@@ -1,0 +1,158 @@
+<?php
+
+// File generated from our OpenAPI spec
+
+namespace Stripe\Billing;
+
+/**
+ * A billing alert is a resource that notifies you when a certain usage threshold on a meter is crossed. For example, you might create a billing alert to notify you when a certain user made 100 API requests.
+ *
+ * @property string $id Unique identifier for the object.
+ * @property string $object String representing the object's type. Objects of the same type share the same value.
+ * @property string $alert_type Defines the type of the alert.
+ * @property null|(object{filters: null|((object{customer: null|string|\Stripe\Customer, type: string}&\Stripe\StripeObject))[], lte: (object{balance_type: string, custom_pricing_unit?: null|(object{custom_pricing_unit_details: null|(object{created: int, display_name: string, id: string, lookup_key: null|string, metadata: \Stripe\StripeObject, status: string}&\Stripe\StripeObject), id: string, value: string}&\Stripe\StripeObject), monetary: null|(object{currency: string, value: int}&\Stripe\StripeObject)}&\Stripe\StripeObject)}&\Stripe\StripeObject) $credit_balance_threshold Encapsulates configuration of the alert to monitor billing credit balance.
+ * @property bool $livemode If the object exists in live mode, the value is <code>true</code>. If the object exists in test mode, the value is <code>false</code>.
+ * @property null|(object{aggregation_period: string, filters: null|(object{billing_cadence: null|string, pricing_plan: null|string, pricing_plan_subscription: null|string}&\Stripe\StripeObject), group_by: null|string, gte: (object{amount: null|(object{currency: string, value: int}&\Stripe\StripeObject), custom_pricing_unit: null|(object{custom_pricing_unit_details: null|(object{created: int, display_name: string, id: string, lookup_key: null|string, metadata: \Stripe\StripeObject, status: string}&\Stripe\StripeObject), id: string, value: string}&\Stripe\StripeObject), type: string}&\Stripe\StripeObject)}&\Stripe\StripeObject) $spend_threshold Encapsulates the alert's configuration to monitor spend on pricing plan subscriptions.
+ * @property null|string $status Status of the alert. This can be active, inactive or archived.
+ * @property string $title Title of the alert.
+ * @property null|(object{filters: null|((object{customer: null|string|\Stripe\Customer, type: string}&\Stripe\StripeObject))[], gte: int, meter: Meter|string, recurrence: string}&\Stripe\StripeObject) $usage_threshold Encapsulates configuration of the alert to monitor usage on a specific <a href="https://docs.stripe.com/api/billing/meter">Billing Meter</a>.
+ */
+class Alert extends \Stripe\ApiResource
+{
+    const OBJECT_NAME = 'billing.alert';
+
+    use \Stripe\ApiOperations\NestedResource;
+
+    const ALERT_TYPE_CREDIT_BALANCE_THRESHOLD = 'credit_balance_threshold';
+    const ALERT_TYPE_SPEND_THRESHOLD = 'spend_threshold';
+    const ALERT_TYPE_USAGE_THRESHOLD = 'usage_threshold';
+
+    const STATUS_ACTIVE = 'active';
+    const STATUS_ARCHIVED = 'archived';
+    const STATUS_INACTIVE = 'inactive';
+
+    /**
+     * Creates a billing alert.
+     *
+     * @param null|array{alert_type: string, credit_balance_threshold?: array{filters?: array{credit_grants?: array{applicability_config: array{scope: array{billable_items?: array{id: string}[], price_type?: string, prices?: array{id: string}[]}}}, customer?: string, type: string}[], lte: array{balance_type: string, custom_pricing_unit?: array{id: string, value: string}, monetary?: array{currency: string, value: int}}}, expand?: string[], spend_threshold?: array{aggregation_period: string, filters?: array{billable_items?: string[], billing_cadence?: string, pricing_plan?: string, pricing_plan_subscription?: string}, group_by?: string, gte: array{amount?: array{currency: string, value: int}, custom_pricing_unit?: array{id: string, value: string}, type: string}}, title: string, usage_threshold?: array{filters?: array{customer?: string, type: string}[], gte: int, meter: string, recurrence: string}} $params
+     * @param null|array|string $options
+     *
+     * @return Alert the created resource
+     *
+     * @throws \Stripe\Exception\ApiErrorException if the request fails
+     */
+    public static function create($params = null, $options = null)
+    {
+        self::_validateParams($params);
+        $url = static::classUrl();
+
+        list($response, $opts) = static::_staticRequest('post', $url, $params, $options);
+        $obj = \Stripe\Util\Util::convertToStripeObject($response->json, $opts);
+        $obj->setLastResponse($response);
+
+        return $obj;
+    }
+
+    /**
+     * Lists billing active and inactive alerts.
+     *
+     * @param null|array{alert_type?: string, customer?: string, ending_before?: string, expand?: string[], limit?: int, meter?: string, starting_after?: string} $params
+     * @param null|array|string $opts
+     *
+     * @return \Stripe\Collection<Alert> of ApiResources
+     *
+     * @throws \Stripe\Exception\ApiErrorException if the request fails
+     */
+    public static function all($params = null, $opts = null)
+    {
+        $url = static::classUrl();
+
+        return static::_requestPage($url, \Stripe\Collection::class, $params, $opts);
+    }
+
+    /**
+     * Retrieves a billing alert given an ID.
+     *
+     * @param array|string $id the ID of the API resource to retrieve, or an options array containing an `id` key
+     * @param null|array|string $opts
+     *
+     * @return Alert
+     *
+     * @throws \Stripe\Exception\ApiErrorException if the request fails
+     */
+    public static function retrieve($id, $opts = null)
+    {
+        $opts = \Stripe\Util\RequestOptions::parse($opts);
+        $instance = new static($id, $opts);
+        $instance->refresh();
+
+        return $instance;
+    }
+
+    /**
+     * @param null|array $params
+     * @param null|array|string $opts
+     *
+     * @return Alert the activated alert
+     *
+     * @throws \Stripe\Exception\ApiErrorException if the request fails
+     */
+    public function activate($params = null, $opts = null)
+    {
+        $url = $this->instanceUrl() . '/activate';
+        list($response, $opts) = $this->_request('post', $url, $params, $opts);
+        $this->refreshFrom($response, $opts);
+
+        return $this;
+    }
+
+    /**
+     * @param null|array $params
+     * @param null|array|string $opts
+     *
+     * @return Alert the archived alert
+     *
+     * @throws \Stripe\Exception\ApiErrorException if the request fails
+     */
+    public function archive($params = null, $opts = null)
+    {
+        $url = $this->instanceUrl() . '/archive';
+        list($response, $opts) = $this->_request('post', $url, $params, $opts);
+        $this->refreshFrom($response, $opts);
+
+        return $this;
+    }
+
+    /**
+     * @param null|array $params
+     * @param null|array|string $opts
+     *
+     * @return Alert the deactivated alert
+     *
+     * @throws \Stripe\Exception\ApiErrorException if the request fails
+     */
+    public function deactivate($params = null, $opts = null)
+    {
+        $url = $this->instanceUrl() . '/deactivate';
+        list($response, $opts) = $this->_request('post', $url, $params, $opts);
+        $this->refreshFrom($response, $opts);
+
+        return $this;
+    }
+
+    const PATH_NOTIFICATIONS = '/notifications';
+
+    /**
+     * @param string $id the ID of the alert on which to retrieve the alert notifications
+     * @param null|array $params
+     * @param null|array|string $opts
+     *
+     * @return \Stripe\Collection<AlertNotification> the list of alert notifications
+     *
+     * @throws \Stripe\Exception\ApiErrorException if the request fails
+     */
+    public static function allNotifications($id, $params = null, $opts = null)
+    {
+        return self::_allNestedResources($id, static::PATH_NOTIFICATIONS, $params, $opts);
+    }
+}

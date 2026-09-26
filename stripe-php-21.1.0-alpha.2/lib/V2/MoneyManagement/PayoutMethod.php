@@ -1,0 +1,33 @@
+<?php
+
+// File generated from our OpenAPI spec
+
+namespace Stripe\V2\MoneyManagement;
+
+/**
+ * Use the PayoutMethods API to list and interact with PayoutMethod objects.
+ *
+ * @property string $id ID of the PayoutMethod object.
+ * @property string $object String representing the object's type. Objects of the same type share the same value of the object field.
+ * @property null|(object{id: string, type: string}&\Stripe\StripeObject) $alternative_reference The alternative reference for this payout method, if it's a projected payout method.
+ * @property string[] $available_payout_speeds A set of available payout speeds for this payout method.
+ * @property null|(object{archived: bool, bank_account_type: string, bank_name: string, branch_number?: string, country: string, enabled_delivery_options: string[], financial_connections_account?: string, last4: string, routing_number?: string, supported_currencies: string[], swift_code?: string}&\Stripe\StripeObject) $bank_account The PayoutMethodBankAccount object details.
+ * @property null|(object{archived: bool, exp_month: string, exp_year: string, fingerprint: string, last4: string, supported_currencies: string[]}&\Stripe\StripeObject) $card The PayoutMethodCard object details.
+ * @property int $created Created timestamp.
+ * @property null|(object{address: string, archived: bool, memo?: string, network: string}&\Stripe\StripeObject) $crypto_wallet The PayoutMethodCryptoWallet object details.
+ * @property null|string $latest_outbound_setup_intent ID of the underlying active OutboundSetupIntent object, if any.
+ * @property bool $livemode Has the value <code>true</code> if the object exists in live mode or the value <code>false</code> if the object exists in test mode.
+ * @property null|(object{network_business_profile: string}&\Stripe\StripeObject) $network_business_profile_wallet The PayoutMethodNetworkBusinessProfileWallet object details.
+ * @property bool $restricted Whether the Payout Method is currently unusable for money movement, despite potentially being correctly set up. Please reach out to Stripe Support for more information.
+ * @property string $type Closed Enum. The type of payout method.
+ * @property (object{payments: string, transfers: string}&\Stripe\StripeObject) $usage_status Indicates whether the payout method has met the necessary requirements for outbound money movement.
+ */
+class PayoutMethod extends \Stripe\ApiResource
+{
+    const OBJECT_NAME = 'v2.money_management.payout_method';
+
+    const TYPE_BANK_ACCOUNT = 'bank_account';
+    const TYPE_CARD = 'card';
+    const TYPE_CRYPTO_WALLET = 'crypto_wallet';
+    const TYPE_NETWORK_BUSINESS_PROFILE_WALLET = 'network_business_profile_wallet';
+}

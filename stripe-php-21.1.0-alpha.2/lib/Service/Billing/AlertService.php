@@ -1,0 +1,125 @@
+<?php
+
+// File generated from our OpenAPI spec
+
+namespace Stripe\Service\Billing;
+
+/**
+ * @phpstan-import-type RequestOptionsArray from \Stripe\Util\RequestOptions
+ *
+ * @psalm-import-type RequestOptionsArray from \Stripe\Util\RequestOptions
+ */
+class AlertService extends \Stripe\Service\AbstractService
+{
+    /**
+     * Reactivates this alert, allowing it to trigger again.
+     *
+     * @param string $id
+     * @param null|array{expand?: string[]} $params
+     * @param null|RequestOptionsArray|\Stripe\Util\RequestOptions $opts
+     *
+     * @return \Stripe\Billing\Alert
+     *
+     * @throws \Stripe\Exception\ApiErrorException if the request fails
+     */
+    public function activate($id, $params = null, $opts = null)
+    {
+        return $this->request('post', $this->buildPath('/v1/billing/alerts/%s/activate', $id), $params, $opts);
+    }
+
+    /**
+     * Lists billing active and inactive alerts.
+     *
+     * @param null|array{alert_type?: string, customer?: string, ending_before?: string, expand?: string[], limit?: int, meter?: string, starting_after?: string} $params
+     * @param null|RequestOptionsArray|\Stripe\Util\RequestOptions $opts
+     *
+     * @return \Stripe\Collection<\Stripe\Billing\Alert>
+     *
+     * @throws \Stripe\Exception\ApiErrorException if the request fails
+     */
+    public function all($params = null, $opts = null)
+    {
+        return $this->requestCollection('get', '/v1/billing/alerts', $params, $opts);
+    }
+
+    /**
+     * Lists sent billing alert triggered and recovered notifications for a billing
+     * alert.
+     *
+     * @param string $parentId
+     * @param null|array{action?: string, cadence?: string, customer: string, ending_before?: string, expand?: string[], limit?: int, meter?: string, notified_at?: array|int, starting_after?: string, subscription?: string} $params
+     * @param null|RequestOptionsArray|\Stripe\Util\RequestOptions $opts
+     *
+     * @return \Stripe\Collection<\Stripe\Billing\AlertNotification>
+     *
+     * @throws \Stripe\Exception\ApiErrorException if the request fails
+     */
+    public function allNotifications($parentId, $params = null, $opts = null)
+    {
+        return $this->requestCollection('get', $this->buildPath('/v1/billing/alerts/%s/notifications', $parentId), $params, $opts);
+    }
+
+    /**
+     * Archives this alert, removing it from the list view and APIs. This is
+     * non-reversible.
+     *
+     * @param string $id
+     * @param null|array{expand?: string[]} $params
+     * @param null|RequestOptionsArray|\Stripe\Util\RequestOptions $opts
+     *
+     * @return \Stripe\Billing\Alert
+     *
+     * @throws \Stripe\Exception\ApiErrorException if the request fails
+     */
+    public function archive($id, $params = null, $opts = null)
+    {
+        return $this->request('post', $this->buildPath('/v1/billing/alerts/%s/archive', $id), $params, $opts);
+    }
+
+    /**
+     * Creates a billing alert.
+     *
+     * @param null|array{alert_type: string, credit_balance_threshold?: array{filters?: array{credit_grants?: array{applicability_config: array{scope: array{billable_items?: array{id: string}[], price_type?: string, prices?: array{id: string}[]}}}, customer?: string, type: string}[], lte: array{balance_type: string, custom_pricing_unit?: array{id: string, value: string}, monetary?: array{currency: string, value: int}}}, expand?: string[], spend_threshold?: array{aggregation_period: string, filters?: array{billable_items?: string[], billing_cadence?: string, pricing_plan?: string, pricing_plan_subscription?: string}, group_by?: string, gte: array{amount?: array{currency: string, value: int}, custom_pricing_unit?: array{id: string, value: string}, type: string}}, title: string, usage_threshold?: array{filters?: array{customer?: string, type: string}[], gte: int, meter: string, recurrence: string}} $params
+     * @param null|RequestOptionsArray|\Stripe\Util\RequestOptions $opts
+     *
+     * @return \Stripe\Billing\Alert
+     *
+     * @throws \Stripe\Exception\ApiErrorException if the request fails
+     */
+    public function create($params = null, $opts = null)
+    {
+        return $this->request('post', '/v1/billing/alerts', $params, $opts);
+    }
+
+    /**
+     * Deactivates this alert, preventing it from triggering.
+     *
+     * @param string $id
+     * @param null|array{expand?: string[]} $params
+     * @param null|RequestOptionsArray|\Stripe\Util\RequestOptions $opts
+     *
+     * @return \Stripe\Billing\Alert
+     *
+     * @throws \Stripe\Exception\ApiErrorException if the request fails
+     */
+    public function deactivate($id, $params = null, $opts = null)
+    {
+        return $this->request('post', $this->buildPath('/v1/billing/alerts/%s/deactivate', $id), $params, $opts);
+    }
+
+    /**
+     * Retrieves a billing alert given an ID.
+     *
+     * @param string $id
+     * @param null|array{expand?: string[]} $params
+     * @param null|RequestOptionsArray|\Stripe\Util\RequestOptions $opts
+     *
+     * @return \Stripe\Billing\Alert
+     *
+     * @throws \Stripe\Exception\ApiErrorException if the request fails
+     */
+    public function retrieve($id, $params = null, $opts = null)
+    {
+        return $this->request('get', $this->buildPath('/v1/billing/alerts/%s', $id), $params, $opts);
+    }
+}

@@ -1,0 +1,69 @@
+<?php
+
+// File generated from our OpenAPI spec
+
+namespace Stripe;
+
+/**
+ * Invoice Line Items represent the individual lines within an <a href="https://docs.stripe.com/api/invoices">invoice</a> and only exist within the context of an invoice.
+ *
+ * Each line item is backed by either an <a href="https://docs.stripe.com/api/invoiceitems">invoice item</a> or a <a href="https://docs.stripe.com/api/subscription_items">subscription item</a>.
+ *
+ * @property string $id Unique identifier for the object.
+ * @property string $object String representing the object's type. Objects of the same type share the same value.
+ * @property int $amount The amount, in cents (or local equivalent).
+ * @property string $currency Three-letter <a href="https://www.iso.org/iso-4217-currency-codes.html">ISO currency code</a>, in lowercase. Must be a <a href="https://stripe.com/docs/currencies">supported currency</a>.
+ * @property null|string $description An arbitrary string attached to the object. Often useful for displaying to users.
+ * @property null|((object{amount: int, discount: Discount|string}&StripeObject))[] $discount_amounts The amount of discount calculated per discount for this line item.
+ * @property bool $discountable If true, discounts will apply to this line item. Always false for prorations.
+ * @property (Discount|string)[] $discounts The discounts applied to the invoice line item. Line item discounts are applied before invoice discounts. Use <code>expand[]=discounts</code> to expand each discount.
+ * @property null|string $invoice The ID of the invoice that contains this line item.
+ * @property bool $livemode If the object exists in live mode, the value is <code>true</code>. If the object exists in test mode, the value is <code>false</code>.
+ * @property null|((object{amount: int, margin: Margin|string}&StripeObject))[] $margin_amounts The amount of margin calculated per margin for this line item.
+ * @property null|(Margin|string)[] $margins The margins applied to the line item. When set, the <code>default_margins</code> on the invoice do not apply to the line item. Use <code>expand[]=margins</code> to expand each margin.
+ * @property StripeObject $metadata Set of <a href="https://docs.stripe.com/api/metadata">key-value pairs</a> that you can attach to an object. This can be useful for storing additional information about the object in a structured format. Note that for line items with <code>type=subscription</code>, <code>metadata</code> reflects the current metadata from the subscription associated with the line item, unless the invoice line was directly updated with different metadata after creation.
+ * @property null|(object{invoice_item_details: null|(object{invoice_item: string, proration: bool, proration_details: null|(object{credited_items: null|(object{invoice: string, invoice_line_items: string[]}&StripeObject)}&StripeObject), subscription: null|string}&StripeObject), pricing_plan_subscription_details?: null|(object{invoice_item: string, pricing_plan_subscription: string, pricing_plan_version: string}&StripeObject), rate_card_subscription_details?: null|(object{invoice_item: string, rate_card_subscription: string, rate_card_version: string}&StripeObject), schedule_details?: null|(object{invoice_item: null|string, proration: bool, proration_details: null|(object{credited_items: null|(object{invoice: string, invoice_line_items: string[]}&StripeObject)}&StripeObject), schedule: string, subscription: null|string}&StripeObject), subscription_item_details: null|(object{invoice_item: null|string, proration: bool, proration_details: null|(object{credited_items: null|(object{invoice: string, invoice_line_items: string[]}&StripeObject)}&StripeObject), subscription: null|string, subscription_item: string}&StripeObject), type: string}&StripeObject) $parent The parent that generated this line item.
+ * @property (object{end: int, start: int}&StripeObject) $period
+ * @property null|((object{amount: int, credit_balance_transaction?: null|Billing\CreditBalanceTransaction|string, discount?: Discount|string, margin?: Margin|string, type: string}&StripeObject))[] $pretax_credit_amounts Contains pretax credit amounts (ex: discount, credit grants, etc) that apply to this line item.
+ * @property null|(object{license_fee_details?: (object{license_fee: string, license_fee_version: string, licensed_item: string}&StripeObject), price_details?: (object{price: Price|string, product: string}&StripeObject), rate_card_custom_pricing_unit_overage_rate_details?: (object{custom_pricing_unit: string, custom_pricing_unit_overage_rate: string, one_time_item: string, rate_card: string}&StripeObject), rate_card_rate_details?: (object{metered_item: string, rate_card: string, rate_card_rate: string}&StripeObject), type: string, unit_amount_decimal: null|string}&StripeObject) $pricing The pricing information of the line item.
+ * @property null|int $quantity Quantity of units for the invoice line item in integer format, with any decimal precision truncated. For the line item's full-precision decimal quantity, use <code>quantity_decimal</code>. This field will be deprecated in favor of <code>quantity_decimal</code> in a future version. If the line item is a proration or subscription, the quantity of the subscription that the proration was computed for.
+ * @property null|string $quantity_decimal Non-negative decimal with at most 12 decimal places. The quantity of units for the line item.
+ * @property null|string|Subscription $subscription
+ * @property int $subtotal The subtotal of the line item, in cents (or local equivalent), before any discounts or taxes.
+ * @property null|(object{calculation_id: null|string, calculation_item_id: null|string}&StripeObject) $tax_calculation_reference The tax calculation identifiers of the line item.
+ * @property null|((object{amount: int, tax_behavior: string, tax_rate_details: null|(object{tax_rate: string|TaxRate}&StripeObject), taxability_reason: string, taxable_amount: null|int, type: string}&StripeObject))[] $taxes The tax information of the line item.
+ */
+class InvoiceLineItem extends ApiResource
+{
+    const OBJECT_NAME = 'line_item';
+
+    use ApiOperations\Update;
+
+    /**
+     * Updates an invoice’s line item. Some fields, such as <code>tax_amounts</code>,
+     * only live on the invoice line item, so they can only be updated through this
+     * endpoint. Other fields, such as <code>amount</code>, live on both the invoice
+     * item and the invoice line item, so updates on this endpoint will propagate to
+     * the invoice item as well. Updating an invoice’s line item is only possible
+     * before the invoice is finalized.
+     *
+     * @param string $id the ID of the resource to update
+     * @param null|array{amount?: int, description?: string, discountable?: bool, discounts?: null|array{coupon?: string, discount?: string, discount_end?: array{duration?: array{interval: string, interval_count: int}, timestamp?: int, type: string}, promotion_code?: string}[], expand?: string[], margins?: null|string[], metadata?: null|array<string, string>, period?: array{end: int, start: int}, price_data?: array{currency: string, product?: string, product_data?: array{description?: string, images?: string[], metadata?: array<string, string>, name: string, tax_code?: string, tax_details?: array{performance_location?: string, tax_code?: null|string}, unit_label?: string}, tax_behavior?: string, unit_amount?: int, unit_amount_decimal?: string}, pricing?: array{price?: string}, quantity?: int, quantity_decimal?: string, tax_amounts?: null|array{amount: int, tax_rate_data: array{country?: string, description?: string, display_name: string, inclusive: bool, jurisdiction?: string, jurisdiction_level?: string, percentage: float, state?: string, tax_type?: string}, taxability_reason?: string, taxable_amount: int}[], tax_rates?: null|string[]} $params
+     * @param null|array|string $opts
+     *
+     * @return InvoiceLineItem the updated resource
+     *
+     * @throws Exception\ApiErrorException if the request fails
+     */
+    public static function update($id, $params = null, $opts = null)
+    {
+        self::_validateParams($params);
+        $url = static::resourceUrl($id);
+
+        list($response, $opts) = static::_staticRequest('post', $url, $params, $opts);
+        $obj = Util\Util::convertToStripeObject($response->json, $opts);
+        $obj->setLastResponse($response);
+
+        return $obj;
+    }
+}

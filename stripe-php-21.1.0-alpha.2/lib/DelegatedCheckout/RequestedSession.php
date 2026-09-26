@@ -1,0 +1,165 @@
+<?php
+
+// File generated from our OpenAPI spec
+
+namespace Stripe\DelegatedCheckout;
+
+/**
+ * A requested session is a session that has been requested by a customer.
+ *
+ * @property string $id Unique identifier for the object.
+ * @property string $object String representing the object's type. Objects of the same type share the same value.
+ * @property null|((object{campaign_id: null|string, creative_id: null|string, expires_at: int, identification_token: string, issued_at: int, provider: string, publisher_id: null|string, shared_metadata: null|\Stripe\StripeObject, source: null|(object{platform: null|string, type: string, url: null|string}&\Stripe\StripeObject), sub_id: null|string, touchpoint: string}&\Stripe\StripeObject))[] $affiliate_attributions Affiliate attribution data associated with this requested session.
+ * @property null|int $amount_subtotal The subtotal amount of the requested session.
+ * @property null|int $amount_total The total amount of the requested session.
+ * @property null|(object{marketing: null|(object{consents: null|(object{channel: string, status: string}&\Stripe\StripeObject)[], options: null|(object{channel: string, description: string, privacy_policy_url: string}&\Stripe\StripeObject)[]}&\Stripe\StripeObject)}&\Stripe\StripeObject) $buyer_consents The buyer consent options for this requested session, including marketing preferences.
+ * @property int $created_at Time at which the object was created. Measured in seconds since the Unix epoch.
+ * @property string $currency Three-letter <a href="https://www.iso.org/iso-4217-currency-codes.html">ISO currency code</a>, in lowercase. Must be a <a href="https://stripe.com/docs/currencies">supported currency</a>.
+ * @property null|string $customer The customer for this requested session.
+ * @property null|(object{applied: null|((object{amount_off: null|int, code: string, currency: null|string, key: string, name: string, percent_off: null|float, type: string}&\Stripe\StripeObject))[], invalid: null|(object{code: string, reason: string}&\Stripe\StripeObject)[]}&\Stripe\StripeObject) $discounts The discounts applied to and rejected from this requested session.
+ * @property int $expires_at Time at which the requested session expires. Measured in seconds since the Unix epoch.
+ * @property null|(object{address: null|(object{city: null|string, country: null|string, line1: null|string, line2: null|string, postal_code: null|string, state: null|string}&\Stripe\StripeObject), email: null|string, fulfillment_options: null|((object{digital: null|(object{digital_options: null|((object{description: null|string, digital_amount: int, display_name: string, key: string, line_item_keys: null|string[]}&\Stripe\StripeObject))[]}&\Stripe\StripeObject), shipping: null|(object{shipping_options: null|((object{description: null|string, display_name: string, earliest_delivery_time: null|int, key: string, latest_delivery_time: null|int, line_item_keys: null|string[], shipping_amount: int}&\Stripe\StripeObject))[]}&\Stripe\StripeObject), type: string}&\Stripe\StripeObject))[], name: null|string, phone: null|string, selected_fulfillment_option: null|(object{digital: null|(object{digital_option: null|string}&\Stripe\StripeObject), shipping: null|(object{shipping_option: null|string}&\Stripe\StripeObject), type: string}&\Stripe\StripeObject), selected_fulfillment_option_overrides: null|((object{digital: null|(object{digital_option: null|string}&\Stripe\StripeObject), line_item_keys: null|string[], shipping: null|(object{shipping_option: null|string}&\Stripe\StripeObject), type: string}&\Stripe\StripeObject))[]}&\Stripe\StripeObject) $fulfillment_details The details of the fulfillment.
+ * @property ((object{amount_discount: int, amount_sale?: int, amount_subtotal: int, fulfillment_type: string, key: string, product_details?: (object{custom_attributes: null|(object{display_name: string, value: string}&\Stripe\StripeObject)[], description: null|string, disclosures: null|(object{content: string, content_type: string, type: string}&\Stripe\StripeObject)[], images: null|string[], title: string}&\Stripe\StripeObject), quantity: int, sku_id: string, unit_amount: int}&\Stripe\StripeObject))[] $line_item_details The line items to be purchased.
+ * @property bool $livemode If the object exists in live mode, the value is <code>true</code>. If the object exists in test mode, the value is <code>false</code>.
+ * @property null|\Stripe\StripeObject $metadata Set of <a href="https://docs.stripe.com/api/metadata">key-value pairs</a> that you can attach to an object. This can be useful for storing additional information about the object in a structured format.
+ * @property null|(object{order_id: null|string, order_status_url: null|string}&\Stripe\StripeObject) $order_details The details of the order.
+ * @property null|string $payment_method The payment method used for the requested session.
+ * @property null|(object{card: null|(object{brands_blocked: null|string[]}&\Stripe\StripeObject), displayable_card_brands: null|string[], displayable_payment_method_types: null|string[], excluded_payment_method_types: null|string[]}&\Stripe\StripeObject) $payment_method_options The payment method options for this requested session.
+ * @property null|(object{billing_details: null|(object{address: null|(object{city: string, country: string, line1: string, line2: null|string, postal_code: string, state: string}&\Stripe\StripeObject), email: null|string, name: null|string, phone: null|string}&\Stripe\StripeObject), card: null|(object{exp_month: int, exp_year: int, last4: string}&\Stripe\StripeObject), type: string}&\Stripe\StripeObject) $payment_method_preview The preview of the payment method to be created when the requested session is confirmed.
+ * @property null|(object{client_device_metadata_details: null|(object{radar_session: null|string, referrer: null|string, remote_ip: null|string, time_on_page_ms: null|int, user_agent: null|string}&\Stripe\StripeObject)}&\Stripe\StripeObject) $risk_details The risk details of the requested session.
+ * @property (object{card_brands: null|string[], marketplace_seller_details: null|(object{}&\Stripe\StripeObject), network_profile: string|\Stripe\Profile, payment_method_types: null|string[], privacy_notice_url: null|string, return_policy_url: null|string, store_policy_url: null|string, terms_of_service_url: null|string}&\Stripe\StripeObject) $seller_details
+ * @property null|string $setup_future_usage Whether or not the payment method should be saved for future use.
+ * @property null|\Stripe\StripeObject $shared_metadata The metadata shared with the seller.
+ * @property null|string|\Stripe\SharedPayment\IssuedToken $shared_payment_issued_token The SPT used for payment.
+ * @property string $status The status of the requested session.
+ * @property (object{amount_cart_discount: null|int, amount_discount?: null|int, amount_fulfillment: null|int, amount_items_discount: null|int, amount_sale?: null|int, amount_tax: null|int, applicable_fees: null|((object{amount: int, description: null|string, display_name: string}&\Stripe\StripeObject))[], breakdown?: null|(object{discounts: null|(object{amount: int, key: string}&\Stripe\StripeObject)[]}&\Stripe\StripeObject)}&\Stripe\StripeObject) $total_details
+ * @property int $updated_at Time at which the object was last updated. Measured in seconds since the Unix epoch.
+ */
+class RequestedSession extends \Stripe\ApiResource
+{
+    const OBJECT_NAME = 'delegated_checkout.requested_session';
+
+    use \Stripe\ApiOperations\Update;
+
+    const STATUS_COMPLETED = 'completed';
+    const STATUS_EXPIRED = 'expired';
+    const STATUS_OPEN = 'open';
+    const STATUS_REQUIRES_ACTION = 'requires_action';
+
+    /**
+     * Creates a requested session.
+     *
+     * @param null|array{affiliate_attribution?: array{campaign_id?: string, creative_id?: string, expires_at: int, identification_token: string, issued_at: int, provider: string, publisher_id?: string, shared_metadata?: array<string, string>, source?: array{platform?: string, type: string, url?: string}, sub_id?: string, touchpoint: string}, currency: string, customer?: string, discounts?: array{codes: string[], enforce_strict_eligibility?: bool}, expand?: string[], fulfillment_details?: array{address?: array{city: string, country: string, line1?: string, line2?: string, postal_code: string, state: string}, email?: string, name?: string, phone?: string}, line_item_details: array{quantity: int, sku_id: string}[], metadata?: array<string, string>, payment_method?: string, payment_method_options?: array{card?: array{brands_blocked?: string[]}, excluded_payment_method_types?: string[]}, seller_details: array{network_profile: string}, setup_future_usage?: string, shared_metadata?: array<string, string>} $params
+     * @param null|array|string $options
+     *
+     * @return RequestedSession the created resource
+     *
+     * @throws \Stripe\Exception\ApiErrorException if the request fails
+     */
+    public static function create($params = null, $options = null)
+    {
+        self::_validateParams($params);
+        $url = static::classUrl();
+
+        list($response, $opts) = static::_staticRequest('post', $url, $params, $options);
+        $obj = \Stripe\Util\Util::convertToStripeObject($response->json, $opts);
+        $obj->setLastResponse($response);
+
+        return $obj;
+    }
+
+    /**
+     * Retrieves a requested session.
+     *
+     * @param array|string $id the ID of the API resource to retrieve, or an options array containing an `id` key
+     * @param null|array|string $opts
+     *
+     * @return RequestedSession
+     *
+     * @throws \Stripe\Exception\ApiErrorException if the request fails
+     */
+    public static function retrieve($id, $opts = null)
+    {
+        $opts = \Stripe\Util\RequestOptions::parse($opts);
+        $instance = new static($id, $opts);
+        $instance->refresh();
+
+        return $instance;
+    }
+
+    /**
+     * Updates a requested session.
+     *
+     * @param string $id the ID of the resource to update
+     * @param null|array{discounts?: array{codes: null|string[], enforce_strict_eligibility?: bool}, expand?: string[], fulfillment_details?: array{address?: array{city: string, country: string, line1?: string, line2?: string, postal_code: string, state: string}, email?: string, name?: string, phone?: string, selected_fulfillment_option?: array{digital?: array{digital_option: string}, shipping?: array{shipping_option: string}, type: string}, selected_fulfillment_option_overrides?: array{digital?: array{digital_option: string}, line_item_keys: string[], shipping?: array{shipping_option: string}, type: string}[]}, line_item_details?: array{key: string, quantity: int}[], metadata?: null|array<string, string>, payment_method?: string, payment_method_options?: array{card?: array{brands_blocked?: string[]}, excluded_payment_method_types?: string[]}, shared_metadata?: null|array<string, string>} $params
+     * @param null|array|string $opts
+     *
+     * @return RequestedSession the updated resource
+     *
+     * @throws \Stripe\Exception\ApiErrorException if the request fails
+     */
+    public static function update($id, $params = null, $opts = null)
+    {
+        self::_validateParams($params);
+        $url = static::resourceUrl($id);
+
+        list($response, $opts) = static::_staticRequest('post', $url, $params, $opts);
+        $obj = \Stripe\Util\Util::convertToStripeObject($response->json, $opts);
+        $obj->setLastResponse($response);
+
+        return $obj;
+    }
+
+    /**
+     * @param null|array $params
+     * @param null|array|string $opts
+     *
+     * @return RequestedSession the confirmed requested session
+     *
+     * @throws \Stripe\Exception\ApiErrorException if the request fails
+     */
+    public function confirm($params = null, $opts = null)
+    {
+        $url = $this->instanceUrl() . '/confirm';
+        list($response, $opts) = $this->_request('post', $url, $params, $opts);
+        $this->refreshFrom($response, $opts);
+
+        return $this;
+    }
+
+    /**
+     * @param null|array $params
+     * @param null|array|string $opts
+     *
+     * @return RequestedSession the expired requested session
+     *
+     * @throws \Stripe\Exception\ApiErrorException if the request fails
+     */
+    public function expire($params = null, $opts = null)
+    {
+        $url = $this->instanceUrl() . '/expire';
+        list($response, $opts) = $this->_request('post', $url, $params, $opts);
+        $this->refreshFrom($response, $opts);
+
+        return $this;
+    }
+
+    /**
+     * @param string $id
+     * @param null|array $params
+     * @param null|array|string $opts
+     *
+     * @return \Stripe\Collection<Order> list of orders
+     *
+     * @throws \Stripe\Exception\ApiErrorException if the request fails
+     */
+    public static function allOrders($id, $params = null, $opts = null)
+    {
+        $url = static::resourceUrl($id) . '/orders';
+        list($response, $opts) = static::_staticRequest('get', $url, $params, $opts);
+        $obj = \Stripe\Util\Util::convertToStripeObject($response->json, $opts);
+        $obj->setLastResponse($response);
+
+        return $obj;
+    }
+}

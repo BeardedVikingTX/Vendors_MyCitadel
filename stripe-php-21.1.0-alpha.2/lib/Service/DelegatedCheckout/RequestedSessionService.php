@@ -1,0 +1,108 @@
+<?php
+
+// File generated from our OpenAPI spec
+
+namespace Stripe\Service\DelegatedCheckout;
+
+/**
+ * @phpstan-import-type RequestOptionsArray from \Stripe\Util\RequestOptions
+ *
+ * @psalm-import-type RequestOptionsArray from \Stripe\Util\RequestOptions
+ */
+class RequestedSessionService extends \Stripe\Service\AbstractService
+{
+    /**
+     * Lists orders for a delegated checkout requested session.
+     *
+     * @param string $id
+     * @param null|array{ending_before?: string, expand?: string[], limit?: int, starting_after?: string} $params
+     * @param null|RequestOptionsArray|\Stripe\Util\RequestOptions $opts
+     *
+     * @return \Stripe\Collection<\Stripe\DelegatedCheckout\Order>
+     *
+     * @throws \Stripe\Exception\ApiErrorException if the request fails
+     */
+    public function allOrders($id, $params = null, $opts = null)
+    {
+        return $this->requestCollection('get', $this->buildPath('/v1/delegated_checkout/requested_sessions/%s/orders', $id), $params, $opts);
+    }
+
+    /**
+     * Confirms a requested session.
+     *
+     * @param string $id
+     * @param null|array{affiliate_attribution?: array{campaign_id?: string, creative_id?: string, expires_at: int, identification_token: string, issued_at: int, provider: string, publisher_id?: string, shared_metadata?: array<string, string>, source?: array{platform?: string, type: string, url?: string}, sub_id?: string, touchpoint: string}, buyer_consents?: array{marketing?: array{consents?: array{channel: string, status: string}[]}}, expand?: string[], metadata?: null|array<string, string>, payment_method?: string, return_url?: string, risk_details?: array{client_device_metadata_details?: array{radar_session?: string, referrer?: string, remote_ip?: string, time_on_page_ms?: int, user_agent?: string}}, use_stripe_sdk?: bool} $params
+     * @param null|RequestOptionsArray|\Stripe\Util\RequestOptions $opts
+     *
+     * @return \Stripe\DelegatedCheckout\RequestedSession
+     *
+     * @throws \Stripe\Exception\ApiErrorException if the request fails
+     */
+    public function confirm($id, $params = null, $opts = null)
+    {
+        return $this->request('post', $this->buildPath('/v1/delegated_checkout/requested_sessions/%s/confirm', $id), $params, $opts);
+    }
+
+    /**
+     * Creates a requested session.
+     *
+     * @param null|array{affiliate_attribution?: array{campaign_id?: string, creative_id?: string, expires_at: int, identification_token: string, issued_at: int, provider: string, publisher_id?: string, shared_metadata?: array<string, string>, source?: array{platform?: string, type: string, url?: string}, sub_id?: string, touchpoint: string}, currency: string, customer?: string, discounts?: array{codes: string[], enforce_strict_eligibility?: bool}, expand?: string[], fulfillment_details?: array{address?: array{city: string, country: string, line1?: string, line2?: string, postal_code: string, state: string}, email?: string, name?: string, phone?: string}, line_item_details: array{quantity: int, sku_id: string}[], metadata?: array<string, string>, payment_method?: string, payment_method_options?: array{card?: array{brands_blocked?: string[]}, excluded_payment_method_types?: string[]}, seller_details: array{network_profile: string}, setup_future_usage?: string, shared_metadata?: array<string, string>} $params
+     * @param null|RequestOptionsArray|\Stripe\Util\RequestOptions $opts
+     *
+     * @return \Stripe\DelegatedCheckout\RequestedSession
+     *
+     * @throws \Stripe\Exception\ApiErrorException if the request fails
+     */
+    public function create($params = null, $opts = null)
+    {
+        return $this->request('post', '/v1/delegated_checkout/requested_sessions', $params, $opts);
+    }
+
+    /**
+     * Expires a requested session.
+     *
+     * @param string $id
+     * @param null|array{expand?: string[]} $params
+     * @param null|RequestOptionsArray|\Stripe\Util\RequestOptions $opts
+     *
+     * @return \Stripe\DelegatedCheckout\RequestedSession
+     *
+     * @throws \Stripe\Exception\ApiErrorException if the request fails
+     */
+    public function expire($id, $params = null, $opts = null)
+    {
+        return $this->request('post', $this->buildPath('/v1/delegated_checkout/requested_sessions/%s/expire', $id), $params, $opts);
+    }
+
+    /**
+     * Retrieves a requested session.
+     *
+     * @param string $id
+     * @param null|array{expand?: string[]} $params
+     * @param null|RequestOptionsArray|\Stripe\Util\RequestOptions $opts
+     *
+     * @return \Stripe\DelegatedCheckout\RequestedSession
+     *
+     * @throws \Stripe\Exception\ApiErrorException if the request fails
+     */
+    public function retrieve($id, $params = null, $opts = null)
+    {
+        return $this->request('get', $this->buildPath('/v1/delegated_checkout/requested_sessions/%s', $id), $params, $opts);
+    }
+
+    /**
+     * Updates a requested session.
+     *
+     * @param string $id
+     * @param null|array{discounts?: array{codes: null|string[], enforce_strict_eligibility?: bool}, expand?: string[], fulfillment_details?: array{address?: array{city: string, country: string, line1?: string, line2?: string, postal_code: string, state: string}, email?: string, name?: string, phone?: string, selected_fulfillment_option?: array{digital?: array{digital_option: string}, shipping?: array{shipping_option: string}, type: string}, selected_fulfillment_option_overrides?: array{digital?: array{digital_option: string}, line_item_keys: string[], shipping?: array{shipping_option: string}, type: string}[]}, line_item_details?: array{key: string, quantity: int}[], metadata?: null|array<string, string>, payment_method?: string, payment_method_options?: array{card?: array{brands_blocked?: string[]}, excluded_payment_method_types?: string[]}, shared_metadata?: null|array<string, string>} $params
+     * @param null|RequestOptionsArray|\Stripe\Util\RequestOptions $opts
+     *
+     * @return \Stripe\DelegatedCheckout\RequestedSession
+     *
+     * @throws \Stripe\Exception\ApiErrorException if the request fails
+     */
+    public function update($id, $params = null, $opts = null)
+    {
+        return $this->request('post', $this->buildPath('/v1/delegated_checkout/requested_sessions/%s', $id), $params, $opts);
+    }
+}

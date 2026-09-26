@@ -1,0 +1,28 @@
+name: Sign Release
+on:
+  release:
+    types: [published]
+
+permissions:
+  contents: read
+
+jobs:
+  sign:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write   # to attach .sigstore bundles to the release
+      id-token: write   # OIDC for keyless signing
+    steps:
+      - uses: step-security/harden-runner@e14015d583714f6e62063499dc959a02595150a1 # v2.21.1
+        with:
+          egress-policy: audit
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          persist-credentials: false
+      - uses: sigstore/gh-action-sigstore-python@790bc6befb9d733738f18d8f895854b453640ec9 # v3.0.1
+        with:
+          inputs: dist/purify.min.js dist/purify.js
+          # Re-uploads signed artefacts to the release that triggered this run.
+          # Without this flag, .sigstore bundles are generated but dropped at
+          # job end - the release page gets nothing.
+          release-signing-artifacts: true
