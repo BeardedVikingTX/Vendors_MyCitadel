@@ -1,0 +1,24 @@
+[26-Sep-2026 18:21:35 UTC] PHP Fatal error:  Uncaught Error: Class "Stripe\ApiResource" not found in /home/beardedviking/vendors.mycitadel.lol/stripe-php-21.1.0-alpha.2/lib/Terminal/Configuration.php:32
+Stack trace:
+#0 {main}
+  thrown in /home/beardedviking/vendors.mycitadel.lol/stripe-php-21.1.0-alpha.2/lib/Terminal/Configuration.php on line 32
+[26-Sep-2026 18:21:36 UTC] PHP Fatal error:  Uncaught Error: Class "Stripe\ApiResource" not found in /home/beardedviking/vendors.mycitadel.lol/stripe-php-21.1.0-alpha.2/lib/Terminal/ConnectionToken.php:16
+Stack trace:
+#0 {main}
+  thrown in /home/beardedviking/vendors.mycitadel.lol/stripe-php-21.1.0-alpha.2/lib/Terminal/ConnectionToken.php on line 16
+[26-Sep-2026 18:21:36 UTC] PHP Fatal error:  Uncaught Error: Class "Stripe\ApiResource" not found in /home/beardedviking/vendors.mycitadel.lol/stripe-php-21.1.0-alpha.2/lib/Terminal/Location.php:25
+Stack trace:
+#0 {main}
+  thrown in /home/beardedviking/vendors.mycitadel.lol/stripe-php-21.1.0-alpha.2/lib/Terminal/Location.php on line 25
+[26-Sep-2026 18:21:36 UTC] PHP Fatal error:  Uncaught Error: Class "Stripe\ApiResource" not found in /home/beardedviking/vendors.mycitadel.lol/stripe-php-21.1.0-alpha.2/lib/Terminal/OnboardingLink.php:16
+Stack trace:
+#0 {main}
+  thrown in /home/beardedviking/vendors.mycitadel.lol/stripe-php-21.1.0-alpha.2/lib/Terminal/OnboardingLink.php on line 16
+[26-Sep-2026 18:21:36 UTC] PHP Fatal error:  Uncaught Error: Class "Stripe\ApiResource" not found in /home/beardedviking/vendors.mycitadel.lol/stripe-php-21.1.0-alpha.2/lib/Terminal/Reader.php:26
+Stack trace:
+#0 {main}
+  thrown in /home/beardedviking/vendors.mycitadel.lol/stripe-php-21.1.0-alpha.2/lib/Terminal/Reader.php on line 26
+[26-Sep-2026 18:21:37 UTC] PHP Fatal error:  Uncaught Error: Class "Stripe\ApiResource" not found in /home/beardedviking/vendors.mycitadel.lol/stripe-php-21.1.0-alpha.2/lib/Terminal/ReaderCollectedData.php:17
+Stack trace:
+#0 {main}
+  thrown in /home/beardedviking/vendors.mycitadel.lol/stripe-php-21.1.0-alpha.2/lib/Terminal/ReaderCollectedData.php on line 17

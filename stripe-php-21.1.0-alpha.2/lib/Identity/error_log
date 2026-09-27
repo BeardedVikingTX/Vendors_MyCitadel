@@ -1,0 +1,12 @@
+[26-Sep-2026 18:18:03 UTC] PHP Fatal error:  Uncaught Error: Class "Stripe\ApiResource" not found in /home/beardedviking/vendors.mycitadel.lol/stripe-php-21.1.0-alpha.2/lib/Identity/BlocklistEntry.php:28
+Stack trace:
+#0 {main}
+  thrown in /home/beardedviking/vendors.mycitadel.lol/stripe-php-21.1.0-alpha.2/lib/Identity/BlocklistEntry.php on line 28
+[26-Sep-2026 18:18:03 UTC] PHP Fatal error:  Uncaught Error: Class "Stripe\ApiResource" not found in /home/beardedviking/vendors.mycitadel.lol/stripe-php-21.1.0-alpha.2/lib/Identity/VerificationReport.php:35
+Stack trace:
+#0 {main}
+  thrown in /home/beardedviking/vendors.mycitadel.lol/stripe-php-21.1.0-alpha.2/lib/Identity/VerificationReport.php on line 35
+[26-Sep-2026 18:18:03 UTC] PHP Fatal error:  Uncaught Error: Class "Stripe\ApiResource" not found in /home/beardedviking/vendors.mycitadel.lol/stripe-php-21.1.0-alpha.2/lib/Identity/VerificationSession.php:41
+Stack trace:
+#0 {main}
+  thrown in /home/beardedviking/vendors.mycitadel.lol/stripe-php-21.1.0-alpha.2/lib/Identity/VerificationSession.php on line 41

@@ -1,0 +1,4 @@
+[27-Sep-2026 00:46:29 UTC] PHP Fatal error:  Uncaught Error: Class "Stripe\Service\AbstractService" not found in /home/beardedviking/vendors.mycitadel.lol/stripe-php-21.1.0-alpha.2/lib/Service/Forwarding/RequestService.php:12
+Stack trace:
+#0 {main}
+  thrown in /home/beardedviking/vendors.mycitadel.lol/stripe-php-21.1.0-alpha.2/lib/Service/Forwarding/RequestService.php on line 12

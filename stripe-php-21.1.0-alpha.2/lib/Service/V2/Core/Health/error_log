@@ -1,0 +1,8 @@
+[27-Sep-2026 02:58:02 UTC] PHP Fatal error:  Uncaught Error: Class "Stripe\Service\AbstractServiceFactory" not found in /home/beardedviking/vendors.mycitadel.lol/stripe-php-21.1.0-alpha.2/lib/Service/V2/Core/Health/HealthServiceFactory.php:12
+Stack trace:
+#0 {main}
+  thrown in /home/beardedviking/vendors.mycitadel.lol/stripe-php-21.1.0-alpha.2/lib/Service/V2/Core/Health/HealthServiceFactory.php on line 12
+[27-Sep-2026 03:01:37 UTC] PHP Fatal error:  Uncaught Error: Class "Stripe\Service\AbstractService" not found in /home/beardedviking/vendors.mycitadel.lol/stripe-php-21.1.0-alpha.2/lib/Service/V2/Core/Health/AlertService.php:14
+Stack trace:
+#0 {main}
+  thrown in /home/beardedviking/vendors.mycitadel.lol/stripe-php-21.1.0-alpha.2/lib/Service/V2/Core/Health/AlertService.php on line 14

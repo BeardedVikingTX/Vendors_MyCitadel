@@ -1,0 +1,1019 @@
+/* ============================================================================
+ * ███ CITADEL.CSS ███
+ * MyCitadel — Core Visual System
+ * ----------------------------------------------------------------------------
+ * Subdomain : https://vendors.mycitadel.lol/css/citadel.css
+ * Author    : Bearded Viking (https://beardedviking.org)
+ * Project   : MyCitadel (https://mycitadel.lol)
+ * License   : MIT
+ *
+ * THEME: Sci-Fi / Cyber-Viking / Heavy Hacking / Runic Futurism
+ *
+ * This file defines the entire visual identity of MyCitadel:
+ *   • Color system (cyber-cyan, rune-violet, blood-red, gold)
+ *   • Typography (Cinzel, Orbitron, JetBrains Mono, MedievalSharp)
+ *   • Animated headers (scan lines, glow pulses, rune rotation)
+ *   • Floating elements (bobbing, drifting, orbit paths)
+ *   • Colored borders (glow frames, animated conic-gradient rings)
+ *   • Rune decorations (Unicode runes ᚠᚢᚦᚨᚱᚲ and glyphs)
+ *   • Form, button, card, and badge components
+ *   • Utility classes for quick composition
+ *
+ * LOAD ORDER (critical — do NOT reorder):
+ *   1. Bootstrap (vendors.mycitadel.lol/Bootstrap/...)
+ *   2. FontAwesome (vendors.mycitadel.lol/FontAwesome/...)
+ *   3. Fonts (@font-face declarations below)
+ *   4. THIS FILE
+ * ========================================================================== */
+
+
+/* ============================================================================
+ * ▓▓▓ TABLE OF CONTENTS ▓▓▓
+ * ----------------------------------------------------------------------------
+ *   01. CSS CUSTOM PROPERTIES (Design Tokens)
+ *   02. FONT IMPORTS (@font-face)
+ *   03. GLOBAL RESET & BASE
+ *   04. TYPOGRAPHY
+ *   05. ANIMATIONS (KEYFRAMES)
+ *   06. UTILITY — ANIMATION CLASSES
+ *   07. UTILITY — GLOW & TEXT EFFECTS
+ *   08. UTILITY — BORDERS & FRAMES
+ *   09. UTILITY — FLOATING & MOTION
+ *   10. COMPONENT — HEADERS / HERO
+ *   11. COMPONENT — CARDS (Citadel Panels)
+ *   12. COMPONENT — BUTTONS
+ *   13. COMPONENT — FORMS & INPUTS
+ *   14. COMPONENT — BADGES & REPUTATION
+ *   15. COMPONENT — RUNE DECORATIONS
+ *   16. COMPONENT — NAVBAR / SIDEBAR
+ *   17. COMPONENT — DASHBOARD LAYOUT
+ *   18. SCROLLBAR & SELECTION
+ *   19. ACCESSIBILITY (prefers-reduced-motion)
+ * ========================================================================== */
+
+
+/* ============================================================================
+ * 01. CSS CUSTOM PROPERTIES — DESIGN TOKENS
+ * ----------------------------------------------------------------------------
+ * Every color, glow, shadow, and timing value lives here.
+ * Change a token once → it updates everywhere. Never hardcode these values.
+ * ========================================================================== */
+
+:root {
+
+    /* ── CORE PALETTE ────────────────────────────────────────────────────── */
+
+    /* Deep space backgrounds — the void behind everything */
+    --c-void:           #05070a;   /* absolute darkest, page body              */
+    --c-abyss:          #0a0e14;   /* primary dark surface                     */
+    --c-slab:           #10151d;   /* raised surface (cards, panels)           */
+    --c-slab-hi:        #171f2b;   /* hover / active surface                   */
+
+    /* Primary accent — cyber-cyan (the "energy" of the Citadel) */
+    --c-cyan:           #00e5ff;
+    --c-cyan-dim:       #00b8cc;
+    --c-cyan-bright:    #7df9ff;
+
+    /* Secondary accent — rune-violet (mystic, encrypted, arcane) */
+    --c-rune:           #a855f7;
+    --c-rune-dim:       #7c3aed;
+    --c-rune-bright:    #c4b5fd;
+
+    /* Viking gold — royal, valuable, premium tier */
+    --c-gold:           #d4af37;
+    --c-gold-bright:    #f5d76e;
+
+    /* Blood red — warnings, dangerous actions, logout */
+    --c-blood:          #ef4444;
+    --c-blood-dim:      #b91c1c;
+
+    /* Success — neon green (verified, secure, online) */
+    --c-success:        #39ff14;
+    --c-success-dim:    #22c55e;
+
+    /* Text colors */
+    --c-text:           #e0e6ed;   /* primary readable text                    */
+    --c-text-dim:       #94a3b8;   /* secondary, muted                        */
+    --c-text-faint:     #475569;   /* disabled, placeholders                  */
+
+    /* ── GLOW TOKENS ─────────────────────────────────────────────────────── */
+    /* Reusable box-shadow values — keep glow strength consistent site-wide */
+    --glow-cyan-sm:     0 0 6px  rgba(0, 229, 255, 0.55);
+    --glow-cyan-md:     0 0 14px rgba(0, 229, 255, 0.65),
+                        0 0 28px rgba(0, 229, 255, 0.30);
+    --glow-cyan-lg:     0 0 24px rgba(0, 229, 255, 0.75),
+                        0 0 60px rgba(0, 229, 255, 0.35);
+
+    --glow-rune-md:     0 0 14px rgba(168, 85, 247, 0.65),
+                        0 0 28px rgba(168, 85, 247, 0.30);
+    --glow-gold-md:     0 0 14px rgba(212, 175, 55, 0.65),
+                        0 0 28px rgba(212, 175, 55, 0.30);
+    --glow-blood-md:    0 0 14px rgba(239, 68, 68, 0.65),
+                        0 0 28px rgba(239, 68, 68, 0.30);
+
+    /* Text-shadow glows (for headings, never for body copy) */
+    --txt-glow-cyan:    0 0 6px rgba(0, 229, 255, 0.85),
+                        0 0 12px rgba(0, 229, 255, 0.45);
+    --txt-glow-gold:    0 0 6px rgba(212, 175, 55, 0.85),
+                        0 0 12px rgba(212, 175, 55, 0.45);
+
+    /* ── TIMING / EASING ─────────────────────────────────────────────────── */
+    --t-fast:           150ms;
+    --t-med:            300ms;
+    --t-slow:           600ms;
+    --t-drift:          8s;
+    --ease-out:         cubic-bezier(0.16, 1, 0.3, 1);
+    --ease-io:          cubic-bezier(0.65, 0, 0.35, 1);
+
+    /* ── RADII & SPACING ─────────────────────────────────────────────────── */
+    --r-sm:             4px;
+    --r-md:             8px;
+    --r-lg:             14px;
+    --r-xl:             22px;
+
+    /* ── Z-INDEX LAYERS ──────────────────────────────────────────────────── */
+    /* Keep z-indexes centralized to prevent layering wars */
+    --z-base:           1;
+    --z-dropdown:       100;
+    --z-sticky:         500;
+    --z-overlay:        900;
+    --z-modal:          1000;
+    --z-toast:          1100;
+
+    /* ── FONT STACKS ─────────────────────────────────────────────────────── */
+    --f-display:        'Cinzel Decorative', 'Cinzel', serif;      /* royal hero  */
+    --f-heading:        'Cinzel', 'Orbitron', serif;                /* section     */
+    --f-scifi:          'Orbitron', 'Oxanium', sans-serif;         /* futuristic  */
+    --f-tech:           'Oxanium', 'Michroma', sans-serif;         /* UI accents  */
+    --f-rune:           'MedievalSharp', 'Uncial Antiqua', serif;  /* runic       */
+    --f-body:           'Inter', 'IBM Plex Sans', system-ui, sans-serif;
+    --f-mono:           'JetBrains Mono', 'Fira Code', 'Share Tech Mono', monospace;
+}
+
+
+/* ============================================================================
+ * 02. FONT IMPORTS (@font-face)
+ * ----------------------------------------------------------------------------
+ * All fonts are self-hosted on vendors.mycitadel.lol — NO calls to Google.
+ * Only declaring the families we actually use keeps payload small.
+ * Add more here if new fonts enter the design.
+ * ========================================================================== */
+
+/* ── Cinzel Decorative — royal viking hero headings ── */
+@font-face {
+    font-family: 'Cinzel Decorative';
+    src: url('../GoogleFonts/Cinzel_Decorative/CinzelDecorative-Bold.woff2') format('woff2');
+    font-weight: 700;
+    font-display: swap;
+}
+@font-face {
+    font-family: 'Cinzel Decorative';
+    src: url('../GoogleFonts/Cinzel_Decorative/CinzelDecorative-Regular.woff2') format('woff2');
+    font-weight: 400;
+    font-display: swap;
+}
+
+/* ── Cinzel — elegant headings ── */
+@font-face {
+    font-family: 'Cinzel';
+    src: url('../GoogleFonts/Cinzel/Cinzel-VariableFont_wght.woff2') format('woff2-variations');
+    font-weight: 400 900;
+    font-display: swap;
+}
+
+/* ── Orbitron — sci-fi UI, buttons, labels ── */
+@font-face {
+    font-family: 'Orbitron';
+    src: url('../GoogleFonts/Orbitron/Orbitron-VariableFont_wght.woff2') format('woff2-variations');
+    font-weight: 400 900;
+    font-display: swap;
+}
+
+/* ── Oxanium — tech accents, subtitles ── */
+@font-face {
+    font-family: 'Oxanium';
+    src: url('../GoogleFonts/Oxanium/Oxanium-VariableFont_wght.woff2') format('woff2-variations');
+    font-weight: 200 800;
+    font-display: swap;
+}
+
+/* ── JetBrains Mono — code, tokens, hashes ── */
+@font-face {
+    font-family: 'JetBrains Mono';
+    src: url('../GoogleFonts/JetBrains_Mono/JetBrainsMono-VariableFont_wght.woff2') format('woff2-variations');
+    font-weight: 100 800;
+    font-display: swap;
+}
+
+/* ── MedievalSharp — runic, decorative ── */
+@font-face {
+    font-family: 'MedievalSharp';
+    src: url('../GoogleFonts/MedievalSharp/MedievalSharp-Regular.woff2') format('woff2');
+    font-weight: 400;
+    font-display: swap;
+}
+
+/* ── Inter — body text (readable, neutral) ── */
+@font-face {
+    font-family: 'Inter';
+    src: url('../GoogleFonts/Inter/Inter-VariableFont_opsz,wght.woff2') format('woff2-variations');
+    font-weight: 100 900;
+    font-display: swap;
+}
+
+
+/* ============================================================================
+ * 03. GLOBAL RESET & BASE
+ * ========================================================================== */
+
+*, *::before, *::after {
+    box-sizing: border-box;
+}
+
+html {
+    scroll-behavior: smooth;
+    -webkit-text-size-adjust: 100%;
+}
+
+body {
+    margin: 0;
+    min-height: 100vh;
+    font-family: var(--f-body);
+    font-size: 1rem;
+    line-height: 1.6;
+    color: var(--c-text);
+    background-color: var(--c-void);
+
+    /* Deep-space layered background: radial nebula + subtle grid */
+    background-image:
+        radial-gradient(ellipse at 20% 0%,  rgba(0, 229, 255, 0.08) 0%, transparent 45%),
+        radial-gradient(ellipse at 80% 100%, rgba(168, 85, 247, 0.08) 0%, transparent 45%),
+        linear-gradient(rgba(0, 229, 255, 0.025) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(0, 229, 255, 0.025) 1px, transparent 1px);
+    background-size: 100% 100%, 100% 100%, 44px 44px, 44px 44px;
+    background-attachment: fixed;
+
+    /* Prevent layout shift when a modal opens */
+    overflow-x: hidden;
+}
+
+
+/* ============================================================================
+ * 04. TYPOGRAPHY
+ * ----------------------------------------------------------------------------
+ * Headings use royal/sci-fi fonts. Body uses Inter for readability.
+ * ========================================================================== */
+
+h1, h2, h3, h4, h5, h6 {
+    margin: 0 0 0.6em;
+    font-family: var(--f-heading);
+    font-weight: 700;
+    line-height: 1.2;
+    letter-spacing: 0.04em;
+    color: var(--c-text);
+}
+
+/* H1 — the hero title. Royal, glowing, dramatic. */
+h1 {
+    font-family: var(--f-display);
+    font-size: clamp(2rem, 5vw + 1rem, 3.75rem);
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: var(--c-cyan-bright);
+    text-shadow: var(--txt-glow-cyan);
+}
+
+/* H2 — section headings. Royal gold accent. */
+h2 {
+    font-size: clamp(1.5rem, 2.5vw + 0.5rem, 2.25rem);
+    color: var(--c-gold-bright);
+    border-bottom: 1px solid rgba(212, 175, 55, 0.25);
+    padding-bottom: 0.35em;
+}
+
+/* H3 — sub-sections. Sci-fi cyan. */
+h3 {
+    font-family: var(--f-scifi);
+    font-size: clamp(1.15rem, 1.5vw + 0.5rem, 1.5rem);
+    color: var(--c-cyan);
+}
+
+/* H4–H6 — tech labels */
+h4, h5, h6 {
+    font-family: var(--f-tech);
+    text-transform: uppercase;
+    letter-spacing: 0.12em;
+    color: var(--c-text-dim);
+}
+
+/* Paragraphs */
+p {
+    margin: 0 0 1em;
+    color: var(--c-text);
+}
+
+/* Links — neon cyan with animated underline on hover */
+a {
+    color: var(--c-cyan);
+    text-decoration: none;
+    position: relative;
+    transition: color var(--t-fast) var(--ease-out),
+                text-shadow var(--t-fast) var(--ease-out);
+}
+a:hover {
+    color: var(--c-cyan-bright);
+    text-shadow: var(--txt-glow-cyan);
+}
+
+/* Inline code / monospace */
+code, kbd, pre, samp {
+    font-family: var(--f-mono);
+    font-size: 0.92em;
+}
+code {
+    padding: 0.15em 0.4em;
+    background: rgba(0, 229, 255, 0.08);
+    border: 1px solid rgba(0, 229, 255, 0.22);
+    border-radius: var(--r-sm);
+    color: var(--c-cyan-bright);
+}
+pre {
+    padding: 1em 1.25em;
+    background: var(--c-abyss);
+    border-left: 3px solid var(--c-cyan);
+    border-radius: var(--r-md);
+    overflow-x: auto;
+    color: var(--c-text);
+}
+
+/* Runic inline text — for decorative labels */
+.rune {
+    font-family: var(--f-rune);
+    color: var(--c-gold);
+    letter-spacing: 0.15em;
+    text-shadow: var(--txt-glow-gold);
+}
+
+
+/* ============================================================================
+ * 05. ANIMATIONS (KEYFRAMES)
+ * ----------------------------------------------------------------------------
+ * All @keyframes live here. Reused via utility classes below.
+ * ========================================================================== */
+
+/* ── Pulse glow — subtle breathing for glowing elements ── */
+@keyframes pulse-glow {
+    0%, 100% { box-shadow: var(--glow-cyan-md); }
+    50%      { box-shadow: var(--glow-cyan-lg); }
+}
+
+/* ── Text flicker — CRT / terminal vibe (use sparingly) ── */
+@keyframes text-flicker {
+    0%, 19%, 21%, 23%, 25%, 54%, 56%, 100% { opacity: 1; }
+    20%, 22%, 24%, 55%                       { opacity: 0.35; }
+}
+
+/* ── Scan line — sweeping horizontal bar over hero elements ── */
+@keyframes scan-line {
+    0%   { transform: translateY(-100%); opacity: 0; }
+    10%  { opacity: 1; }
+    90%  { opacity: 1; }
+    100% { transform: translateY(100vh); opacity: 0; }
+}
+
+/* ── Float — gentle vertical bob for images / cards ── */
+@keyframes float-y {
+    0%, 100% { transform: translateY(0); }
+    50%      { transform: translateY(-12px); }
+}
+
+/* ── Drift — slow lateral drift for background decorations ── */
+@keyframes drift-x {
+    0%   { transform: translateX(0)   rotate(0deg); }
+    50%  { transform: translateX(24px) rotate(4deg); }
+    100% { transform: translateX(0)   rotate(0deg); }
+}
+
+/* ── Rune spin — slow rotation for circular rune medallions ── */
+@keyframes rune-spin {
+    from { transform: rotate(0deg); }
+    to   { transform: rotate(360deg); }
+}
+
+/* ── Border march — animated conic gradient ring around cards ── */
+@keyframes border-march {
+    from { --angle: 0deg; }
+    to   { --angle: 360deg; }
+}
+
+/* ── Data stream — vertical cascading lines (matrix vibe) ── */
+@keyframes data-stream {
+    0%   { background-position: 0 0; }
+    100% { background-position: 0 400px; }
+}
+
+/* ── Glitch — RGB split effect on hover for titles ── */
+@keyframes glitch {
+    0%, 100% { text-shadow: var(--txt-glow-cyan); }
+    25% {
+        text-shadow: -2px 0 var(--c-blood),
+                      2px 0 var(--c-cyan-bright);
+    }
+    50% {
+        text-shadow:  2px 0 var(--c-rune),
+                     -2px 0 var(--c-cyan);
+    }
+    75% {
+        text-shadow: -1px 0 var(--c-success),
+                      1px 0 var(--c-gold);
+    }
+}
+
+/* ── Shimmer — light sweep across buttons / badges ── */
+@keyframes shimmer {
+    0%   { background-position: -200% 0; }
+    100% { background-position:  200% 0; }
+}
+
+
+/* ============================================================================
+ * 06. UTILITY — ANIMATION CLASSES
+ * ----------------------------------------------------------------------------
+ * Attach these to any element to apply the corresponding keyframe.
+ * ========================================================================== */
+
+.anim-pulse      { animation: pulse-glow   2.4s var(--ease-io) infinite; }
+.anim-flicker    { animation: text-flicker 3s   steps(1) infinite; }
+.anim-float      { animation: float-y      6s   var(--ease-io) infinite; }
+.anim-drift      { animation: drift-x      12s  var(--ease-io) infinite; }
+.anim-spin-slow  { animation: rune-spin    24s  linear infinite; }
+.anim-glitch     { animation: glitch       2s   steps(2) infinite; }
+.anim-shimmer {
+    background-image: linear-gradient(
+        90deg,
+        transparent 0%,
+        rgba(255, 255, 255, 0.18) 50%,
+        transparent 100%
+    );
+    background-size: 200% 100%;
+    animation: shimmer 2.8s linear infinite;
+}
+
+
+/* ============================================================================
+ * 07. UTILITY — GLOW & TEXT EFFECTS
+ * ========================================================================== */
+
+.glow-cyan   { box-shadow: var(--glow-cyan-md); }
+.glow-rune   { box-shadow: var(--glow-rune-md); }
+.glow-gold   { box-shadow: var(--glow-gold-md); }
+.glow-blood  { box-shadow: var(--glow-blood-md); }
+
+/* Text-only glow (no box shadow) */
+.text-glow-cyan { color: var(--c-cyan-bright); text-shadow: var(--txt-glow-cyan); }
+.text-glow-gold { color: var(--c-gold-bright); text-shadow: var(--txt-glow-gold); }
+
+/* Uppercase tech label */
+.label-tech {
+    font-family: var(--f-tech);
+    font-size: 0.75rem;
+    font-weight: 600;
+    letter-spacing: 0.18em;
+    text-transform: uppercase;
+    color: var(--c-text-dim);
+}
+
+
+/* ============================================================================
+ * 08. UTILITY — BORDERS & FRAMES
+ * ----------------------------------------------------------------------------
+ * Glowing framed borders. The .border-march class creates an animated
+ * rotating conic-gradient ring — a signature "arcane tech" effect.
+ * ========================================================================== */
+
+.border-cyan {
+    border: 1px solid rgba(0, 229, 255, 0.45);
+    box-shadow: var(--glow-cyan-sm);
+}
+.border-rune {
+    border: 1px solid rgba(168, 85, 247, 0.45);
+    box-shadow: 0 0 6px rgba(168, 85, 247, 0.4);
+}
+.border-gold {
+    border: 1px solid rgba(212, 175, 55, 0.55);
+    box-shadow: 0 0 6px rgba(212, 175, 55, 0.4);
+}
+
+/* ── Animated marching border — wraps a card in a rotating gradient ── */
+/* Usage: <div class="border-march"><div class="border-march-inner">...</div></div> */
+@property --angle {
+    syntax: '<angle>';
+    initial-value: 0deg;
+    inherits: false;
+}
+.border-march {
+    position: relative;
+    padding: 1px;
+    border-radius: var(--r-lg);
+    background: conic-gradient(
+        from var(--angle),
+        transparent 0deg,
+        var(--c-cyan) 90deg,
+        var(--c-rune) 180deg,
+        var(--c-gold) 270deg,
+        transparent 360deg
+    );
+    animation: border-march 6s linear infinite;
+}
+.border-march-inner {
+    background: var(--c-slab);
+    border-radius: calc(var(--r-lg) - 1px);
+    padding: 1.5rem;
+}
+
+
+/* ============================================================================
+ * 09. UTILITY — FLOATING & MOTION
+ * ========================================================================== */
+
+.float-slow  { animation: float-y 8s var(--ease-io) infinite; }
+.float-med   { animation: float-y 5s var(--ease-io) infinite; }
+.float-fast  { animation: float-y 3s var(--ease-io) infinite; }
+
+/* Decorative background runes drifting behind hero */
+.bg-rune {
+    position: fixed;
+    font-family: var(--f-rune);
+    font-size: 12rem;
+    color: rgba(168, 85, 247, 0.045);
+    pointer-events: none;
+    user-select: none;
+    z-index: var(--z-base);
+}
+
+
+/* ============================================================================
+ * 10. COMPONENT — HEADERS / HERO
+ * ----------------------------------------------------------------------------
+ * The hero banner. Includes an optional scan-line overlay and glowing title.
+ * Usage:
+ *   <header class="citadel-hero">
+ *     <h1 class="citadel-title">MyCitadel</h1>
+ *     <p class="citadel-subtitle">Your Digital Fortress</p>
+ *   </header>
+ * ========================================================================== */
+
+.citadel-hero {
+    position: relative;
+    padding: 6rem 2rem 4rem;
+    text-align: center;
+    overflow: hidden;
+    border-bottom: 1px solid rgba(0, 229, 255, 0.22);
+    background:
+        radial-gradient(ellipse at 50% 0%, rgba(0, 229, 255, 0.10) 0%, transparent 60%),
+        radial-gradient(ellipse at 50% 120%, rgba(168, 85, 247, 0.10) 0%, transparent 60%),
+        var(--c-void);
+}
+
+/* Sweeping scan line across the hero (CRT / hologram vibe) */
+.citadel-hero::after {
+    content: '';
+    position: absolute;
+    left: 0; right: 0;
+    height: 2px;
+    background: linear-gradient(90deg, transparent, var(--c-cyan), transparent);
+    opacity: 0.55;
+    animation: scan-line 7s linear infinite;
+    pointer-events: none;
+}
+
+.citadel-title {
+    margin: 0;
+    font-family: var(--f-display);
+    font-size: clamp(2.75rem, 7vw, 5.5rem);
+    letter-spacing: 0.16em;
+    text-transform: uppercase;
+    color: var(--c-cyan-bright);
+    text-shadow:
+        0 0 8px  rgba(0, 229, 255, 0.9),
+        0 0 24px rgba(0, 229, 255, 0.55),
+        0 0 60px rgba(0, 229, 255, 0.25);
+}
+
+/* Hover on hero title triggers a glitch */
+.citadel-title:hover {
+    animation: glitch 900ms steps(2) infinite;
+}
+
+.citadel-subtitle {
+    margin: 0.75rem 0 0;
+    font-family: var(--f-tech);
+    font-size: 1rem;
+    letter-spacing: 0.35em;
+    text-transform: uppercase;
+    color: var(--c-gold);
+    text-shadow: var(--txt-glow-gold);
+}
+
+
+/* ============================================================================
+ * 11. COMPONENT — CARDS (Citadel Panels)
+ * ----------------------------------------------------------------------------
+ * Every content block sits in a "panel" — dark slab, thin cyan border,
+ * soft inner glow, animated on hover.
+ * Usage: <div class="panel"> ... </div>
+ * ========================================================================== */
+
+.panel {
+    position: relative;
+    padding: 1.75rem;
+    background:
+        linear-gradient(180deg, rgba(255, 255, 255, 0.02), transparent),
+        var(--c-slab);
+    border: 1px solid rgba(0, 229, 255, 0.22);
+    border-radius: var(--r-lg);
+    box-shadow:
+        0 8px 30px rgba(0, 0, 0, 0.55),
+        inset 0 0 30px rgba(0, 229, 255, 0.03);
+    transition:
+        border-color var(--t-med) var(--ease-out),
+        box-shadow   var(--t-med) var(--ease-out),
+        transform    var(--t-med) var(--ease-out);
+}
+
+/* Corner accents — decorative L-brackets at the four corners */
+.panel::before,
+.panel::after {
+    content: '';
+    position: absolute;
+    width: 18px;
+    height: 18px;
+    border: 2px solid var(--c-cyan);
+    opacity: 0.7;
+    pointer-events: none;
+}
+.panel::before {
+    top: -1px; left: -1px;
+    border-right: none;
+    border-bottom: none;
+}
+.panel::after {
+    bottom: -1px; right: -1px;
+    border-left: none;
+    border-top: none;
+}
+
+.panel:hover {
+    border-color: rgba(0, 229, 255, 0.55);
+    box-shadow:
+        0 12px 40px rgba(0, 0, 0, 0.65),
+        var(--glow-cyan-md);
+    transform: translateY(-2px);
+}
+
+
+/* ============================================================================
+ * 12. COMPONENT — BUTTONS
+ * ----------------------------------------------------------------------------
+ * Primary (cyan), Rune (violet), Gold (premium), Danger (blood).
+ * All buttons share a base class `.btn-cyber`.
+ * ========================================================================== */
+
+.btn-cyber {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.5rem;
+    padding: 0.75rem 1.75rem;
+    font-family: var(--f-tech);
+    font-size: 0.9rem;
+    font-weight: 700;
+    letter-spacing: 0.16em;
+    text-transform: uppercase;
+    color: var(--c-cyan-bright);
+    background: rgba(0, 229, 255, 0.06);
+    border: 1px solid var(--c-cyan);
+    border-radius: var(--r-sm);
+    cursor: pointer;
+    position: relative;
+    overflow: hidden;
+    text-decoration: none;
+    transition:
+        background var(--t-fast) var(--ease-out),
+        color      var(--t-fast) var(--ease-out),
+        box-shadow var(--t-fast) var(--ease-out),
+        transform  var(--t-fast) var(--ease-out);
+}
+
+/* Light-sweep shimmer on hover */
+.btn-cyber::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(
+        120deg,
+        transparent 30%,
+        rgba(255, 255, 255, 0.28) 50%,
+        transparent 70%
+    );
+    transform: translateX(-120%);
+    transition: transform 600ms var(--ease-out);
+}
+.btn-cyber:hover::before { transform: translateX(120%); }
+
+.btn-cyber:hover {
+    background: rgba(0, 229, 255, 0.18);
+    color: #ffffff;
+    box-shadow: var(--glow-cyan-md);
+    transform: translateY(-1px);
+}
+.btn-cyber:active { transform: translateY(0); }
+
+/* Variants — just override color token */
+.btn-rune {
+    color: var(--c-rune-bright);
+    background: rgba(168, 85, 247, 0.06);
+    border-color: var(--c-rune);
+}
+.btn-rune:hover {
+    background: rgba(168, 85, 247, 0.20);
+    box-shadow: var(--glow-rune-md);
+}
+
+.btn-gold {
+    color: var(--c-gold-bright);
+    background: rgba(212, 175, 55, 0.06);
+    border-color: var(--c-gold);
+}
+.btn-gold:hover {
+    background: rgba(212, 175, 55, 0.20);
+    box-shadow: var(--glow-gold-md);
+}
+
+.btn-danger {
+    color: #ffd0d0;
+    background: rgba(239, 68, 68, 0.06);
+    border-color: var(--c-blood);
+}
+.btn-danger:hover {
+    background: rgba(239, 68, 68, 0.20);
+    box-shadow: var(--glow-blood-md);
+}
+
+/* Disabled state */
+.btn-cyber:disabled,
+.btn-cyber[aria-disabled="true"] {
+    opacity: 0.4;
+    cursor: not-allowed;
+    box-shadow: none;
+    transform: none;
+}
+
+
+/* ============================================================================
+ * 13. COMPONENT — FORMS & INPUTS
+ * ----------------------------------------------------------------------------
+ * Dark, glowing input fields with a focus "electric" state.
+ * ========================================================================== */
+
+.form-label {
+    display: block;
+    margin-bottom: 0.4rem;
+    font-family: var(--f-tech);
+    font-size: 0.78rem;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    color: var(--c-text-dim);
+}
+
+.form-input,
+.form-textarea,
+.form-select {
+    width: 100%;
+    padding: 0.75rem 1rem;
+    font-family: var(--f-mono);
+    font-size: 0.95rem;
+    color: var(--c-text);
+    background: var(--c-abyss);
+    border: 1px solid rgba(0, 229, 255, 0.22);
+    border-radius: var(--r-sm);
+    outline: none;
+    transition:
+        border-color var(--t-fast) var(--ease-out),
+        box-shadow   var(--t-fast) var(--ease-out),
+        background   var(--t-fast) var(--ease-out);
+}
+
+.form-input::placeholder { color: var(--c-text-faint); }
+
+.form-input:focus,
+.form-textarea:focus,
+.form-select:focus {
+    border-color: var(--c-cyan);
+    background: rgba(0, 229, 255, 0.03);
+    box-shadow:
+        0 0 0 3px rgba(0, 229, 255, 0.12),
+        var(--glow-cyan-sm);
+}
+
+.form-textarea { min-height: 120px; resize: vertical; }
+
+
+/* ============================================================================
+ * 14. COMPONENT — BADGES & REPUTATION
+ * ----------------------------------------------------------------------------
+ * Small pill-shaped indicators for gamification, tiers, and reputation.
+ * ========================================================================== */
+
+.badge-cyber {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.35rem;
+    padding: 0.28rem 0.7rem;
+    font-family: var(--f-tech);
+    font-size: 0.72rem;
+    font-weight: 700;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    border-radius: 999px;
+    border: 1px solid currentColor;
+    background: rgba(255, 255, 255, 0.03);
+    color: var(--c-cyan);
+}
+
+.badge-rune  { color: var(--c-rune); }
+.badge-gold  { color: var(--c-gold); }
+.badge-success { color: var(--c-success); }
+.badge-danger  { color: var(--c-blood); }
+
+/* Reputation counter — large glowing numeric readout */
+.rep-counter {
+    font-family: var(--f-mono);
+    font-size: 2.25rem;
+    font-weight: 700;
+    color: var(--c-gold-bright);
+    text-shadow: var(--txt-glow-gold);
+    letter-spacing: 0.05em;
+}
+
+
+/* ============================================================================
+ * 15. COMPONENT — RUNE DECORATIONS
+ * ----------------------------------------------------------------------------
+ * Unicode Elder Futhark runes rendered as pure-text ornaments.
+ * Use sparingly — a few per page for maximum impact.
+ * Example: <span class="rune-divider">ᚠ ᚢ ᚦ ᚨ ᚱ ᚲ</span>
+ * ========================================================================== */
+
+.rune-divider {
+    display: block;
+    margin: 2rem auto;
+    text-align: center;
+    font-family: var(--f-rune);
+    font-size: 1.35rem;
+    letter-spacing: 0.5em;
+    color: var(--c-gold);
+    opacity: 0.75;
+    text-shadow: var(--txt-glow-gold);
+}
+
+/* Circular rune medallion — slowly rotating ornament */
+.rune-medallion {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 96px;
+    height: 96px;
+    font-family: var(--f-rune);
+    font-size: 2.5rem;
+    color: var(--c-gold-bright);
+    border: 2px solid var(--c-gold);
+    border-radius: 50%;
+    box-shadow:
+        inset 0 0 20px rgba(212, 175, 55, 0.25),
+        var(--glow-gold-md);
+    background: radial-gradient(circle, rgba(212, 175, 55, 0.06), transparent 70%);
+    animation: rune-spin 30s linear infinite;
+}
+
+
+/* ============================================================================
+ * 16. COMPONENT — NAVBAR / SIDEBAR
+ * ========================================================================== */
+
+.citadel-nav {
+    position: sticky;
+    top: 0;
+    z-index: var(--z-sticky);
+    display: flex;
+    align-items: center;
+    gap: 1.5rem;
+    padding: 0.85rem 1.75rem;
+    background: rgba(5, 7, 10, 0.85);
+    backdrop-filter: blur(14px);
+    -webkit-backdrop-filter: blur(14px);
+    border-bottom: 1px solid rgba(0, 229, 255, 0.22);
+}
+
+.citadel-nav a {
+    font-family: var(--f-tech);
+    font-size: 0.85rem;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    color: var(--c-text-dim);
+}
+.citadel-nav a:hover,
+.citadel-nav a.active {
+    color: var(--c-cyan-bright);
+    text-shadow: var(--txt-glow-cyan);
+}
+
+
+/* ============================================================================
+ * 17. COMPONENT — DASHBOARD LAYOUT
+ * ----------------------------------------------------------------------------
+ * A simple 12-column grid for dashboard panels.
+ * Usage: <div class="dash-grid"> <div class="panel dash-col-6">...</div> </div>
+ * ========================================================================== */
+
+.dash-grid {
+    display: grid;
+    grid-template-columns: repeat(12, 1fr);
+    gap: 1.5rem;
+    padding: 2rem;
+}
+
+/* Span helpers — Bootstrap-compatible-ish naming */
+.dash-col-3  { grid-column: span 3;  }
+.dash-col-4  { grid-column: span 4;  }
+.dash-col-6  { grid-column: span 6;  }
+.dash-col-8  { grid-column: span 8;  }
+.dash-col-12 { grid-column: span 12; }
+
+/* Collapse to single column on small screens */
+@media (max-width: 900px) {
+    .dash-col-3, .dash-col-4,
+    .dash-col-6, .dash-col-8 { grid-column: span 12; }
+}
+
+
+/* ============================================================================
+ * 18. SCROLLBAR & SELECTION
+ * ----------------------------------------------------------------------------
+ * Custom scrollbar + text selection colors to match the theme.
+ * ========================================================================== */
+
+/* WebKit browsers (Chrome, Edge, Safari) */
+::-webkit-scrollbar         { width: 10px; height: 10px; }
+::-webkit-scrollbar-track   { background: var(--c-void); }
+::-webkit-scrollbar-thumb {
+    background: linear-gradient(180deg, var(--c-cyan-dim), var(--c-rune-dim));
+    border-radius: 10px;
+    border: 2px solid var(--c-void);
+}
+::-webkit-scrollbar-thumb:hover {
+    background: linear-gradient(180deg, var(--c-cyan), var(--c-rune));
+}
+
+/* Firefox */
+* {
+    scrollbar-width: thin;
+    scrollbar-color: var(--c-cyan-dim) var(--c-void);
+}
+
+/* Text selection */
+::selection {
+    background: rgba(0, 229, 255, 0.35);
+    color: #ffffff;
+    text-shadow: 0 0 6px rgba(0, 229, 255, 0.8);
+}
+
+
+/* ============================================================================
+ * 19. ACCESSIBILITY — PREFERS-REDUCED-MOTION
+ * ----------------------------------------------------------------------------
+ * Users who set "reduce motion" in their OS get instant, static rendering.
+ * This is a WCAG 2.1 requirement — DO NOT REMOVE.
+ * ========================================================================== */
+
+@media (prefers-reduced-motion: reduce) {
+    *,
+    *::before,
+    *::after {
+        animation-duration: 0.001ms !important;
+        animation-iteration-count: 1 !important;
+        transition-duration: 0.001ms !important;
+        scroll-behavior: auto !important;
+    }
+    .border-march::before,
+    .citadel-hero::after { display: none; }
+}
+
+
+/* ============================================================================
+ * ▓▓▓ END OF CITADEL.CSS ▓▓▓
+ * ----------------------------------------------------------------------------
+ * Remember: chaos is expensive. Restraint is a weapon.
+ * One hero glow is dramatic. Ten is a nightclub.
+ * — Bearded Viking
+ * ========================================================================== */

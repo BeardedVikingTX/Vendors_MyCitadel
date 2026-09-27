@@ -1,0 +1,12 @@
+[26-Sep-2026 18:17:35 UTC] PHP Fatal error:  Uncaught Error: Class "Stripe\ApiResource" not found in /home/beardedviking/vendors.mycitadel.lol/stripe-php-21.1.0-alpha.2/lib/DelegatedCheckout/Order.php:22
+Stack trace:
+#0 {main}
+  thrown in /home/beardedviking/vendors.mycitadel.lol/stripe-php-21.1.0-alpha.2/lib/DelegatedCheckout/Order.php on line 22
+[26-Sep-2026 18:17:35 UTC] PHP Fatal error:  Uncaught Error: Class "Stripe\ApiResource" not found in /home/beardedviking/vendors.mycitadel.lol/stripe-php-21.1.0-alpha.2/lib/DelegatedCheckout/OrderEvent.php:21
+Stack trace:
+#0 {main}
+  thrown in /home/beardedviking/vendors.mycitadel.lol/stripe-php-21.1.0-alpha.2/lib/DelegatedCheckout/OrderEvent.php on line 21
+[26-Sep-2026 18:17:36 UTC] PHP Fatal error:  Uncaught Error: Class "Stripe\ApiResource" not found in /home/beardedviking/vendors.mycitadel.lol/stripe-php-21.1.0-alpha.2/lib/DelegatedCheckout/RequestedSession.php:38
+Stack trace:
+#0 {main}
+  thrown in /home/beardedviking/vendors.mycitadel.lol/stripe-php-21.1.0-alpha.2/lib/DelegatedCheckout/RequestedSession.php on line 38

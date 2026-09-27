@@ -1,0 +1,4 @@
+[26-Sep-2026 18:21:37 UTC] PHP Fatal error:  Uncaught Error: Class "Stripe\ApiResource" not found in /home/beardedviking/vendors.mycitadel.lol/stripe-php-21.1.0-alpha.2/lib/TestHelpers/TestClock.php:22
+Stack trace:
+#0 {main}
+  thrown in /home/beardedviking/vendors.mycitadel.lol/stripe-php-21.1.0-alpha.2/lib/TestHelpers/TestClock.php on line 22
