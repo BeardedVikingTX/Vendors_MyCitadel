@@ -1,581 +1,355 @@
 /* ============================================================================
- * ███ CITADEL.CSS ███
- * MyCitadel — Core Visual System
+ * ███ CITADEL.CSS — PART 2: LAYOUT & COMPONENTS ███
  * ----------------------------------------------------------------------------
- * Subdomain : https://vendors.mycitadel.lol/css/citadel.css
- * Author    : Bearded Viking (https://beardedviking.org)
- * Project   : MyCitadel (https://mycitadel.lol)
- * License   : MIT
- *
- * THEME: Sci-Fi / Cyber-Viking / Heavy Hacking / Runic Futurism
- *
- * This file defines the entire visual identity of MyCitadel:
- *   • Color system (cyber-cyan, rune-violet, blood-red, gold)
- *   • Typography (Cinzel, Orbitron, JetBrains Mono, MedievalSharp)
- *   • Animated headers (scan lines, glow pulses, rune rotation)
- *   • Floating elements (bobbing, drifting, orbit paths)
- *   • Colored borders (glow frames, animated conic-gradient rings)
- *   • Rune decorations (Unicode runes ᚠᚢᚦᚨᚱᚲ and glyphs)
- *   • Form, button, card, and badge components
- *   • Utility classes for quick composition
- *
- * LOAD ORDER (critical — do NOT reorder):
- *   1. Bootstrap (vendors.mycitadel.lol/Bootstrap/...)
- *   2. FontAwesome (vendors.mycitadel.lol/FontAwesome/...)
- *   3. Fonts (@font-face declarations below)
- *   4. THIS FILE
+ * Appended to the base theme. Adds:
+ *   • Base page body for mycitadel.lol
+ *   • Top navigation bar with auth states
+ *   • Home page hero, pillars, premium teaser
+ *   • Site footer
+ *   • Responsive behavior
  * ========================================================================== */
 
 
-/* ============================================================================
- * ▓▓▓ TABLE OF CONTENTS ▓▓▓
- * ----------------------------------------------------------------------------
- *   01. CSS CUSTOM PROPERTIES (Design Tokens)
- *   02. FONT IMPORTS (@font-face)
- *   03. GLOBAL RESET & BASE
- *   04. TYPOGRAPHY
- *   05. ANIMATIONS (KEYFRAMES)
- *   06. UTILITY — ANIMATION CLASSES
- *   07. UTILITY — GLOW & TEXT EFFECTS
- *   08. UTILITY — BORDERS & FRAMES
- *   09. UTILITY — FLOATING & MOTION
- *   10. COMPONENT — HEADERS / HERO
- *   11. COMPONENT — CARDS (Citadel Panels)
- *   12. COMPONENT — BUTTONS
- *   13. COMPONENT — FORMS & INPUTS
- *   14. COMPONENT — BADGES & REPUTATION
- *   15. COMPONENT — RUNE DECORATIONS
- *   16. COMPONENT — NAVBAR / SIDEBAR
- *   17. COMPONENT — DASHBOARD LAYOUT
- *   18. SCROLLBAR & SELECTION
- *   19. ACCESSIBILITY (prefers-reduced-motion)
+/* ══════════════════════════════════════════════════════════════════════════
+ * BASE PAGE LAYOUT
  * ========================================================================== */
 
-
-/* ============================================================================
- * 01. CSS CUSTOM PROPERTIES — DESIGN TOKENS
- * ----------------------------------------------------------------------------
- * Every color, glow, shadow, and timing value lives here.
- * Change a token once → it updates everywhere. Never hardcode these values.
- * ========================================================================== */
-
-:root {
-
-    /* ── CORE PALETTE ────────────────────────────────────────────────────── */
-
-    /* Deep space backgrounds — the void behind everything */
-    --c-void:           #05070a;   /* absolute darkest, page body              */
-    --c-abyss:          #0a0e14;   /* primary dark surface                     */
-    --c-slab:           #10151d;   /* raised surface (cards, panels)           */
-    --c-slab-hi:        #171f2b;   /* hover / active surface                   */
-
-    /* Primary accent — cyber-cyan (the "energy" of the Citadel) */
-    --c-cyan:           #00e5ff;
-    --c-cyan-dim:       #00b8cc;
-    --c-cyan-bright:    #7df9ff;
-
-    /* Secondary accent — rune-violet (mystic, encrypted, arcane) */
-    --c-rune:           #a855f7;
-    --c-rune-dim:       #7c3aed;
-    --c-rune-bright:    #c4b5fd;
-
-    /* Viking gold — royal, valuable, premium tier */
-    --c-gold:           #d4af37;
-    --c-gold-bright:    #f5d76e;
-
-    /* Blood red — warnings, dangerous actions, logout */
-    --c-blood:          #ef4444;
-    --c-blood-dim:      #b91c1c;
-
-    /* Success — neon green (verified, secure, online) */
-    --c-success:        #39ff14;
-    --c-success-dim:    #22c55e;
-
-    /* Text colors */
-    --c-text:           #e0e6ed;   /* primary readable text                    */
-    --c-text-dim:       #94a3b8;   /* secondary, muted                        */
-    --c-text-faint:     #475569;   /* disabled, placeholders                  */
-
-    /* ── GLOW TOKENS ─────────────────────────────────────────────────────── */
-    /* Reusable box-shadow values — keep glow strength consistent site-wide */
-    --glow-cyan-sm:     0 0 6px  rgba(0, 229, 255, 0.55);
-    --glow-cyan-md:     0 0 14px rgba(0, 229, 255, 0.65),
-                        0 0 28px rgba(0, 229, 255, 0.30);
-    --glow-cyan-lg:     0 0 24px rgba(0, 229, 255, 0.75),
-                        0 0 60px rgba(0, 229, 255, 0.35);
-
-    --glow-rune-md:     0 0 14px rgba(168, 85, 247, 0.65),
-                        0 0 28px rgba(168, 85, 247, 0.30);
-    --glow-gold-md:     0 0 14px rgba(212, 175, 55, 0.65),
-                        0 0 28px rgba(212, 175, 55, 0.30);
-    --glow-blood-md:    0 0 14px rgba(239, 68, 68, 0.65),
-                        0 0 28px rgba(239, 68, 68, 0.30);
-
-    /* Text-shadow glows (for headings, never for body copy) */
-    --txt-glow-cyan:    0 0 6px rgba(0, 229, 255, 0.85),
-                        0 0 12px rgba(0, 229, 255, 0.45);
-    --txt-glow-gold:    0 0 6px rgba(212, 175, 55, 0.85),
-                        0 0 12px rgba(212, 175, 55, 0.45);
-
-    /* ── TIMING / EASING ─────────────────────────────────────────────────── */
-    --t-fast:           150ms;
-    --t-med:            300ms;
-    --t-slow:           600ms;
-    --t-drift:          8s;
-    --ease-out:         cubic-bezier(0.16, 1, 0.3, 1);
-    --ease-io:          cubic-bezier(0.65, 0, 0.35, 1);
-
-    /* ── RADII & SPACING ─────────────────────────────────────────────────── */
-    --r-sm:             4px;
-    --r-md:             8px;
-    --r-lg:             14px;
-    --r-xl:             22px;
-
-    /* ── Z-INDEX LAYERS ──────────────────────────────────────────────────── */
-    /* Keep z-indexes centralized to prevent layering wars */
-    --z-base:           1;
-    --z-dropdown:       100;
-    --z-sticky:         500;
-    --z-overlay:        900;
-    --z-modal:          1000;
-    --z-toast:          1100;
-
-    /* ── FONT STACKS ─────────────────────────────────────────────────────── */
-    --f-display:        'Cinzel Decorative', 'Cinzel', serif;      /* royal hero  */
-    --f-heading:        'Cinzel', 'Orbitron', serif;                /* section     */
-    --f-scifi:          'Orbitron', 'Oxanium', sans-serif;         /* futuristic  */
-    --f-tech:           'Oxanium', 'Michroma', sans-serif;         /* UI accents  */
-    --f-rune:           'MedievalSharp', 'Uncial Antiqua', serif;  /* runic       */
-    --f-body:           'Inter', 'IBM Plex Sans', system-ui, sans-serif;
-    --f-mono:           'JetBrains Mono', 'Fira Code', 'Share Tech Mono', monospace;
-}
-
-
-/* ============================================================================
- * 02. FONT IMPORTS (@font-face)
- * ----------------------------------------------------------------------------
- * All fonts are self-hosted on vendors.mycitadel.lol — NO calls to Google.
- * Only declaring the families we actually use keeps payload small.
- * Add more here if new fonts enter the design.
- * ========================================================================== */
-
-/* ── Cinzel Decorative — royal viking hero headings ── */
-@font-face {
-    font-family: 'Cinzel Decorative';
-    src: url('../GoogleFonts/Cinzel_Decorative/CinzelDecorative-Bold.woff2') format('woff2');
-    font-weight: 700;
-    font-display: swap;
-}
-@font-face {
-    font-family: 'Cinzel Decorative';
-    src: url('../GoogleFonts/Cinzel_Decorative/CinzelDecorative-Regular.woff2') format('woff2');
-    font-weight: 400;
-    font-display: swap;
-}
-
-/* ── Cinzel — elegant headings ── */
-@font-face {
-    font-family: 'Cinzel';
-    src: url('../GoogleFonts/Cinzel/Cinzel-VariableFont_wght.woff2') format('woff2-variations');
-    font-weight: 400 900;
-    font-display: swap;
-}
-
-/* ── Orbitron — sci-fi UI, buttons, labels ── */
-@font-face {
-    font-family: 'Orbitron';
-    src: url('../GoogleFonts/Orbitron/Orbitron-VariableFont_wght.woff2') format('woff2-variations');
-    font-weight: 400 900;
-    font-display: swap;
-}
-
-/* ── Oxanium — tech accents, subtitles ── */
-@font-face {
-    font-family: 'Oxanium';
-    src: url('../GoogleFonts/Oxanium/Oxanium-VariableFont_wght.woff2') format('woff2-variations');
-    font-weight: 200 800;
-    font-display: swap;
-}
-
-/* ── JetBrains Mono — code, tokens, hashes ── */
-@font-face {
-    font-family: 'JetBrains Mono';
-    src: url('../GoogleFonts/JetBrains_Mono/JetBrainsMono-VariableFont_wght.woff2') format('woff2-variations');
-    font-weight: 100 800;
-    font-display: swap;
-}
-
-/* ── MedievalSharp — runic, decorative ── */
-@font-face {
-    font-family: 'MedievalSharp';
-    src: url('../GoogleFonts/MedievalSharp/MedievalSharp-Regular.woff2') format('woff2');
-    font-weight: 400;
-    font-display: swap;
-}
-
-/* ── Inter — body text (readable, neutral) ── */
-@font-face {
-    font-family: 'Inter';
-    src: url('../GoogleFonts/Inter/Inter-VariableFont_opsz,wght.woff2') format('woff2-variations');
-    font-weight: 100 900;
-    font-display: swap;
-}
-
-
-/* ============================================================================
- * 03. GLOBAL RESET & BASE
- * ========================================================================== */
-
-*, *::before, *::after {
-    box-sizing: border-box;
-}
-
-html {
-    scroll-behavior: smooth;
-    -webkit-text-size-adjust: 100%;
-}
-
-body {
-    margin: 0;
+.citadel-body {
+    display: flex;
+    flex-direction: column;
     min-height: 100vh;
-    font-family: var(--f-body);
-    font-size: 1rem;
-    line-height: 1.6;
-    color: var(--c-text);
+    margin: 0;
+    padding: 0;
     background-color: var(--c-void);
-
-    /* Deep-space layered background: radial nebula + subtle grid */
     background-image:
-        radial-gradient(ellipse at 20% 0%,  rgba(0, 229, 255, 0.08) 0%, transparent 45%),
+        radial-gradient(ellipse at 20% 0%, rgba(0, 229, 255, 0.08) 0%, transparent 45%),
         radial-gradient(ellipse at 80% 100%, rgba(168, 85, 247, 0.08) 0%, transparent 45%),
         linear-gradient(rgba(0, 229, 255, 0.025) 1px, transparent 1px),
         linear-gradient(90deg, rgba(0, 229, 255, 0.025) 1px, transparent 1px);
     background-size: 100% 100%, 100% 100%, 44px 44px, 44px 44px;
     background-attachment: fixed;
-
-    /* Prevent layout shift when a modal opens */
+    color: var(--c-text);
+    font-family: var(--f-body);
+    font-size: 1rem;
+    line-height: 1.6;
     overflow-x: hidden;
 }
 
-
-/* ============================================================================
- * 04. TYPOGRAPHY
- * ----------------------------------------------------------------------------
- * Headings use royal/sci-fi fonts. Body uses Inter for readability.
- * ========================================================================== */
-
-h1, h2, h3, h4, h5, h6 {
-    margin: 0 0 0.6em;
-    font-family: var(--f-heading);
-    font-weight: 700;
-    line-height: 1.2;
-    letter-spacing: 0.04em;
-    color: var(--c-text);
+/* Universal centered container used by nav, footer, and page sections */
+.citadel-container {
+    width: 100%;
+    max-width: 1200px;
+    margin-left: auto;
+    margin-right: auto;
+    padding-left: 1.5rem;
+    padding-right: 1.5rem;
 }
 
-/* H1 — the hero title. Royal, glowing, dramatic. */
-h1 {
+
+/* ══════════════════════════════════════════════════════════════════════════
+ * TOP NAVIGATION
+ * ========================================================================== */
+
+.citadel-nav {
+    position: sticky;
+    top: 0;
+    z-index: var(--z-sticky, 500);
+    width: 100%;
+    background: rgba(5, 7, 10, 0.85);
+    backdrop-filter: blur(14px);
+    -webkit-backdrop-filter: blur(14px);
+    border-bottom: 1px solid rgba(0, 229, 255, 0.22);
+}
+
+/* Thin animated scanning line at the very top of the page */
+.citadel-nav::before {
+    content: '';
+    position: absolute;
+    top: 0; left: 0; right: 0;
+    height: 1px;
+    background: linear-gradient(90deg, transparent, var(--c-cyan), transparent);
+    opacity: 0.45;
+}
+
+.citadel-nav__inner {
+    display: flex;
+    align-items: center;
+    gap: 1.5rem;
+    width: 100%;
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 0.85rem 1.5rem;
+    min-height: 64px;
+}
+
+/* ── Brand ──────────────────────────────────────────────────────── */
+.citadel-nav__brand {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
     font-family: var(--f-display);
-    font-size: clamp(2rem, 5vw + 1rem, 3.75rem);
-    letter-spacing: 0.08em;
+    font-size: 1.15rem;
+    letter-spacing: 0.14em;
     text-transform: uppercase;
     color: var(--c-cyan-bright);
-    text-shadow: var(--txt-glow-cyan);
-}
-
-/* H2 — section headings. Royal gold accent. */
-h2 {
-    font-size: clamp(1.5rem, 2.5vw + 0.5rem, 2.25rem);
-    color: var(--c-gold-bright);
-    border-bottom: 1px solid rgba(212, 175, 55, 0.25);
-    padding-bottom: 0.35em;
-}
-
-/* H3 — sub-sections. Sci-fi cyan. */
-h3 {
-    font-family: var(--f-scifi);
-    font-size: clamp(1.15rem, 1.5vw + 0.5rem, 1.5rem);
-    color: var(--c-cyan);
-}
-
-/* H4–H6 — tech labels */
-h4, h5, h6 {
-    font-family: var(--f-tech);
-    text-transform: uppercase;
-    letter-spacing: 0.12em;
-    color: var(--c-text-dim);
-}
-
-/* Paragraphs */
-p {
-    margin: 0 0 1em;
-    color: var(--c-text);
-}
-
-/* Links — neon cyan with animated underline on hover */
-a {
-    color: var(--c-cyan);
     text-decoration: none;
-    position: relative;
-    transition: color var(--t-fast) var(--ease-out),
-                text-shadow var(--t-fast) var(--ease-out);
+    text-shadow: 0 0 8px rgba(0, 229, 255, 0.55);
+    flex-shrink: 0;
 }
-a:hover {
+.citadel-nav__brand:hover {
     color: var(--c-cyan-bright);
-    text-shadow: var(--txt-glow-cyan);
+    text-shadow: 0 0 12px rgba(0, 229, 255, 0.85);
 }
-
-/* Inline code / monospace */
-code, kbd, pre, samp {
-    font-family: var(--f-mono);
-    font-size: 0.92em;
-}
-code {
-    padding: 0.15em 0.4em;
-    background: rgba(0, 229, 255, 0.08);
-    border: 1px solid rgba(0, 229, 255, 0.22);
-    border-radius: var(--r-sm);
-    color: var(--c-cyan-bright);
-}
-pre {
-    padding: 1em 1.25em;
-    background: var(--c-abyss);
-    border-left: 3px solid var(--c-cyan);
-    border-radius: var(--r-md);
-    overflow-x: auto;
-    color: var(--c-text);
-}
-
-/* Runic inline text — for decorative labels */
-.rune {
+.citadel-nav__brand-mark {
     font-family: var(--f-rune);
+    font-size: 1.5rem;
     color: var(--c-gold);
-    letter-spacing: 0.15em;
-    text-shadow: var(--txt-glow-gold);
+    text-shadow: 0 0 8px rgba(212, 175, 55, 0.6);
+    line-height: 1;
 }
+.citadel-nav__brand-text { display: inline; }
 
-
-/* ============================================================================
- * 05. ANIMATIONS (KEYFRAMES)
- * ----------------------------------------------------------------------------
- * All @keyframes live here. Reused via utility classes below.
- * ========================================================================== */
-
-/* ── Pulse glow — subtle breathing for glowing elements ── */
-@keyframes pulse-glow {
-    0%, 100% { box-shadow: var(--glow-cyan-md); }
-    50%      { box-shadow: var(--glow-cyan-lg); }
+/* ── Primary links ──────────────────────────────────────────────── */
+.citadel-nav__links {
+    display: flex;
+    align-items: center;
+    gap: 1.75rem;
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    flex: 1 1 auto;
 }
-
-/* ── Text flicker — CRT / terminal vibe (use sparingly) ── */
-@keyframes text-flicker {
-    0%, 19%, 21%, 23%, 25%, 54%, 56%, 100% { opacity: 1; }
-    20%, 22%, 24%, 55%                       { opacity: 0.35; }
-}
-
-/* ── Scan line — sweeping horizontal bar over hero elements ── */
-@keyframes scan-line {
-    0%   { transform: translateY(-100%); opacity: 0; }
-    10%  { opacity: 1; }
-    90%  { opacity: 1; }
-    100% { transform: translateY(100vh); opacity: 0; }
-}
-
-/* ── Float — gentle vertical bob for images / cards ── */
-@keyframes float-y {
-    0%, 100% { transform: translateY(0); }
-    50%      { transform: translateY(-12px); }
-}
-
-/* ── Drift — slow lateral drift for background decorations ── */
-@keyframes drift-x {
-    0%   { transform: translateX(0)   rotate(0deg); }
-    50%  { transform: translateX(24px) rotate(4deg); }
-    100% { transform: translateX(0)   rotate(0deg); }
-}
-
-/* ── Rune spin — slow rotation for circular rune medallions ── */
-@keyframes rune-spin {
-    from { transform: rotate(0deg); }
-    to   { transform: rotate(360deg); }
-}
-
-/* ── Border march — animated conic gradient ring around cards ── */
-@keyframes border-march {
-    from { --angle: 0deg; }
-    to   { --angle: 360deg; }
-}
-
-/* ── Data stream — vertical cascading lines (matrix vibe) ── */
-@keyframes data-stream {
-    0%   { background-position: 0 0; }
-    100% { background-position: 0 400px; }
-}
-
-/* ── Glitch — RGB split effect on hover for titles ── */
-@keyframes glitch {
-    0%, 100% { text-shadow: var(--txt-glow-cyan); }
-    25% {
-        text-shadow: -2px 0 var(--c-blood),
-                      2px 0 var(--c-cyan-bright);
-    }
-    50% {
-        text-shadow:  2px 0 var(--c-rune),
-                     -2px 0 var(--c-cyan);
-    }
-    75% {
-        text-shadow: -1px 0 var(--c-success),
-                      1px 0 var(--c-gold);
-    }
-}
-
-/* ── Shimmer — light sweep across buttons / badges ── */
-@keyframes shimmer {
-    0%   { background-position: -200% 0; }
-    100% { background-position:  200% 0; }
-}
-
-
-/* ============================================================================
- * 06. UTILITY — ANIMATION CLASSES
- * ----------------------------------------------------------------------------
- * Attach these to any element to apply the corresponding keyframe.
- * ========================================================================== */
-
-.anim-pulse      { animation: pulse-glow   2.4s var(--ease-io) infinite; }
-.anim-flicker    { animation: text-flicker 3s   steps(1) infinite; }
-.anim-float      { animation: float-y      6s   var(--ease-io) infinite; }
-.anim-drift      { animation: drift-x      12s  var(--ease-io) infinite; }
-.anim-spin-slow  { animation: rune-spin    24s  linear infinite; }
-.anim-glitch     { animation: glitch       2s   steps(2) infinite; }
-.anim-shimmer {
-    background-image: linear-gradient(
-        90deg,
-        transparent 0%,
-        rgba(255, 255, 255, 0.18) 50%,
-        transparent 100%
-    );
-    background-size: 200% 100%;
-    animation: shimmer 2.8s linear infinite;
-}
-
-
-/* ============================================================================
- * 07. UTILITY — GLOW & TEXT EFFECTS
- * ========================================================================== */
-
-.glow-cyan   { box-shadow: var(--glow-cyan-md); }
-.glow-rune   { box-shadow: var(--glow-rune-md); }
-.glow-gold   { box-shadow: var(--glow-gold-md); }
-.glow-blood  { box-shadow: var(--glow-blood-md); }
-
-/* Text-only glow (no box shadow) */
-.text-glow-cyan { color: var(--c-cyan-bright); text-shadow: var(--txt-glow-cyan); }
-.text-glow-gold { color: var(--c-gold-bright); text-shadow: var(--txt-glow-gold); }
-
-/* Uppercase tech label */
-.label-tech {
+.citadel-nav__links li { margin: 0; }
+.citadel-nav__links a {
     font-family: var(--f-tech);
-    font-size: 0.75rem;
-    font-weight: 600;
+    font-size: 0.78rem;
     letter-spacing: 0.18em;
     text-transform: uppercase;
     color: var(--c-text-dim);
-}
-
-
-/* ============================================================================
- * 08. UTILITY — BORDERS & FRAMES
- * ----------------------------------------------------------------------------
- * Glowing framed borders. The .border-march class creates an animated
- * rotating conic-gradient ring — a signature "arcane tech" effect.
- * ========================================================================== */
-
-.border-cyan {
-    border: 1px solid rgba(0, 229, 255, 0.45);
-    box-shadow: var(--glow-cyan-sm);
-}
-.border-rune {
-    border: 1px solid rgba(168, 85, 247, 0.45);
-    box-shadow: 0 0 6px rgba(168, 85, 247, 0.4);
-}
-.border-gold {
-    border: 1px solid rgba(212, 175, 55, 0.55);
-    box-shadow: 0 0 6px rgba(212, 175, 55, 0.4);
-}
-
-/* ── Animated marching border — wraps a card in a rotating gradient ── */
-/* Usage: <div class="border-march"><div class="border-march-inner">...</div></div> */
-@property --angle {
-    syntax: '<angle>';
-    initial-value: 0deg;
-    inherits: false;
-}
-.border-march {
+    text-decoration: none;
+    padding: 0.4rem 0;
     position: relative;
-    padding: 1px;
-    border-radius: var(--r-lg);
-    background: conic-gradient(
-        from var(--angle),
-        transparent 0deg,
-        var(--c-cyan) 90deg,
-        var(--c-rune) 180deg,
-        var(--c-gold) 270deg,
-        transparent 360deg
-    );
-    animation: border-march 6s linear infinite;
+    transition: color var(--t-fast) var(--ease-out);
 }
-.border-march-inner {
+.citadel-nav__links a::after {
+    content: '';
+    position: absolute;
+    left: 0; right: 0; bottom: -2px;
+    height: 1px;
+    background: var(--c-cyan);
+    transform: scaleX(0);
+    transform-origin: left center;
+    transition: transform var(--t-fast) var(--ease-out);
+    box-shadow: 0 0 6px rgba(0, 229, 255, 0.8);
+}
+.citadel-nav__links a:hover {
+    color: var(--c-cyan-bright);
+}
+.citadel-nav__links a:hover::after {
+    transform: scaleX(1);
+}
+
+/* ── Auth block ─────────────────────────────────────────────────── */
+.citadel-nav__auth {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+    flex-shrink: 0;
+    position: relative;
+}
+
+.citadel-nav__btn {
+    padding: 0.5rem 1.1rem !important;
+    font-size: 0.72rem !important;
+    letter-spacing: 0.16em !important;
+}
+
+.citadel-nav__icon {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 38px;
+    height: 38px;
+    position: relative;
+    color: var(--c-text-dim);
+    text-decoration: none;
+    border: 1px solid transparent;
+    border-radius: var(--r-sm);
+    transition: all var(--t-fast) var(--ease-out);
+}
+.citadel-nav__icon:hover {
+    color: var(--c-cyan-bright);
+    border-color: rgba(0, 229, 255, 0.35);
+}
+.citadel-nav__icon-glyph {
+    font-size: 1.05rem;
+    line-height: 1;
+}
+.citadel-nav__badge {
+    position: absolute;
+    top: 2px;
+    right: 2px;
+    min-width: 16px;
+    height: 16px;
+    padding: 0 4px;
+    font-family: var(--f-mono);
+    font-size: 0.6rem;
+    font-weight: 700;
+    line-height: 16px;
+    text-align: center;
+    color: var(--c-void);
+    background: var(--c-blood);
+    border-radius: 999px;
+    box-shadow: 0 0 6px rgba(239, 68, 68, 0.7);
+}
+
+.citadel-nav__user {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.55rem;
+    padding: 0.3rem 0.7rem 0.3rem 0.35rem;
+    font-family: var(--f-tech);
+    font-size: 0.78rem;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    color: var(--c-text);
+    background: transparent;
+    border: 1px solid rgba(0, 229, 255, 0.2);
+    border-radius: 999px;
+    cursor: pointer;
+    transition: all var(--t-fast) var(--ease-out);
+}
+.citadel-nav__user:hover {
+    border-color: rgba(0, 229, 255, 0.55);
+    background: rgba(0, 229, 255, 0.06);
+}
+.citadel-nav__avatar {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 30px;
+    height: 30px;
+    border-radius: 50%;
+    background: linear-gradient(135deg, var(--c-cyan-dim), var(--c-rune-dim));
+    background-size: cover;
+    background-position: center;
+    color: var(--c-void);
+    font-family: var(--f-heading);
+    font-size: 0.85rem;
+    font-weight: 700;
+    box-shadow: 0 0 8px rgba(0, 229, 255, 0.4);
+}
+.citadel-nav__caret {
+    font-size: 0.65rem;
+    color: var(--c-text-dim);
+}
+
+.citadel-nav__dropdown {
+    position: absolute;
+    top: calc(100% + 0.5rem);
+    right: 0;
+    min-width: 200px;
+    padding: 0.4rem;
     background: var(--c-slab);
-    border-radius: calc(var(--r-lg) - 1px);
-    padding: 1.5rem;
+    border: 1px solid rgba(0, 229, 255, 0.28);
+    border-radius: var(--r-md);
+    box-shadow:
+        0 12px 40px rgba(0, 0, 0, 0.7),
+        0 0 20px rgba(0, 229, 255, 0.15);
+    z-index: var(--z-dropdown, 100);
+}
+.citadel-nav__dropdown a {
+    display: block;
+    padding: 0.55rem 0.75rem;
+    font-family: var(--f-body);
+    font-size: 0.85rem;
+    letter-spacing: 0.02em;
+    color: var(--c-text);
+    text-decoration: none;
+    border-radius: var(--r-sm);
+    transition: all var(--t-fast) var(--ease-out);
+}
+.citadel-nav__dropdown a:hover {
+    background: rgba(0, 229, 255, 0.08);
+    color: var(--c-cyan-bright);
+}
+.citadel-nav__dropdown a.text-danger {
+    color: #ffb0b0;
+}
+.citadel-nav__dropdown a.text-danger:hover {
+    background: rgba(239, 68, 68, 0.12);
+    color: #ff9090;
+}
+.citadel-nav__dropdown hr {
+    border: none;
+    border-top: 1px solid rgba(0, 229, 255, 0.15);
+    margin: 0.35rem 0;
+}
+
+.citadel-nav__spinner {
+    display: inline-block;
+    width: 18px;
+    height: 18px;
+    border: 2px solid rgba(0, 229, 255, 0.2);
+    border-top-color: var(--c-cyan);
+    border-radius: 50%;
+    animation: citadel-spin 0.8s linear infinite;
+}
+@keyframes citadel-spin {
+    to { transform: rotate(360deg); }
+}
+
+/* ── Mobile burger ──────────────────────────────────────────────── */
+.citadel-nav__burger {
+    display: none;
+    flex-direction: column;
+    justify-content: space-between;
+    width: 28px;
+    height: 20px;
+    padding: 0;
+    background: none;
+    border: none;
+    cursor: pointer;
+}
+.citadel-nav__burger span {
+    display: block;
+    height: 2px;
+    background: var(--c-cyan);
+    border-radius: 1px;
+    box-shadow: 0 0 6px rgba(0, 229, 255, 0.5);
+    transition: transform var(--t-fast) var(--ease-out), opacity var(--t-fast);
+}
+.citadel-nav.is-open .citadel-nav__burger span:nth-child(1) {
+    transform: translateY(9px) rotate(45deg);
+}
+.citadel-nav.is-open .citadel-nav__burger span:nth-child(2) {
+    opacity: 0;
+}
+.citadel-nav.is-open .citadel-nav__burger span:nth-child(3) {
+    transform: translateY(-9px) rotate(-45deg);
 }
 
 
-/* ============================================================================
- * 09. UTILITY — FLOATING & MOTION
+/* ══════════════════════════════════════════════════════════════════════════
+ * HOME PAGE
  * ========================================================================== */
 
-.float-slow  { animation: float-y 8s var(--ease-io) infinite; }
-.float-med   { animation: float-y 5s var(--ease-io) infinite; }
-.float-fast  { animation: float-y 3s var(--ease-io) infinite; }
-
-/* Decorative background runes drifting behind hero */
-.bg-rune {
-    position: fixed;
-    font-family: var(--f-rune);
-    font-size: 12rem;
-    color: rgba(168, 85, 247, 0.045);
-    pointer-events: none;
-    user-select: none;
-    z-index: var(--z-base);
+.page-home__main {
+    flex: 1 1 auto;
+    width: 100%;
 }
 
-
-/* ============================================================================
- * 10. COMPONENT — HEADERS / HERO
- * ----------------------------------------------------------------------------
- * The hero banner. Includes an optional scan-line overlay and glowing title.
- * Usage:
- *   <header class="citadel-hero">
- *     <h1 class="citadel-title">MyCitadel</h1>
- *     <p class="citadel-subtitle">Your Digital Fortress</p>
- *   </header>
- * ========================================================================== */
-
+/* ── Hero ───────────────────────────────────────────────────────── */
 .citadel-hero {
     position: relative;
-    padding: 6rem 2rem 4rem;
+    padding: 6rem 1.5rem 5rem;
     text-align: center;
     overflow: hidden;
-    border-bottom: 1px solid rgba(0, 229, 255, 0.22);
+    border-bottom: 1px solid rgba(0, 229, 255, 0.12);
     background:
         radial-gradient(ellipse at 50% 0%, rgba(0, 229, 255, 0.10) 0%, transparent 60%),
-        radial-gradient(ellipse at 50% 120%, rgba(168, 85, 247, 0.10) 0%, transparent 60%),
-        var(--c-void);
+        radial-gradient(ellipse at 50% 120%, rgba(168, 85, 247, 0.10) 0%, transparent 60%);
 }
-
-/* Sweeping scan line across the hero (CRT / hologram vibe) */
 .citadel-hero::after {
     content: '';
     position: absolute;
@@ -583,437 +357,2904 @@ pre {
     height: 2px;
     background: linear-gradient(90deg, transparent, var(--c-cyan), transparent);
     opacity: 0.55;
-    animation: scan-line 7s linear infinite;
+    animation: scan-line 8s linear infinite;
     pointer-events: none;
+}
+
+.citadel-hero__inner {
+    max-width: 860px;
+    margin: 0 auto;
+    position: relative;
+    z-index: 1;
+}
+
+.citadel-hero__rune {
+    display: block;
+    margin-bottom: 1.25rem;
+    font-family: var(--f-rune);
+    font-size: 1.15rem;
+    letter-spacing: 0.55em;
+    color: var(--c-gold);
+    opacity: 0.75;
+    text-shadow: 0 0 10px rgba(212, 175, 55, 0.5);
 }
 
 .citadel-title {
     margin: 0;
     font-family: var(--f-display);
-    font-size: clamp(2.75rem, 7vw, 5.5rem);
+    font-size: clamp(2.75rem, 7vw, 5rem);
     letter-spacing: 0.16em;
     text-transform: uppercase;
     color: var(--c-cyan-bright);
     text-shadow:
-        0 0 8px  rgba(0, 229, 255, 0.9),
-        0 0 24px rgba(0, 229, 255, 0.55),
-        0 0 60px rgba(0, 229, 255, 0.25);
+        0 0 10px rgba(0, 229, 255, 0.9),
+        0 0 30px rgba(0, 229, 255, 0.55),
+        0 0 70px rgba(0, 229, 255, 0.25);
+    line-height: 1.05;
 }
-
-/* Hover on hero title triggers a glitch */
 .citadel-title:hover {
     animation: glitch 900ms steps(2) infinite;
 }
 
 .citadel-subtitle {
-    margin: 0.75rem 0 0;
+    margin: 0.75rem 0 1.5rem;
     font-family: var(--f-tech);
     font-size: 1rem;
-    letter-spacing: 0.35em;
+    letter-spacing: 0.4em;
     text-transform: uppercase;
     color: var(--c-gold);
-    text-shadow: var(--txt-glow-gold);
+    text-shadow: 0 0 8px rgba(212, 175, 55, 0.55);
 }
 
-
-/* ============================================================================
- * 11. COMPONENT — CARDS (Citadel Panels)
- * ----------------------------------------------------------------------------
- * Every content block sits in a "panel" — dark slab, thin cyan border,
- * soft inner glow, animated on hover.
- * Usage: <div class="panel"> ... </div>
- * ========================================================================== */
-
-.panel {
-    position: relative;
-    padding: 1.75rem;
-    background:
-        linear-gradient(180deg, rgba(255, 255, 255, 0.02), transparent),
-        var(--c-slab);
-    border: 1px solid rgba(0, 229, 255, 0.22);
-    border-radius: var(--r-lg);
-    box-shadow:
-        0 8px 30px rgba(0, 0, 0, 0.55),
-        inset 0 0 30px rgba(0, 229, 255, 0.03);
-    transition:
-        border-color var(--t-med) var(--ease-out),
-        box-shadow   var(--t-med) var(--ease-out),
-        transform    var(--t-med) var(--ease-out);
-}
-
-/* Corner accents — decorative L-brackets at the four corners */
-.panel::before,
-.panel::after {
-    content: '';
-    position: absolute;
-    width: 18px;
-    height: 18px;
-    border: 2px solid var(--c-cyan);
-    opacity: 0.7;
-    pointer-events: none;
-}
-.panel::before {
-    top: -1px; left: -1px;
-    border-right: none;
-    border-bottom: none;
-}
-.panel::after {
-    bottom: -1px; right: -1px;
-    border-left: none;
-    border-top: none;
-}
-
-.panel:hover {
-    border-color: rgba(0, 229, 255, 0.55);
-    box-shadow:
-        0 12px 40px rgba(0, 0, 0, 0.65),
-        var(--glow-cyan-md);
-    transform: translateY(-2px);
-}
-
-
-/* ============================================================================
- * 12. COMPONENT — BUTTONS
- * ----------------------------------------------------------------------------
- * Primary (cyan), Rune (violet), Gold (premium), Danger (blood).
- * All buttons share a base class `.btn-cyber`.
- * ========================================================================== */
-
-.btn-cyber {
-    display: inline-flex;
-    align-items: center;
-    justify-content: center;
-    gap: 0.5rem;
-    padding: 0.75rem 1.75rem;
-    font-family: var(--f-tech);
-    font-size: 0.9rem;
-    font-weight: 700;
-    letter-spacing: 0.16em;
-    text-transform: uppercase;
-    color: var(--c-cyan-bright);
-    background: rgba(0, 229, 255, 0.06);
-    border: 1px solid var(--c-cyan);
-    border-radius: var(--r-sm);
-    cursor: pointer;
-    position: relative;
-    overflow: hidden;
-    text-decoration: none;
-    transition:
-        background var(--t-fast) var(--ease-out),
-        color      var(--t-fast) var(--ease-out),
-        box-shadow var(--t-fast) var(--ease-out),
-        transform  var(--t-fast) var(--ease-out);
-}
-
-/* Light-sweep shimmer on hover */
-.btn-cyber::before {
-    content: '';
-    position: absolute;
-    inset: 0;
-    background: linear-gradient(
-        120deg,
-        transparent 30%,
-        rgba(255, 255, 255, 0.28) 50%,
-        transparent 70%
-    );
-    transform: translateX(-120%);
-    transition: transform 600ms var(--ease-out);
-}
-.btn-cyber:hover::before { transform: translateX(120%); }
-
-.btn-cyber:hover {
-    background: rgba(0, 229, 255, 0.18);
-    color: #ffffff;
-    box-shadow: var(--glow-cyan-md);
-    transform: translateY(-1px);
-}
-.btn-cyber:active { transform: translateY(0); }
-
-/* Variants — just override color token */
-.btn-rune {
-    color: var(--c-rune-bright);
-    background: rgba(168, 85, 247, 0.06);
-    border-color: var(--c-rune);
-}
-.btn-rune:hover {
-    background: rgba(168, 85, 247, 0.20);
-    box-shadow: var(--glow-rune-md);
-}
-
-.btn-gold {
-    color: var(--c-gold-bright);
-    background: rgba(212, 175, 55, 0.06);
-    border-color: var(--c-gold);
-}
-.btn-gold:hover {
-    background: rgba(212, 175, 55, 0.20);
-    box-shadow: var(--glow-gold-md);
-}
-
-.btn-danger {
-    color: #ffd0d0;
-    background: rgba(239, 68, 68, 0.06);
-    border-color: var(--c-blood);
-}
-.btn-danger:hover {
-    background: rgba(239, 68, 68, 0.20);
-    box-shadow: var(--glow-blood-md);
-}
-
-/* Disabled state */
-.btn-cyber:disabled,
-.btn-cyber[aria-disabled="true"] {
-    opacity: 0.4;
-    cursor: not-allowed;
-    box-shadow: none;
-    transform: none;
-}
-
-
-/* ============================================================================
- * 13. COMPONENT — FORMS & INPUTS
- * ----------------------------------------------------------------------------
- * Dark, glowing input fields with a focus "electric" state.
- * ========================================================================== */
-
-.form-label {
-    display: block;
-    margin-bottom: 0.4rem;
-    font-family: var(--f-tech);
-    font-size: 0.78rem;
-    letter-spacing: 0.14em;
-    text-transform: uppercase;
+.citadel-hero__lede {
+    max-width: 620px;
+    margin: 0 auto 2.25rem;
+    font-size: 1.05rem;
+    line-height: 1.75;
     color: var(--c-text-dim);
 }
 
-.form-input,
-.form-textarea,
-.form-select {
-    width: 100%;
-    padding: 0.75rem 1rem;
-    font-family: var(--f-mono);
-    font-size: 0.95rem;
-    color: var(--c-text);
-    background: var(--c-abyss);
-    border: 1px solid rgba(0, 229, 255, 0.22);
-    border-radius: var(--r-sm);
-    outline: none;
-    transition:
-        border-color var(--t-fast) var(--ease-out),
-        box-shadow   var(--t-fast) var(--ease-out),
-        background   var(--t-fast) var(--ease-out);
+.citadel-hero__cta {
+    display: flex;
+    gap: 0.85rem;
+    justify-content: center;
+    flex-wrap: wrap;
 }
 
-.form-input::placeholder { color: var(--c-text-faint); }
-
-.form-input:focus,
-.form-textarea:focus,
-.form-select:focus {
-    border-color: var(--c-cyan);
-    background: rgba(0, 229, 255, 0.03);
-    box-shadow:
-        0 0 0 3px rgba(0, 229, 255, 0.12),
-        var(--glow-cyan-sm);
+/* ── Pillars section ────────────────────────────────────────────── */
+.page-home__pillars {
+    padding: 4rem 1.5rem;
+    max-width: 1200px;
+    margin: 0 auto;
+}
+.page-home__pillars > h2 {
+    text-align: center;
+    font-family: var(--f-heading);
+    font-size: clamp(1.5rem, 3vw + 0.5rem, 2rem);
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    color: var(--c-gold-bright);
+    border-bottom: none;
+    padding-bottom: 0;
+    margin-bottom: 2.5rem;
+    text-shadow: 0 0 10px rgba(212, 175, 55, 0.35);
 }
 
-.form-textarea { min-height: 120px; resize: vertical; }
+/* The .dash-grid utility already exists in the base theme.
+   Make sure its children sit centered when used here. */
+.page-home__pillars .dash-grid {
+    padding: 0;
+    gap: 1.5rem;
+}
+.page-home__pillars .panel {
+    text-align: center;
+}
+.page-home__pillars .panel h3 {
+    font-family: var(--f-tech);
+    font-size: 1rem;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    color: var(--c-cyan-bright);
+    margin: 0 0 0.9rem;
+    text-shadow: 0 0 8px rgba(0, 229, 255, 0.4);
+}
+.page-home__pillars .panel p {
+    color: var(--c-text-dim);
+    font-size: 0.92rem;
+    line-height: 1.65;
+    margin: 0;
+}
+
+/* ── Premium teaser ─────────────────────────────────────────────── */
+.page-home__premium {
+    padding: 2rem 1.5rem 5rem;
+    max-width: 900px;
+    margin: 0 auto;
+}
+.page-home__premium .panel {
+    text-align: center;
+    padding: 3rem 2rem;
+    background:
+        linear-gradient(180deg, rgba(212, 175, 55, 0.04), transparent),
+        var(--c-slab);
+    border-color: rgba(212, 175, 55, 0.35);
+}
+.page-home__premium h2 {
+    font-family: var(--f-heading);
+    font-size: 1.6rem;
+    letter-spacing: 0.1em;
+    color: var(--c-gold-bright);
+    border-bottom: none;
+    padding: 0;
+    margin: 0 0 1rem;
+    text-shadow: 0 0 12px rgba(212, 175, 55, 0.5);
+}
+.page-home__premium p {
+    max-width: 500px;
+    margin: 0 auto 2rem;
+    color: var(--c-text-dim);
+    font-size: 1rem;
+}
 
 
-/* ============================================================================
- * 14. COMPONENT — BADGES & REPUTATION
- * ----------------------------------------------------------------------------
- * Small pill-shaped indicators for gamification, tiers, and reputation.
+/* ══════════════════════════════════════════════════════════════════════════
+ * FOOTER
  * ========================================================================== */
 
-.badge-cyber {
-    display: inline-flex;
-    align-items: center;
-    gap: 0.35rem;
-    padding: 0.28rem 0.7rem;
+.citadel-footer {
+    margin-top: auto;
+    padding: 3rem 1.5rem 2rem;
+    border-top: 1px solid rgba(0, 229, 255, 0.18);
+    background: rgba(5, 7, 10, 0.6);
+}
+
+.citadel-footer__inner {
+    display: grid;
+    grid-template-columns: 1.4fr 2fr;
+    gap: 3rem;
+    max-width: 1200px;
+    margin: 0 auto;
+    padding-bottom: 2rem;
+    border-bottom: 1px solid rgba(0, 229, 255, 0.1);
+}
+
+/* ── Brand column ───────────────────────────────────────────────── */
+.citadel-footer__brand {
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+}
+.citadel-footer__mark {
+    font-family: var(--f-rune);
+    font-size: 2rem;
+    color: var(--c-gold);
+    text-shadow: 0 0 12px rgba(212, 175, 55, 0.55);
+    line-height: 1;
+}
+.citadel-footer__name {
+    font-family: var(--f-display);
+    font-size: 1.35rem;
+    letter-spacing: 0.16em;
+    text-transform: uppercase;
+    color: var(--c-cyan-bright);
+    text-shadow: 0 0 10px rgba(0, 229, 255, 0.55);
+}
+.citadel-footer__tagline {
+    color: var(--c-text-dim);
+    font-size: 0.85rem;
+    margin: 0.25rem 0 0;
+    line-height: 1.5;
+}
+
+/* ── Link columns ───────────────────────────────────────────────── */
+.citadel-footer__cols {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 2rem;
+}
+.citadel-footer__col h4 {
     font-family: var(--f-tech);
     font-size: 0.72rem;
-    font-weight: 700;
-    letter-spacing: 0.14em;
+    letter-spacing: 0.18em;
     text-transform: uppercase;
-    border-radius: 999px;
-    border: 1px solid currentColor;
-    background: rgba(255, 255, 255, 0.03);
-    color: var(--c-cyan);
+    color: var(--c-gold);
+    margin: 0 0 0.9rem;
+}
+.citadel-footer__col ul {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+}
+.citadel-footer__col li { margin-bottom: 0.5rem; }
+.citadel-footer__col a {
+    color: var(--c-text-dim);
+    font-size: 0.88rem;
+    text-decoration: none;
+    transition: color var(--t-fast) var(--ease-out);
+}
+.citadel-footer__col a:hover {
+    color: var(--c-cyan-bright);
+    text-shadow: 0 0 6px rgba(0, 229, 255, 0.45);
 }
 
-.badge-rune  { color: var(--c-rune); }
-.badge-gold  { color: var(--c-gold); }
-.badge-success { color: var(--c-success); }
-.badge-danger  { color: var(--c-blood); }
-
-/* Reputation counter — large glowing numeric readout */
-.rep-counter {
-    font-family: var(--f-mono);
-    font-size: 2.25rem;
-    font-weight: 700;
-    color: var(--c-gold-bright);
-    text-shadow: var(--txt-glow-gold);
-    letter-spacing: 0.05em;
-}
-
-
-/* ============================================================================
- * 15. COMPONENT — RUNE DECORATIONS
- * ----------------------------------------------------------------------------
- * Unicode Elder Futhark runes rendered as pure-text ornaments.
- * Use sparingly — a few per page for maximum impact.
- * Example: <span class="rune-divider">ᚠ ᚢ ᚦ ᚨ ᚱ ᚲ</span>
- * ========================================================================== */
-
-.rune-divider {
-    display: block;
-    margin: 2rem auto;
+/* ── Bottom band ────────────────────────────────────────────────── */
+.citadel-footer__bottom {
+    max-width: 1200px;
+    margin: 2rem auto 0;
     text-align: center;
-    font-family: var(--f-rune);
-    font-size: 1.35rem;
+    color: var(--c-text-faint);
+    font-size: 0.82rem;
+    line-height: 1.7;
+}
+.citadel-footer__bottom .rune-divider {
+    margin: 0 auto 1rem;
+    font-size: 0.95rem;
     letter-spacing: 0.5em;
+    opacity: 0.55;
+}
+.citadel-footer__bottom p { margin: 0.35rem 0; }
+.citadel-footer__bottom a {
+    color: var(--c-cyan);
+    text-decoration: none;
+    border-bottom: 1px dashed rgba(0, 229, 255, 0.35);
+}
+.citadel-footer__bottom a:hover {
+    border-bottom-style: solid;
+    color: var(--c-cyan-bright);
+}
+.citadel-footer__note {
+    font-family: var(--f-display);
+    font-style: italic;
+    letter-spacing: 0.06em;
     color: var(--c-gold);
     opacity: 0.75;
-    text-shadow: var(--txt-glow-gold);
+    margin-top: 0.75rem !important;
 }
 
-/* Circular rune medallion — slowly rotating ornament */
-.rune-medallion {
+
+/* ══════════════════════════════════════════════════════════════════════════
+ * RESPONSIVE — TABLET & MOBILE
+ * ========================================================================== */
+
+@media (max-width: 900px) {
+    .citadel-footer__inner {
+        grid-template-columns: 1fr;
+        gap: 2rem;
+    }
+    .citadel-footer__cols {
+        grid-template-columns: repeat(3, 1fr);
+    }
+    .page-home__pillars .dash-grid .dash-col-4 {
+        grid-column: span 12;
+    }
+}
+
+@media (max-width: 720px) {
+
+    /* ── Nav collapses ─────────────────────────────────────────── */
+    .citadel-nav__links {
+        display: none;
+    }
+    .citadel-nav__burger {
+        display: flex;
+        margin-left: auto;
+    }
+
+    /* When the burger is toggled, show links as a vertical stack */
+    .citadel-nav.is-open .citadel-nav__links {
+        display: flex;
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 0.75rem;
+        position: absolute;
+        top: 100%;
+        left: 0;
+        right: 0;
+        padding: 1.25rem 1.5rem;
+        background: rgba(5, 7, 10, 0.98);
+        backdrop-filter: blur(14px);
+        border-bottom: 1px solid rgba(0, 229, 255, 0.25);
+    }
+    .citadel-nav__links a { font-size: 0.85rem; }
+
+    /* Hide auth buttons on tiny screens unless the menu is open */
+    .citadel-nav__auth .auth-guest {
+        display: none;
+    }
+    .citadel-nav.is-open .auth-guest {
+        display: inline-flex;
+        gap: 0.5rem;
+    }
+
+    /* ── Footer stacks into a single column ────────────────────── */
+    .citadel-footer__cols {
+        grid-template-columns: 1fr;
+        gap: 1.75rem;
+    }
+
+    /* ── Hero padding tightens ─────────────────────────────────── */
+    .citadel-hero {
+        padding: 4rem 1.25rem 3rem;
+    }
+    .citadel-hero__rune { font-size: 0.95rem; letter-spacing: 0.4em; }
+
+    .page-home__pillars,
+    .page-home__premium {
+        padding-left: 1rem;
+        padding-right: 1rem;
+    }
+}
+
+@media (max-width: 480px) {
+
+    .citadel-title {
+        font-size: 2.25rem;
+        letter-spacing: 0.1em;
+    }
+    .citadel-subtitle {
+        font-size: 0.78rem;
+        letter-spacing: 0.28em;
+    }
+    .citadel-hero__cta {
+        flex-direction: column;
+        align-items: stretch;
+    }
+    .citadel-hero__cta .btn-cyber {
+        width: 100%;
+        justify-content: center;
+    }
+
+    .citadel-nav__brand-text { display: none; }
+
+    .page-home__premium .panel { padding: 2rem 1.25rem; }
+}
+
+/* ============================================================================
+ * ███ CITADEL.CSS — PART 3: STATIC PAGE COMPONENTS ███
+ * ========================================================================== */
+
+
+/* ══════════════════════════════════════════════════════════════════════════
+ * GENERIC SECTION WRAPPER
+ * ========================================================================== */
+
+.citadel-section {
+    padding: 4rem 1.5rem;
+    position: relative;
+}
+.citadel-section--dark {
+    background: rgba(0, 0, 0, 0.25);
+    border-top: 1px solid rgba(0, 229, 255, 0.08);
+    border-bottom: 1px solid rgba(0, 229, 255, 0.08);
+}
+.citadel-section--final {
+    padding: 5rem 1.5rem;
+    text-align: center;
+}
+
+.citadel-section__inner {
+    max-width: 1200px;
+    margin: 0 auto;
+}
+.citadel-section__inner--narrow {
+    max-width: 800px;
+}
+.citadel-section__inner--center {
+    text-align: center;
+}
+
+.citadel-section__title {
+    font-family: var(--f-heading);
+    font-size: clamp(1.5rem, 3vw + 0.5rem, 2rem);
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    color: var(--c-gold-bright);
+    text-align: center;
+    border-bottom: none;
+    padding-bottom: 0;
+    margin: 0 0 2rem;
+    text-shadow: 0 0 10px rgba(212, 175, 55, 0.35);
+}
+
+.citadel-section__lede {
+    font-size: 1.02rem;
+    line-height: 1.75;
+    color: var(--c-text-dim);
+    max-width: 720px;
+    margin: 0 auto 1.25rem;
+}
+.citadel-section__inner:not(.citadel-section__inner--center) .citadel-section__lede {
+    margin-left: 0;
+}
+
+.citadel-section h2 {
+    font-family: var(--f-heading);
+    font-size: clamp(1.4rem, 2.5vw + 0.5rem, 1.85rem);
+    letter-spacing: 0.08em;
+    color: var(--c-gold-bright);
+    border-bottom: none;
+    padding-bottom: 0;
+    margin: 0 0 1.25rem;
+}
+.citadel-section h3 {
+    color: var(--c-cyan-bright);
+    font-family: var(--f-tech);
+    font-size: 1rem;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    margin: 0 0 0.75rem;
+    text-shadow: 0 0 6px rgba(0, 229, 255, 0.35);
+}
+.citadel-section p {
+    color: var(--c-text-dim);
+    line-height: 1.75;
+}
+
+
+/* ══════════════════════════════════════════════════════════════════════════
+ * STATIC PAGE HEADER (About, Contact, Security)
+ * ========================================================================== */
+
+.page-static {
+    flex: 1 1 auto;
+    width: 100%;
+}
+.page-static__header {
+    padding: 4rem 1.5rem 2rem;
+    text-align: center;
+    max-width: 900px;
+    margin: 0 auto;
+}
+.page-static__header .rune-divider {
+    margin: 0 auto 1rem;
+    font-size: 0.95rem;
+    letter-spacing: 0.5em;
+    opacity: 0.6;
+}
+.page-static__header h1 {
+    font-family: var(--f-display);
+    font-size: clamp(2rem, 5vw + 0.5rem, 3rem);
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    color: var(--c-cyan-bright);
+    text-shadow:
+        0 0 10px rgba(0, 229, 255, 0.85),
+        0 0 30px rgba(0, 229, 255, 0.4);
+    margin: 0 0 1rem;
+    padding: 0;
+    border: none;
+}
+.page-static__lede {
+    font-size: 1.05rem;
+    line-height: 1.75;
+    color: var(--c-text-dim);
+    max-width: 640px;
+    margin: 0 auto;
+}
+
+
+/* ══════════════════════════════════════════════════════════════════════════
+ * PILLARS GRID (home)
+ * ========================================================================== */
+
+.pillars-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+    gap: 1.5rem;
+}
+.pillar-card {
+    text-align: center;
+    padding: 2rem 1.5rem;
+}
+.pillar-card__icon {
+    font-size: 2.5rem;
+    line-height: 1;
+    margin-bottom: 1rem;
+    filter: drop-shadow(0 0 12px rgba(0, 229, 255, 0.5));
+}
+.pillar-card p {
+    margin: 0;
+    font-size: 0.92rem;
+}
+
+
+/* ══════════════════════════════════════════════════════════════════════════
+ * STEPS GRID (how it works)
+ * ========================================================================== */
+
+.steps-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+    gap: 1.25rem;
+    list-style: none;
+    padding: 0;
+    margin: 0;
+    counter-reset: step;
+}
+.step-card {
+    position: relative;
+    padding: 1.75rem 1.5rem;
+    background: rgba(16, 21, 29, 0.6);
+    border: 1px solid rgba(0, 229, 255, 0.15);
+    border-radius: var(--r-md);
+    transition: all var(--t-med) var(--ease-out);
+}
+.step-card:hover {
+    border-color: rgba(0, 229, 255, 0.45);
+    background: rgba(16, 21, 29, 0.85);
+    transform: translateY(-3px);
+    box-shadow: var(--glow-cyan-md);
+}
+.step-card__num {
+    font-family: var(--f-mono);
+    font-size: 1.75rem;
+    font-weight: 700;
+    color: var(--c-cyan);
+    text-shadow: 0 0 12px rgba(0, 229, 255, 0.5);
+    margin-bottom: 0.75rem;
+    letter-spacing: 0.05em;
+}
+.step-card h3 {
+    margin-bottom: 0.5rem;
+}
+
+
+/* ══════════════════════════════════════════════════════════════════════════
+ * GUARANTEE LIST
+ * ========================================================================== */
+
+.guarantee-list {
+    display: grid;
+    gap: 1.5rem;
+    max-width: 860px;
+    margin: 0 auto;
+}
+.guarantee-item {
+    display: flex;
+    gap: 1rem;
+    align-items: flex-start;
+}
+.guarantee-item__mark {
+    flex-shrink: 0;
     display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 32px;
+    height: 32px;
+    color: var(--c-success);
+    background: rgba(57, 255, 20, 0.1);
+    border: 1px solid rgba(57, 255, 20, 0.4);
+    border-radius: 50%;
+    font-weight: 700;
+    font-size: 0.9rem;
+    box-shadow: 0 0 10px rgba(57, 255, 20, 0.3);
+}
+.guarantee-item strong {
+    display: block;
+    color: var(--c-cyan-bright);
+    font-family: var(--f-tech);
+    font-size: 0.88rem;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    margin-bottom: 0.35rem;
+}
+.guarantee-item p {
+    margin: 0;
+    font-size: 0.92rem;
+}
+
+
+/* ══════════════════════════════════════════════════════════════════════════
+ * PREMIUM TEASER
+ * ========================================================================== */
+
+.premium-teaser {
+    text-align: center;
+    padding: 3rem 2rem;
+    background:
+        linear-gradient(180deg, rgba(212, 175, 55, 0.06), transparent),
+        var(--c-slab);
+    border-color: rgba(212, 175, 55, 0.4);
+    position: relative;
+}
+.premium-teaser__badge {
+    position: absolute;
+    top: -12px;
+    left: 50%;
+    transform: translateX(-50%);
+    padding: 0.35rem 1rem;
+    font-family: var(--f-tech);
+    font-size: 0.68rem;
+    letter-spacing: 0.22em;
+    text-transform: uppercase;
+    color: var(--c-void);
+    background: var(--c-gold);
+    border-radius: 999px;
+    box-shadow: 0 0 15px rgba(212, 175, 55, 0.6);
+}
+.premium-teaser h2 {
+    font-size: 2rem;
+    color: var(--c-gold-bright);
+    text-shadow: 0 0 12px rgba(212, 175, 55, 0.5);
+    margin: 0.5rem 0 1rem;
+}
+
+
+/* ══════════════════════════════════════════════════════════════════════════
+ * ABOUT — QUOTE, VALUES, ROADMAP, FOUNDER
+ * ========================================================================== */
+
+.citadel-quote {
+    margin: 1.5rem 0;
+    padding: 1.75rem 2rem;
+    font-family: var(--f-display);
+    font-size: 1.15rem;
+    line-height: 1.65;
+    font-style: italic;
+    color: var(--c-cyan-bright);
+    background: rgba(0, 229, 255, 0.04);
+    border-left: 4px solid var(--c-cyan);
+    border-radius: var(--r-md);
+    text-shadow: 0 0 8px rgba(0, 229, 255, 0.35);
+}
+
+.values-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+    gap: 1.25rem;
+}
+.value-card {
+    padding: 1.5rem;
+    background: rgba(16, 21, 29, 0.5);
+    border: 1px solid rgba(0, 229, 255, 0.12);
+    border-radius: var(--r-md);
+    transition: all var(--t-med) var(--ease-out);
+}
+.value-card:hover {
+    border-color: rgba(0, 229, 255, 0.4);
+    background: rgba(16, 21, 29, 0.8);
+}
+.value-card h3 {
+    color: var(--c-cyan-bright);
+    font-size: 0.95rem;
+}
+.value-card p {
+    margin: 0;
+    font-size: 0.9rem;
+}
+
+/* Roadmap */
+.roadmap {
+    display: grid;
+    gap: 1.25rem;
+    position: relative;
+    padding-left: 2rem;
+}
+.roadmap::before {
+    content: '';
+    position: absolute;
+    left: 9px;
+    top: 8px;
+    bottom: 8px;
+    width: 2px;
+    background: linear-gradient(180deg,
+        var(--c-success) 0%,
+        var(--c-cyan) 25%,
+        rgba(0, 229, 255, 0.15) 60%,
+        rgba(0, 229, 255, 0.15) 100%);
+}
+.roadmap__item {
+    position: relative;
+    padding-left: 0.5rem;
+}
+.roadmap__dot {
+    position: absolute;
+    left: -2rem;
+    top: 6px;
+    width: 20px;
+    height: 20px;
+    border-radius: 50%;
+    background: var(--c-void);
+    border: 2px solid rgba(0, 229, 255, 0.4);
+}
+.roadmap__item--done .roadmap__dot {
+    background: var(--c-success);
+    border-color: var(--c-success);
+    box-shadow: 0 0 12px rgba(57, 255, 20, 0.6);
+}
+.roadmap__item--current .roadmap__dot {
+    background: var(--c-cyan);
+    border-color: var(--c-cyan);
+    box-shadow: 0 0 12px rgba(0, 229, 255, 0.7);
+    animation: pulse-glow 2.4s var(--ease-io) infinite;
+}
+.roadmap__item h3 {
+    margin-bottom: 0.35rem;
+}
+.roadmap__item--done h3 { color: var(--c-success); }
+.roadmap__item--current h3 { color: var(--c-cyan-bright); }
+.roadmap__item p { margin: 0; font-size: 0.9rem; }
+
+/* Founder card */
+.founder-card {
+    display: flex;
+    gap: 1.75rem;
+    align-items: flex-start;
+    padding: 2rem;
+}
+.founder-card__avatar {
+    flex-shrink: 0;
+    display: flex;
     align-items: center;
     justify-content: center;
     width: 96px;
     height: 96px;
     font-family: var(--f-rune);
-    font-size: 2.5rem;
-    color: var(--c-gold-bright);
+    font-size: 3rem;
+    color: var(--c-gold);
+    background: radial-gradient(circle, rgba(212, 175, 55, 0.12), transparent 70%);
     border: 2px solid var(--c-gold);
     border-radius: 50%;
-    box-shadow:
-        inset 0 0 20px rgba(212, 175, 55, 0.25),
-        var(--glow-gold-md);
-    background: radial-gradient(circle, rgba(212, 175, 55, 0.06), transparent 70%);
-    animation: rune-spin 30s linear infinite;
+    box-shadow: 0 0 20px rgba(212, 175, 55, 0.4);
+}
+.founder-card__body h3 {
+    margin-bottom: 0.25rem;
+}
+.founder-card__tagline {
+    color: var(--c-gold) !important;
+    font-style: italic;
+    font-size: 0.9rem !important;
+    margin-bottom: 0.85rem !important;
+}
+.founder-card__links {
+    display: flex;
+    gap: 0.75rem;
+    flex-wrap: wrap;
+    margin-top: 1rem;
+}
+.founder-card__links .btn-cyber {
+    padding: 0.55rem 1.25rem;
+    font-size: 0.72rem;
 }
 
 
-/* ============================================================================
- * 16. COMPONENT — NAVBAR / SIDEBAR
+/* ══════════════════════════════════════════════════════════════════════════
+ * CONTACT
  * ========================================================================== */
 
-.citadel-nav {
-    position: sticky;
-    top: 0;
-    z-index: var(--z-sticky);
-    display: flex;
-    align-items: center;
-    gap: 1.5rem;
-    padding: 0.85rem 1.75rem;
-    background: rgba(5, 7, 10, 0.85);
-    backdrop-filter: blur(14px);
-    -webkit-backdrop-filter: blur(14px);
-    border-bottom: 1px solid rgba(0, 229, 255, 0.22);
+.contact-channels {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+    gap: 1.25rem;
 }
-
-.citadel-nav a {
+.contact-card {
+    text-decoration: none;
+    text-align: center;
+    padding: 2rem 1.5rem;
+    transition: all var(--t-med) var(--ease-out);
+}
+.contact-card:hover {
+    border-color: rgba(0, 229, 255, 0.55);
+    transform: translateY(-3px);
+    box-shadow: var(--glow-cyan-md);
+}
+.contact-card__icon {
+    font-size: 2rem;
+    margin-bottom: 0.75rem;
+    filter: drop-shadow(0 0 10px rgba(0, 229, 255, 0.5));
+}
+.contact-card__email {
+    display: block;
+    margin-top: 1rem;
+    font-family: var(--f-mono);
+    font-size: 0.82rem;
+    color: var(--c-cyan);
+    word-break: break-all;
+}
+.contact-form { margin-top: 1.5rem; }
+.contact-form .form-group { margin-bottom: 1.25rem; }
+.contact-form label {
+    display: block;
+    margin-bottom: 0.5rem;
     font-family: var(--f-tech);
-    font-size: 0.85rem;
-    letter-spacing: 0.14em;
+    font-size: 0.72rem;
+    letter-spacing: 0.16em;
     text-transform: uppercase;
     color: var(--c-text-dim);
 }
-.citadel-nav a:hover,
-.citadel-nav a.active {
-    color: var(--c-cyan-bright);
-    text-shadow: var(--txt-glow-cyan);
+.contact-form input,
+.contact-form textarea {
+    width: 100%;
+    padding: 0.85rem 1rem;
+    font-family: var(--f-mono);
+    font-size: 0.92rem;
+    color: var(--c-text);
+    background: var(--c-abyss);
+    border: 1px solid rgba(0, 229, 255, 0.22);
+    border-radius: var(--r-sm);
+    outline: none;
+    transition: all var(--t-fast) var(--ease-out);
 }
+.contact-form input:focus,
+.contact-form textarea:focus {
+    border-color: var(--c-cyan);
+    box-shadow: 0 0 0 3px rgba(0, 229, 255, 0.12);
+}
+.contact-form textarea { resize: vertical; min-height: 160px; }
 
 
-/* ============================================================================
- * 17. COMPONENT — DASHBOARD LAYOUT
- * ----------------------------------------------------------------------------
- * A simple 12-column grid for dashboard panels.
- * Usage: <div class="dash-grid"> <div class="panel dash-col-6">...</div> </div>
+/* ══════════════════════════════════════════════════════════════════════════
+ * SECURITY & PRIVACY PAGE
  * ========================================================================== */
 
-.dash-grid {
+.threat-grid {
     display: grid;
-    grid-template-columns: repeat(12, 1fr);
+    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+    gap: 1.25rem;
+}
+.threat-card {
+    padding: 1.5rem;
+    background: rgba(16, 21, 29, 0.6);
+    border: 1px solid rgba(0, 229, 255, 0.12);
+    border-left: 3px solid var(--c-blood);
+    border-radius: var(--r-md);
+    transition: all var(--t-med) var(--ease-out);
+}
+.threat-card:hover {
+    border-left-color: var(--c-success);
+    background: rgba(16, 21, 29, 0.85);
+}
+.threat-card h3 {
+    color: var(--c-cyan-bright);
+    margin-bottom: 0.75rem;
+}
+.threat-card__attack {
+    font-size: 0.88rem;
+    color: var(--c-text-faint) !important;
+    margin-bottom: 0.75rem !important;
+    padding-bottom: 0.75rem;
+    border-bottom: 1px dashed rgba(0, 229, 255, 0.15);
+}
+.threat-card__attack em {
+    color: var(--c-blood);
+    font-style: normal;
+    font-weight: 700;
+}
+.threat-card__defense {
+    font-size: 0.9rem;
+    color: var(--c-text-dim);
+    margin: 0 !important;
+}
+.threat-card__defense strong {
+    color: var(--c-success);
+}
+
+.mechanism-list {
+    display: grid;
+    gap: 1.75rem;
+}
+.mechanism {
+    padding: 1.5rem 0;
+    border-bottom: 1px solid rgba(0, 229, 255, 0.1);
+}
+.mechanism:last-child { border-bottom: none; }
+.mechanism h3 {
+    margin-bottom: 0.6rem;
+}
+.mechanism p {
+    margin: 0;
+    font-size: 0.95rem;
+}
+
+.limits-list {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+    display: grid;
     gap: 1.5rem;
-    padding: 2rem;
+}
+.limits-list li {
+    padding: 1.25rem 1.5rem;
+    background: rgba(239, 68, 68, 0.04);
+    border-left: 3px solid var(--c-blood);
+    border-radius: var(--r-md);
+}
+.limits-list strong {
+    display: block;
+    color: #ffb0b0;
+    font-family: var(--f-tech);
+    font-size: 0.9rem;
+    letter-spacing: 0.06em;
+    margin-bottom: 0.5rem;
+}
+.limits-list p {
+    margin: 0;
+    font-size: 0.92rem;
 }
 
-/* Span helpers — Bootstrap-compatible-ish naming */
-.dash-col-3  { grid-column: span 3;  }
-.dash-col-4  { grid-column: span 4;  }
-.dash-col-6  { grid-column: span 6;  }
-.dash-col-8  { grid-column: span 8;  }
-.dash-col-12 { grid-column: span 12; }
 
-/* Collapse to single column on small screens */
-@media (max-width: 900px) {
-    .dash-col-3, .dash-col-4,
-    .dash-col-6, .dash-col-8 { grid-column: span 12; }
-}
-
-
-/* ============================================================================
- * 18. SCROLLBAR & SELECTION
- * ----------------------------------------------------------------------------
- * Custom scrollbar + text selection colors to match the theme.
+/* ══════════════════════════════════════════════════════════════════════════
+ * RESPONSIVE
  * ========================================================================== */
 
-/* WebKit browsers (Chrome, Edge, Safari) */
-::-webkit-scrollbar         { width: 10px; height: 10px; }
-::-webkit-scrollbar-track   { background: var(--c-void); }
-::-webkit-scrollbar-thumb {
-    background: linear-gradient(180deg, var(--c-cyan-dim), var(--c-rune-dim));
-    border-radius: 10px;
-    border: 2px solid var(--c-void);
+@media (max-width: 720px) {
+    .citadel-section { padding: 3rem 1rem; }
+    .page-static__header { padding: 3rem 1rem 1.5rem; }
+    .founder-card { flex-direction: column; align-items: center; text-align: center; }
+    .founder-card__links { justify-content: center; }
+    .premium-teaser { padding: 2.5rem 1.25rem; }
 }
-::-webkit-scrollbar-thumb:hover {
-    background: linear-gradient(180deg, var(--c-cyan), var(--c-rune));
-}
-
-/* Firefox */
-* {
-    scrollbar-width: thin;
-    scrollbar-color: var(--c-cyan-dim) var(--c-void);
-}
-
-/* Text selection */
-::selection {
-    background: rgba(0, 229, 255, 0.35);
-    color: #ffffff;
-    text-shadow: 0 0 6px rgba(0, 229, 255, 0.8);
-}
-
 
 /* ============================================================================
- * 19. ACCESSIBILITY — PREFERS-REDUCED-MOTION
- * ----------------------------------------------------------------------------
- * Users who set "reduce motion" in their OS get instant, static rendering.
- * This is a WCAG 2.1 requirement — DO NOT REMOVE.
+ * ███ CITADEL.CSS — PART 4: EVIDENCE SECTION ███
  * ========================================================================== */
 
-@media (prefers-reduced-motion: reduce) {
-    *,
-    *::before,
-    *::after {
-        animation-duration: 0.001ms !important;
-        animation-iteration-count: 1 !important;
-        transition-duration: 0.001ms !important;
-        scroll-behavior: auto !important;
+.evidence-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+    gap: 1.5rem;
+    margin-bottom: 2.5rem;
+}
+
+.evidence-card {
+    padding: 1.75rem;
+    border-left: 4px solid var(--c-blood);
+    transition: all var(--t-med) var(--ease-out);
+}
+
+.evidence-card:hover {
+    border-left-color: var(--c-gold);
+    transform: translateY(-3px);
+    box-shadow: 0 12px 40px rgba(0, 0, 0, 0.5), 0 0 30px rgba(239, 68, 68, 0.1);
+}
+
+.evidence-card h3 {
+    color: var(--c-blood);
+    font-family: var(--f-heading);
+    font-size: 1.15rem;
+    letter-spacing: 0.08em;
+    margin-bottom: 1rem;
+    text-transform: uppercase;
+}
+
+.evidence-card__stat {
+    display: flex;
+    flex-direction: column;
+    margin-bottom: 1.25rem;
+    padding-bottom: 1.25rem;
+    border-bottom: 1px dashed rgba(239, 68, 68, 0.3);
+}
+
+.evidence-card__number {
+    font-family: var(--f-mono);
+    font-size: 2rem;
+    font-weight: 700;
+    color: var(--c-blood);
+    text-shadow: 0 0 20px rgba(239, 68, 68, 0.5);
+    line-height: 1;
+    margin-bottom: 0.35rem;
+}
+
+.evidence-card__label {
+    font-family: var(--f-tech);
+    font-size: 0.65rem;
+    letter-spacing: 0.16em;
+    text-transform: uppercase;
+    color: var(--c-text-faint);
+}
+
+.evidence-card__list {
+    list-style: none;
+    padding: 0;
+    margin: 0 0 1.25rem;
+}
+
+.evidence-card__list li {
+    position: relative;
+    padding-left: 1.5rem;
+    margin-bottom: 0.75rem;
+    font-size: 0.88rem;
+    line-height: 1.6;
+    color: var(--c-text-dim);
+}
+
+.evidence-card__list li::before {
+    content: '✗';
+    position: absolute;
+    left: 0;
+    color: var(--c-blood);
+    font-weight: 700;
+}
+
+.evidence-card__list li strong {
+    color: var(--c-text);
+}
+
+.evidence-card__list li a {
+    color: var(--c-cyan);
+    font-size: 0.75rem;
+    text-decoration: none;
+    border-bottom: 1px dotted rgba(0, 229, 255, 0.4);
+    margin-left: 0.25rem;
+    opacity: 0.7;
+    transition: opacity var(--t-fast);
+}
+.evidence-card__list li a:hover {
+    opacity: 1;
+    border-bottom-style: solid;
+}
+
+.evidence-card__cost {
+    padding-top: 1rem;
+    border-top: 1px solid rgba(239, 68, 68, 0.2);
+    font-family: var(--f-tech);
+    font-size: 0.78rem;
+    letter-spacing: 0.08em;
+    color: var(--c-text-dim);
+}
+
+.evidence-card__cost strong {
+    color: var(--c-blood);
+}
+
+.citadel-section__cta {
+    display: flex;
+    gap: 1rem;
+    justify-content: center;
+    flex-wrap: wrap;
+    margin-top: 2.5rem;
+}
+
+@media (max-width: 640px) {
+    .evidence-grid {
+        grid-template-columns: 1fr;
     }
-    .border-march::before,
-    .citadel-hero::after { display: none; }
+    .evidence-card__number {
+        font-size: 1.6rem;
+    }
+}
+
+/* ============================================================================
+ * NAV DROPDOWN — Section headings & polish
+ * ========================================================================== */
+
+.citadel-nav__dropdown {
+    min-width: 240px;
+    padding: 0.5rem;
+}
+
+.citadel-nav__dropdown-heading {
+    display: block;
+    padding: 0.5rem 0.75rem 0.35rem;
+    font-family: var(--f-tech);
+    font-size: 0.62rem;
+    letter-spacing: 0.18em;
+    text-transform: uppercase;
+    color: var(--c-text-faint);
+    opacity: 0.7;
+}
+.citadel-nav__dropdown-heading:not(:first-child) {
+    margin-top: 0.35rem;
+}
+
+.citadel-nav__dropdown a {
+    padding: 0.55rem 0.75rem;
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    font-size: 0.88rem;
+}
+
+.citadel-nav__dropdown a:hover {
+    background: rgba(0, 229, 255, 0.08);
+    color: var(--c-cyan-bright);
+    padding-left: 0.95rem;
+}
+
+/* Active page indicator */
+.citadel-nav__links a.active {
+    color: var(--c-cyan-bright);
+    text-shadow: 0 0 6px rgba(0, 229, 255, 0.5);
+}
+.citadel-nav__links a.active::after {
+    transform: scaleX(1);
+}
+
+/* ============================================================================
+ * ███ CITADEL.CSS — PART 5: ABOUT PAGE ███
+ * ----------------------------------------------------------------------------
+ * Glitched headers, floating runes, protective imagery.
+ * All animations respect prefers-reduced-motion (base theme already
+ * handles this via the global media query).
+ * ========================================================================== */
+
+
+/* ══════════════════════════════════════════════════════════════════════════
+ * ABOUT PAGE — LAYOUT
+ * ========================================================================== */
+
+.page-about__main {
+    flex: 1 1 auto;
+    width: 100%;
+    overflow-x: hidden;
+}
+
+/* Section headers with numbered rune marks */
+.about-h2 {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    margin-bottom: 2rem;
+    font-family: var(--f-heading);
+    font-size: clamp(1.5rem, 3vw + 0.5rem, 2rem);
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    color: var(--c-gold-bright);
+    text-shadow: 0 0 10px rgba(212, 175, 55, 0.35);
+    border: none;
+    padding: 0;
+}
+
+.about-h2--center {
+    justify-content: center;
+    text-align: center;
+}
+
+.about-h2__mark {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 44px;
+    height: 44px;
+    font-family: var(--f-mono);
+    font-size: 0.9rem;
+    font-weight: 700;
+    color: var(--c-gold);
+    background: rgba(212, 175, 55, 0.06);
+    border: 1px solid rgba(212, 175, 55, 0.5);
+    border-radius: 50%;
+    box-shadow:
+        0 0 12px rgba(212, 175, 55, 0.35),
+        inset 0 0 12px rgba(212, 175, 55, 0.15);
+    flex-shrink: 0;
+}
+
+/* Body paragraphs get comfortable reading measure */
+.about-lede {
+    font-size: 1.05rem;
+    line-height: 1.85;
+    color: var(--c-text-dim);
+    margin: 0 0 1.5rem;
+}
+
+.about-lede--highlight {
+    margin: 2rem 0;
+    padding: 1.5rem 1.75rem;
+    font-family: var(--f-display);
+    font-size: 1.2rem;
+    letter-spacing: 0.02em;
+    color: var(--c-cyan-bright);
+    background: rgba(0, 229, 255, 0.05);
+    border-left: 4px solid var(--c-cyan);
+    border-radius: var(--r-md);
+    text-shadow: 0 0 8px rgba(0, 229, 255, 0.35);
+}
+
+.about-lede--highlight strong {
+    color: var(--c-cyan-bright);
+    font-weight: 700;
 }
 
 
-/* ============================================================================
- * ▓▓▓ END OF CITADEL.CSS ▓▓▓
- * ----------------------------------------------------------------------------
- * Remember: chaos is expensive. Restraint is a weapon.
- * One hero glow is dramatic. Ten is a nightclub.
- * — Bearded Viking
+/* ══════════════════════════════════════════════════════════════════════════
+ * ABOUT HERO — glitched title, floating runes, scroll hint
  * ========================================================================== */
+
+.about-hero {
+    position: relative;
+    padding: 6rem 1.5rem 4rem;
+    text-align: center;
+    overflow: hidden;
+    border-bottom: 1px solid rgba(0, 229, 255, 0.12);
+    background:
+        radial-gradient(ellipse at 50% 0%, rgba(0, 229, 255, 0.10) 0%, transparent 55%),
+        radial-gradient(ellipse at 50% 120%, rgba(168, 85, 247, 0.10) 0%, transparent 55%);
+    min-height: 60vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.about-hero__inner {
+    position: relative;
+    z-index: 2;
+    max-width: 800px;
+    margin: 0 auto;
+}
+
+.about-hero__eyebrow {
+    display: inline-block;
+    padding: 0.35rem 0.9rem;
+    margin-bottom: 1.5rem;
+    font-family: var(--f-tech);
+    font-size: 0.7rem;
+    letter-spacing: 0.24em;
+    text-transform: uppercase;
+    color: var(--c-gold);
+    border: 1px solid rgba(212, 175, 55, 0.5);
+    border-radius: 999px;
+    background: rgba(212, 175, 55, 0.04);
+    box-shadow: 0 0 10px rgba(212, 175, 55, 0.25);
+}
+
+/* Glitched title — layered ::before and ::after use the data-text
+   attribute and offset the text in cyan/rune colors for an RGB split */
+.about-hero__title {
+    position: relative;
+    margin: 0 0 0.75rem;
+    font-family: var(--f-display);
+    font-size: clamp(3rem, 9vw, 6rem);
+    letter-spacing: 0.16em;
+    text-transform: uppercase;
+    color: var(--c-cyan-bright);
+    text-shadow:
+        0 0 12px rgba(0, 229, 255, 0.9),
+        0 0 40px rgba(0, 229, 255, 0.5),
+        0 0 80px rgba(0, 229, 255, 0.25);
+    line-height: 1.05;
+}
+
+.about-hero__title.glitch::before,
+.about-hero__title.glitch::after {
+    content: attr(data-text);
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    pointer-events: none;
+}
+
+.about-hero__title.glitch::before {
+    color: var(--c-rune-bright);
+    text-shadow: 0 0 8px rgba(168, 85, 247, 0.8);
+    animation: glitch-shift-a 4.2s steps(2, end) infinite;
+    mix-blend-mode: screen;
+    opacity: 0.85;
+}
+
+.about-hero__title.glitch::after {
+    color: var(--c-gold-bright);
+    text-shadow: 0 0 8px rgba(212, 175, 55, 0.8);
+    animation: glitch-shift-b 5.7s steps(2, end) infinite;
+    mix-blend-mode: screen;
+    opacity: 0.7;
+}
+
+@keyframes glitch-shift-a {
+    0%, 90%, 100% { transform: translate(0, 0); clip-path: none; }
+    91%           { transform: translate(-3px, 1px); clip-path: polygon(0 0, 100% 0, 100% 35%, 0 35%); }
+    92%           { transform: translate(2px, -2px);  clip-path: polygon(0 40%, 100% 40%, 100% 100%, 0 100%); }
+    93%           { transform: translate(-2px, 2px);  clip-path: polygon(0 15%, 100% 15%, 100% 60%, 0 60%); }
+    94%           { transform: translate(0, 0); }
+}
+@keyframes glitch-shift-b {
+    0%, 88%, 100% { transform: translate(0, 0); clip-path: none; }
+    89%           { transform: translate(3px, -1px); clip-path: polygon(0 10%, 100% 10%, 100% 40%, 0 40%); }
+    90%           { transform: translate(-2px, 2px);  clip-path: polygon(0 45%, 100% 45%, 100% 90%, 0 90%); }
+    91%           { transform: translate(1px, -2px);  clip-path: polygon(0 0, 100% 0, 100% 30%, 0 30%); }
+    92%           { transform: translate(0, 0); }
+}
+
+.about-hero__subtitle {
+    margin: 0 0 1.5rem;
+    font-family: var(--f-tech);
+    font-size: 0.95rem;
+    letter-spacing: 0.4em;
+    text-transform: uppercase;
+    color: var(--c-gold);
+    text-shadow: 0 0 8px rgba(212, 175, 55, 0.55);
+}
+
+.about-hero__lede {
+    max-width: 620px;
+    margin: 0 auto;
+    font-size: 1.05rem;
+    line-height: 1.75;
+    color: var(--c-text-dim);
+}
+
+/* Floating decorative runes */
+.about-float {
+    position: absolute;
+    font-family: var(--f-rune);
+    color: var(--c-cyan);
+    opacity: 0.12;
+    pointer-events: none;
+    user-select: none;
+    z-index: 1;
+    text-shadow: 0 0 30px currentColor;
+}
+
+.about-float--1 { top: 12%; left: 8%;  font-size: 5rem;   animation: float-y 9s  ease-in-out infinite; color: var(--c-cyan); }
+.about-float--2 { top: 22%; right: 11%; font-size: 7rem;  animation: float-y 12s ease-in-out infinite reverse; color: var(--c-rune); }
+.about-float--3 { bottom: 18%; left: 14%; font-size: 6rem; animation: drift-x 15s ease-in-out infinite; color: var(--c-gold); }
+.about-float--4 { bottom: 12%; right: 16%; font-size: 4.5rem; animation: float-y 10s ease-in-out infinite; color: var(--c-cyan); }
+.about-float--5 { top: 48%; left: 4%;  font-size: 3.5rem;  animation: drift-x 18s ease-in-out infinite reverse; color: var(--c-rune); }
+.about-float--6 { top: 55%; right: 5%; font-size: 4rem;    animation: float-y 11s ease-in-out infinite reverse; color: var(--c-gold); }
+
+/* Scroll hint at the bottom of the hero */
+.about-hero__scroll {
+    position: absolute;
+    bottom: 2rem;
+    left: 50%;
+    transform: translateX(-50%);
+    z-index: 2;
+    opacity: 0.5;
+}
+.about-hero__scroll-line {
+    display: block;
+    width: 1px;
+    height: 40px;
+    background: linear-gradient(180deg, transparent, var(--c-cyan), transparent);
+    animation: scroll-pulse 2.2s ease-in-out infinite;
+}
+@keyframes scroll-pulse {
+    0%, 100% { transform: scaleY(0.6); opacity: 0.4; }
+    50%      { transform: scaleY(1);   opacity: 1; }
+}
+
+
+/* ══════════════════════════════════════════════════════════════════════════
+ * FOR OUR CHILDREN — four protective cards with animated SVG icons
+ * ========================================================================== */
+
+.children-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+    gap: 1.5rem;
+    margin: 2.5rem 0;
+}
+
+.child-card {
+    position: relative;
+    padding: 2rem 1.75rem;
+    text-align: center;
+    overflow: hidden;
+    transition: all var(--t-med) var(--ease-out);
+}
+
+.child-card::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background: radial-gradient(circle at 50% 0%, rgba(0, 229, 255, 0.08), transparent 60%);
+    opacity: 0;
+    transition: opacity var(--t-med) var(--ease-out);
+    pointer-events: none;
+}
+.child-card:hover::before { opacity: 1; }
+
+.child-card:hover {
+    transform: translateY(-4px);
+    border-color: rgba(0, 229, 255, 0.5);
+    box-shadow:
+        0 15px 40px rgba(0, 0, 0, 0.5),
+        0 0 30px rgba(0, 229, 255, 0.15);
+}
+
+.child-card__icon {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 72px;
+    height: 72px;
+    margin-bottom: 1.25rem;
+    color: var(--c-cyan-bright);
+    background: radial-gradient(circle, rgba(0, 229, 255, 0.10), transparent 70%);
+    border: 1px solid rgba(0, 229, 255, 0.35);
+    border-radius: 50%;
+    box-shadow:
+        inset 0 0 20px rgba(0, 229, 255, 0.15),
+        0 0 20px rgba(0, 229, 255, 0.3);
+    animation: float-y 6s ease-in-out infinite;
+}
+
+.child-card__icon svg {
+    filter: drop-shadow(0 0 8px currentColor);
+}
+
+/* Give each card its own color personality */
+.child-card--protect .child-card__icon { color: var(--c-cyan-bright); border-color: rgba(0, 229, 255, 0.4); }
+.child-card--shield  .child-card__icon { color: var(--c-gold-bright); border-color: rgba(212, 175, 55, 0.4); animation-duration: 8s; }
+.child-card--private .child-card__icon { color: var(--c-rune-bright); border-color: rgba(168, 85, 247, 0.4); animation-duration: 7s; animation-direction: reverse; }
+.child-card--future  .child-card__icon { color: var(--c-success);     border-color: rgba(57, 255, 20, 0.4); animation-duration: 9s; }
+
+.child-card h3 {
+    color: var(--c-cyan-bright);
+    font-size: 0.95rem;
+    margin-bottom: 0.75rem;
+}
+
+.child-card p {
+    font-size: 0.9rem;
+    line-height: 1.7;
+    margin: 0;
+}
+
+
+/* ══════════════════════════════════════════════════════════════════════════
+ * ABOUT QUOTE
+ * ========================================================================== */
+
+.about-quote {
+    margin: 3rem auto 0;
+    padding: 2rem 2.25rem;
+    max-width: 780px;
+    font-family: var(--f-display);
+    font-size: 1.15rem;
+    line-height: 1.7;
+    font-style: italic;
+    color: var(--c-cyan-bright);
+    background: rgba(0, 229, 255, 0.04);
+    border-left: 4px solid var(--c-cyan);
+    border-radius: var(--r-md);
+    text-shadow: 0 0 8px rgba(0, 229, 255, 0.35);
+    position: relative;
+}
+.about-quote::before {
+    content: '"';
+    position: absolute;
+    top: -0.6rem;
+    left: 1rem;
+    font-family: var(--f-display);
+    font-size: 4rem;
+    color: var(--c-cyan);
+    opacity: 0.3;
+    line-height: 1;
+}
+
+
+/* ══════════════════════════════════════════════════════════════════════════
+ * FOUNDER CARD — enhanced for the about page
+ * ========================================================================== */
+
+.founder-card--large {
+    padding: 2.5rem 2.25rem;
+    gap: 2rem;
+}
+
+.founder-card__avatar--rune {
+    position: relative;
+    width: 120px;
+    height: 120px;
+    font-size: 3.75rem;
+    color: var(--c-gold-bright);
+    text-shadow: 0 0 12px rgba(212, 175, 55, 0.7);
+    background: radial-gradient(circle, rgba(212, 175, 55, 0.15), transparent 70%);
+    border: 2px solid var(--c-gold);
+    border-radius: 50%;
+    box-shadow:
+        0 0 24px rgba(212, 175, 55, 0.4),
+        inset 0 0 20px rgba(212, 175, 55, 0.15);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.founder-card__avatar-ring {
+    position: absolute;
+    inset: -12px;
+    border: 1px dashed rgba(212, 175, 55, 0.35);
+    border-radius: 50%;
+    animation: rune-spin 30s linear infinite;
+    pointer-events: none;
+}
+
+.founder-card--large .founder-card__body h3 {
+    font-family: var(--f-display);
+    font-size: 1.5rem;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    color: var(--c-gold-bright);
+    text-shadow: 0 0 10px rgba(212, 175, 55, 0.45);
+    margin-bottom: 0.35rem;
+}
+
+.founder-card--large .founder-card__body p {
+    font-size: 0.98rem;
+    line-height: 1.75;
+}
+
+
+/* ══════════════════════════════════════════════════════════════════════════
+ * RESPONSIVE
+ * ========================================================================== */
+
+@media (max-width: 720px) {
+    .about-hero {
+        padding: 4rem 1rem 3rem;
+        min-height: auto;
+    }
+    .about-hero__title {
+        font-size: clamp(2.25rem, 12vw, 3.5rem);
+        letter-spacing: 0.1em;
+    }
+    .about-hero__subtitle {
+        font-size: 0.75rem;
+        letter-spacing: 0.28em;
+    }
+    .about-float--1,
+    .about-float--2 { font-size: 3rem; }
+    .about-float--3,
+    .about-float--4 { font-size: 2.5rem; }
+    .about-float--5,
+    .about-float--6 { display: none; }
+
+    .about-h2 {
+        font-size: 1.2rem;
+        gap: 0.75rem;
+    }
+    .about-h2__mark {
+        width: 36px;
+        height: 36px;
+        font-size: 0.75rem;
+    }
+
+    .founder-card--large {
+        padding: 2rem 1.5rem;
+        text-align: center;
+    }
+    .founder-card--large .founder-card__body p {
+        text-align: left;
+    }
+}
+
+@media (max-width: 480px) {
+    .about-quote {
+        padding: 1.5rem 1.25rem;
+        font-size: 1rem;
+    }
+    .about-lede--highlight {
+        padding: 1.25rem;
+        font-size: 1.05rem;
+    }
+    .child-card {
+        padding: 1.75rem 1.25rem;
+    }
+    .child-card__icon {
+        width: 60px;
+        height: 60px;
+    }
+    .child-card__icon svg {
+        width: 44px;
+        height: 44px;
+    }
+}
+
+/* ============================================================================
+ * FOUNDER AVATAR — image inside the runic frame
+ * ========================================================================== */
+
+/* The circle container — keep the gold border and glow, remove any
+   flex centering that would affect the absolutely-positioned children */
+.founder-card__avatar--rune {
+    position: relative;
+    overflow: visible;          /* let the dashed ring extend past the circle */
+    padding: 0;                 /* prevent any inherited padding from offsetting */
+}
+
+/* Image fills the inner area of the circle */
+.founder-card__avatar-img {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;          /* crop to fill, no distortion */
+    object-position: center;    /* keep the subject centered */
+    border-radius: 50%;         /* clip to circle */
+    z-index: 2;                 /* above the fallback rune */
+    display: block;
+    box-shadow: inset 0 0 20px rgba(212, 175, 55, 0.25);
+}
+
+/* Fallback rune sits underneath; only visible if the image is missing
+   or hidden by onerror */
+.founder-card__avatar-fallback {
+    position: absolute;
+    inset: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-family: var(--f-rune);
+    font-size: 3.75rem;
+    color: var(--c-gold-bright);
+    text-shadow: 0 0 12px rgba(212, 175, 55, 0.7);
+    z-index: 1;
+    pointer-events: none;
+}
+
+/* The dashed animated ring stays above the image */
+.founder-card__avatar--rune .founder-card__avatar-ring {
+    z-index: 3;
+}
+
+/* ============================================================================
+ * CONTACT FORM — form rows, honeypots, verification, HQ cards
+ * ========================================================================== */
+
+.form-row {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 1rem;
+}
+@media (max-width: 640px) {
+    .form-row { grid-template-columns: 1fr; }
+}
+
+.form-hint {
+    margin-top: 0.35rem;
+    font-family: var(--f-mono);
+    font-size: 0.68rem;
+    letter-spacing: 0.06em;
+    color: var(--c-text-faint);
+}
+
+/* ── Honeypots — invisible to humans, visible to bots ──────────────────── */
+
+.hp-trap--offscreen {
+    position: absolute !important;
+    left: -9999px !important;
+    top: auto !important;
+    width: 1px !important;
+    height: 1px !important;
+    overflow: hidden !important;
+}
+
+.hp-trap--display {
+    display: none !important;
+}
+
+.hp-trap--fax {
+    position: absolute !important;
+    width: 1px !important;
+    height: 1px !important;
+    opacity: 0 !important;
+    pointer-events: none !important;
+    top: 0;
+    left: 0;
+}
+
+/* ── Verification group ────────────────────────────────────────────────── */
+
+.verify-group {
+    padding: 1.25rem;
+    background: rgba(0, 229, 255, 0.03);
+    border: 1px dashed rgba(0, 229, 255, 0.35);
+    border-radius: var(--r-md);
+    margin-top: 0.5rem;
+}
+
+.verify-phrase {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+    padding: 0.9rem 1rem;
+    margin-bottom: 0.75rem;
+    background: var(--c-void);
+    border: 1px solid rgba(0, 229, 255, 0.25);
+    border-radius: var(--r-sm);
+}
+
+.verify-phrase__label {
+    font-family: var(--f-tech);
+    font-size: 0.68rem;
+    letter-spacing: 0.18em;
+    text-transform: uppercase;
+    color: var(--c-text-faint);
+    flex-shrink: 0;
+}
+
+.verify-phrase__value {
+    font-family: var(--f-mono);
+    font-size: 1.05rem;
+    letter-spacing: 0.12em;
+    color: var(--c-cyan-bright);
+    text-shadow: 0 0 10px rgba(0, 229, 255, 0.5);
+    user-select: none;
+    -webkit-user-select: none;
+}
+
+.verify-group input[type="text"] {
+    width: 100%;
+    padding: 0.85rem 1rem;
+    font-family: var(--f-mono);
+    font-size: 0.95rem;
+    letter-spacing: 0.06em;
+    color: var(--c-text);
+    background: var(--c-abyss);
+    border: 1px solid rgba(0, 229, 255, 0.22);
+    border-radius: var(--r-sm);
+    outline: none;
+    transition: all var(--t-fast) var(--ease-out);
+}
+
+.verify-group input[type="text"].is-match {
+    border-color: var(--c-success);
+    box-shadow: 0 0 0 3px rgba(57, 255, 20, 0.15), 0 0 12px rgba(57, 255, 20, 0.3);
+}
+
+.verify-group input[type="text"].is-mismatch {
+    border-color: var(--c-blood);
+    box-shadow: 0 0 0 3px rgba(239, 68, 68, 0.15);
+}
+
+/* ── Form controls ────────────────────────────────────────────────────── */
+
+.contact-form select {
+    width: 100%;
+    padding: 0.85rem 1rem;
+    font-family: var(--f-mono);
+    font-size: 0.92rem;
+    color: var(--c-text);
+    background: var(--c-abyss);
+    border: 1px solid rgba(0, 229, 255, 0.22);
+    border-radius: var(--r-sm);
+    outline: none;
+    transition: all var(--t-fast) var(--ease-out);
+    cursor: pointer;
+}
+.contact-form select:focus {
+    border-color: var(--c-cyan);
+    box-shadow: 0 0 0 3px rgba(0, 229, 255, 0.12);
+}
+
+/* ── HQ cards ─────────────────────────────────────────────────────────── */
+
+.hq-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 1.5rem;
+    max-width: 800px;
+    margin: 0 auto;
+}
+@media (max-width: 720px) {
+    .hq-grid { grid-template-columns: 1fr; }
+}
+
+.hq-card {
+    text-align: center;
+    padding: 2rem 1.5rem;
+    position: relative;
+}
+
+.hq-card--hq {
+    border-color: rgba(212, 175, 55, 0.5);
+    background: linear-gradient(180deg, rgba(212, 175, 55, 0.05), transparent), var(--c-slab);
+}
+
+.hq-card--branch {
+    border-color: rgba(0, 229, 255, 0.35);
+}
+
+.hq-card__badge {
+    display: inline-block;
+    padding: 0.3rem 0.85rem;
+    margin-bottom: 1rem;
+    font-family: var(--f-tech);
+    font-size: 0.65rem;
+    letter-spacing: 0.22em;
+    text-transform: uppercase;
+    color: var(--c-void);
+    background: var(--c-gold);
+    border-radius: 999px;
+    box-shadow: 0 0 12px rgba(212, 175, 55, 0.5);
+}
+
+.hq-card__badge--branch {
+    background: var(--c-cyan);
+    box-shadow: 0 0 12px rgba(0, 229, 255, 0.5);
+}
+
+.hq-card h3 {
+    font-family: var(--f-display);
+    font-size: 1.35rem;
+    letter-spacing: 0.08em;
+    color: var(--c-text);
+    margin: 0 0 0.5rem;
+    text-transform: none;
+}
+
+.hq-card__status {
+    color: var(--c-cyan);
+    font-family: var(--f-tech);
+    font-size: 0.75rem;
+    letter-spacing: 0.16em;
+    text-transform: uppercase;
+    margin: 0 0 0.75rem;
+}
+
+.hq-card__note {
+    color: var(--c-text-dim);
+    font-size: 0.88rem;
+    margin: 0;
+}
+
+/* ============================================================================
+ * ███ CITADEL.CSS — PART 6: SECURITY PAGE ███
+ * ========================================================================== */
+
+.page-security__main {
+    flex: 1 1 auto;
+    width: 100%;
+    overflow-x: hidden;
+}
+
+/* ══════════════════════════════════════════════════════════════════════════
+ * HERO
+ * ========================================================================== */
+
+.security-hero {
+    position: relative;
+    padding: 6rem 1.5rem 4rem;
+    text-align: center;
+    overflow: hidden;
+    border-bottom: 1px solid rgba(0, 229, 255, 0.12);
+    background:
+        radial-gradient(ellipse at 50% 0%, rgba(0, 229, 255, 0.10) 0%, transparent 55%),
+        radial-gradient(ellipse at 50% 120%, rgba(57, 255, 20, 0.06) 0%, transparent 55%);
+    min-height: 60vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+.security-hero__inner {
+    position: relative;
+    z-index: 2;
+    max-width: 800px;
+    margin: 0 auto;
+}
+
+/* Quick-jump pill nav */
+.security-toc {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.5rem;
+    justify-content: center;
+    margin-top: 2rem;
+}
+.security-toc a {
+    padding: 0.4rem 0.9rem;
+    font-family: var(--f-tech);
+    font-size: 0.68rem;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    color: var(--c-text-dim);
+    background: rgba(0, 229, 255, 0.04);
+    border: 1px solid rgba(0, 229, 255, 0.25);
+    border-radius: 999px;
+    text-decoration: none;
+    transition: all var(--t-fast) var(--ease-out);
+}
+.security-toc a:hover {
+    color: var(--c-cyan-bright);
+    border-color: var(--c-cyan);
+    background: rgba(0, 229, 255, 0.10);
+    box-shadow: 0 0 10px rgba(0, 229, 255, 0.3);
+}
+
+/* ══════════════════════════════════════════════════════════════════════════
+ * SECURITY FACTS — big number stats
+ * ========================================================================== */
+
+.security-facts {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
+    gap: 1.25rem;
+    margin-top: 2rem;
+    padding: 2rem;
+    background: rgba(0, 229, 255, 0.03);
+    border: 1px solid rgba(0, 229, 255, 0.15);
+    border-radius: var(--r-lg);
+}
+.security-fact {
+    text-align: center;
+}
+.security-fact__num {
+    display: block;
+    font-family: var(--f-mono);
+    font-size: 2.25rem;
+    font-weight: 700;
+    color: var(--c-cyan-bright);
+    text-shadow: 0 0 12px rgba(0, 229, 255, 0.55);
+    line-height: 1;
+    margin-bottom: 0.5rem;
+}
+.security-fact__unit {
+    font-size: 1rem;
+    letter-spacing: 0.05em;
+    margin-left: 0.15rem;
+    color: var(--c-cyan);
+    opacity: 0.75;
+}
+.security-fact__label {
+    font-family: var(--f-tech);
+    font-size: 0.68rem;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    color: var(--c-text-dim);
+    line-height: 1.5;
+}
+
+/* ══════════════════════════════════════════════════════════════════════════
+ * MECHANISMS GRID
+ * ========================================================================== */
+
+.mechanisms-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+    gap: 1.5rem;
+    margin-top: 3rem;
+}
+.mechanism-card {
+    padding: 1.75rem;
+    text-align: left;
+    transition: all var(--t-med) var(--ease-out);
+}
+.mechanism-card:hover {
+    transform: translateY(-3px);
+    border-color: rgba(0, 229, 255, 0.5);
+    box-shadow:
+        0 15px 40px rgba(0, 0, 0, 0.5),
+        0 0 30px rgba(0, 229, 255, 0.12);
+}
+.mechanism-card__icon {
+    font-size: 1.75rem;
+    line-height: 1;
+    margin-bottom: 0.85rem;
+    filter: drop-shadow(0 0 10px rgba(0, 229, 255, 0.5));
+}
+.mechanism-card h3 {
+    color: var(--c-cyan-bright);
+    font-size: 0.95rem;
+    margin-bottom: 0.65rem;
+}
+.mechanism-card p {
+    font-size: 0.9rem;
+    line-height: 1.65;
+    margin: 0;
+    color: var(--c-text-dim);
+}
+.mechanism-card p strong {
+    color: var(--c-text);
+}
+
+/* ══════════════════════════════════════════════════════════════════════════
+ * STALKER SHIELD
+ * ========================================================================== */
+
+.shield-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+    gap: 1.5rem;
+    margin-top: 3rem;
+}
+.shield-card {
+    padding: 1.75rem;
+    text-align: center;
+    position: relative;
+    overflow: hidden;
+    transition: all var(--t-med) var(--ease-out);
+    border-color: rgba(168, 85, 247, 0.2);
+}
+.shield-card::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background: radial-gradient(circle at 50% 0%, rgba(168, 85, 247, 0.10), transparent 65%);
+    opacity: 0;
+    transition: opacity var(--t-med) var(--ease-out);
+    pointer-events: none;
+}
+.shield-card:hover {
+    transform: translateY(-4px);
+    border-color: rgba(168, 85, 247, 0.55);
+    box-shadow:
+        0 15px 40px rgba(0, 0, 0, 0.5),
+        0 0 30px rgba(168, 85, 247, 0.2);
+}
+.shield-card:hover::before { opacity: 1; }
+
+.shield-card__icon {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 80px;
+    height: 80px;
+    margin-bottom: 1.25rem;
+    color: var(--c-rune-bright);
+    background: radial-gradient(circle, rgba(168, 85, 247, 0.15), transparent 70%);
+    border: 1px solid rgba(168, 85, 247, 0.4);
+    border-radius: 50%;
+    box-shadow:
+        inset 0 0 20px rgba(168, 85, 247, 0.15),
+        0 0 24px rgba(168, 85, 247, 0.35);
+    animation: float-y 7s ease-in-out infinite;
+}
+.shield-card__icon svg {
+    filter: drop-shadow(0 0 8px currentColor);
+}
+.shield-card h3 {
+    color: var(--c-rune-bright);
+    font-size: 0.95rem;
+    margin-bottom: 0.75rem;
+    text-shadow: 0 0 6px rgba(168, 85, 247, 0.4);
+}
+.shield-card p {
+    font-size: 0.9rem;
+    line-height: 1.7;
+    margin: 0;
+    color: var(--c-text-dim);
+    text-align: left;
+}
+.shield-card p strong { color: var(--c-text); }
+
+/* Give each card a slightly different animation offset */
+.shield-card--blocks .shield-card__icon   { animation-duration: 9s; color: var(--c-blood); border-color: rgba(239, 68, 68, 0.4); background: radial-gradient(circle, rgba(239, 68, 68, 0.12), transparent 70%); }
+.shield-card--blocks h3 { color: #ffb0b0; }
+.shield-card--hidden .shield-card__icon   { animation-duration: 11s; color: var(--c-gold-bright); border-color: rgba(212, 175, 55, 0.4); background: radial-gradient(circle, rgba(212, 175, 55, 0.12), transparent 70%); }
+.shield-card--hidden h3 { color: var(--c-gold-bright); }
+.shield-card--noenum .shield-card__icon   { animation-duration: 8s; color: var(--c-success); border-color: rgba(57, 255, 20, 0.4); background: radial-gradient(circle, rgba(57, 255, 20, 0.12), transparent 70%); }
+.shield-card--noenum h3 { color: var(--c-success); }
+.shield-card--sever .shield-card__icon    { animation-duration: 10s; animation-direction: reverse; }
+.shield-card--mute .shield-card__icon     { animation-duration: 6s; }
+
+/* ══════════════════════════════════════════════════════════════════════════
+ * NO BACKDOORS
+ * ========================================================================== */
+
+.no-backdoor-grid {
+    display: grid;
+    gap: 1.25rem;
+    margin-top: 2rem;
+}
+.no-backdoor-item {
+    display: flex;
+    gap: 1rem;
+    align-items: flex-start;
+    padding: 1.25rem 1.5rem;
+    background: rgba(57, 255, 20, 0.03);
+    border-left: 3px solid var(--c-success);
+    border-radius: var(--r-md);
+}
+.no-backdoor-item__check {
+    flex-shrink: 0;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 32px;
+    height: 32px;
+    color: var(--c-success);
+    background: rgba(57, 255, 20, 0.10);
+    border: 1px solid rgba(57, 255, 20, 0.5);
+    border-radius: 50%;
+    font-weight: 700;
+    font-size: 0.9rem;
+    box-shadow: 0 0 10px rgba(57, 255, 20, 0.3);
+}
+.no-backdoor-item strong {
+    display: block;
+    color: var(--c-success);
+    font-family: var(--f-tech);
+    font-size: 0.88rem;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    margin-bottom: 0.35rem;
+}
+.no-backdoor-item p {
+    margin: 0;
+    font-size: 0.92rem;
+    line-height: 1.6;
+    color: var(--c-text-dim);
+}
+
+/* ══════════════════════════════════════════════════════════════════════════
+ * MATH CALLOUT + BUSINESS MODEL
+ * ========================================================================== */
+
+.math-callout {
+    display: flex;
+    gap: 1.5rem;
+    align-items: center;
+    margin: 2rem 0;
+    padding: 1.75rem 2rem;
+    background: linear-gradient(135deg, rgba(0, 229, 255, 0.06), rgba(168, 85, 247, 0.06));
+    border: 1px solid rgba(0, 229, 255, 0.3);
+    border-radius: var(--r-lg);
+}
+.math-callout__glyph {
+    flex-shrink: 0;
+    font-family: var(--f-display);
+    font-size: 4rem;
+    color: var(--c-cyan-bright);
+    text-shadow: 0 0 20px rgba(0, 229, 255, 0.5);
+    line-height: 1;
+}
+.math-callout__body h3 {
+    font-family: var(--f-heading);
+    font-size: 1.15rem;
+    color: var(--c-cyan-bright);
+    text-transform: none;
+    letter-spacing: 0.03em;
+    margin: 0 0 0.5rem;
+}
+.math-callout__body p {
+    margin: 0;
+    font-size: 0.95rem;
+    line-height: 1.7;
+    color: var(--c-text-dim);
+}
+
+.business-model {
+    margin-top: 2rem;
+    padding: 1.75rem 2rem;
+    background: rgba(212, 175, 55, 0.03);
+    border-left: 3px solid var(--c-gold);
+    border-radius: var(--r-md);
+}
+.business-model h3 {
+    font-family: var(--f-heading);
+    color: var(--c-gold-bright);
+    text-transform: none;
+    letter-spacing: 0.03em;
+    margin: 0 0 0.85rem;
+}
+.business-model p {
+    color: var(--c-text-dim);
+    line-height: 1.75;
+    margin: 0 0 1rem;
+}
+.business-model p strong { color: var(--c-text); }
+.business-model__note {
+    font-style: italic;
+    color: var(--c-gold) !important;
+    font-size: 0.92rem;
+    opacity: 0.85;
+}
+
+/* ══════════════════════════════════════════════════════════════════════════
+ * BUG BOUNTY
+ * ========================================================================== */
+
+.bounty-section {
+    scroll-margin-top: 80px;   /* offset for sticky nav when jumping to #bug-bounty */
+}
+
+.bounty-hero {
+    text-align: center;
+    max-width: 820px;
+    margin: 0 auto 3rem;
+}
+.bounty-hero__icon {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    color: var(--c-gold-bright);
+    margin-bottom: 1.25rem;
+    filter: drop-shadow(0 0 20px rgba(212, 175, 55, 0.5));
+    animation: float-y 6s ease-in-out infinite;
+}
+.bounty-hero__lede {
+    font-size: 1.05rem;
+    line-height: 1.75;
+    color: var(--c-text-dim);
+    max-width: 640px;
+    margin: 1.25rem auto 2rem;
+}
+
+.bounty-status {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.65rem;
+    padding: 0.75rem 1.5rem;
+    background: rgba(57, 255, 20, 0.05);
+    border: 1px solid rgba(57, 255, 20, 0.35);
+    border-radius: 999px;
+    font-size: 0.88rem;
+    color: var(--c-text);
+}
+.bounty-status__dot {
+    display: inline-block;
+    width: 10px;
+    height: 10px;
+    background: var(--c-success);
+    border-radius: 50%;
+    box-shadow: 0 0 10px rgba(57, 255, 20, 0.8);
+    animation: pulse-glow 2s ease-in-out infinite;
+}
+.bounty-status__text strong { color: var(--c-success); }
+
+.bounty-subhead {
+    margin: 3rem 0 1.5rem;
+    font-family: var(--f-heading);
+    font-size: 1.35rem;
+    letter-spacing: 0.08em;
+    color: var(--c-gold-bright);
+    text-transform: uppercase;
+    text-align: center;
+}
+
+.bounty-tiers {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+    gap: 1.5rem;
+}
+.bounty-tier {
+    padding: 2rem 1.75rem;
+    position: relative;
+}
+.bounty-tier--merch {
+    border-color: rgba(0, 229, 255, 0.35);
+}
+.bounty-tier--cash {
+    border-color: rgba(212, 175, 55, 0.5);
+    background: linear-gradient(180deg, rgba(212, 175, 55, 0.04), transparent), var(--c-slab);
+}
+.bounty-tier__badge {
+    display: inline-block;
+    padding: 0.3rem 0.9rem;
+    margin-bottom: 1rem;
+    font-family: var(--f-tech);
+    font-size: 0.65rem;
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+    color: var(--c-void);
+    background: var(--c-cyan);
+    border-radius: 999px;
+    box-shadow: 0 0 12px rgba(0, 229, 255, 0.5);
+}
+.bounty-tier__badge--cash {
+    background: var(--c-gold);
+    box-shadow: 0 0 12px rgba(212, 175, 55, 0.6);
+}
+.bounty-tier h4 {
+    font-family: var(--f-display);
+    font-size: 1.4rem;
+    letter-spacing: 0.05em;
+    color: var(--c-text);
+    text-transform: none;
+    margin: 0 0 1rem;
+}
+.bounty-tier ul {
+    list-style: none;
+    padding: 0;
+    margin: 0 0 1rem;
+}
+.bounty-tier ul li {
+    position: relative;
+    padding-left: 1.5rem;
+    margin-bottom: 0.65rem;
+    font-size: 0.9rem;
+    line-height: 1.6;
+    color: var(--c-text-dim);
+}
+.bounty-tier ul li::before {
+    content: '✓';
+    position: absolute;
+    left: 0;
+    color: var(--c-success);
+    font-weight: 700;
+}
+.bounty-tier ul li strong { color: var(--c-text); }
+.bounty-tier__note {
+    margin-top: 1.25rem;
+    padding-top: 1.25rem;
+    border-top: 1px solid rgba(212, 175, 55, 0.2);
+    font-size: 0.88rem;
+    line-height: 1.65;
+    color: var(--c-text-dim);
+}
+.bounty-tier__note em { color: var(--c-gold); }
+
+.bounty-scope {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 1.5rem;
+}
+@media (max-width: 720px) {
+    .bounty-scope { grid-template-columns: 1fr; }
+}
+.bounty-scope__col {
+    padding: 1.75rem;
+    border-radius: var(--r-md);
+}
+.bounty-scope__col--in {
+    background: rgba(57, 255, 20, 0.03);
+    border: 1px solid rgba(57, 255, 20, 0.3);
+}
+.bounty-scope__col--out {
+    background: rgba(239, 68, 68, 0.03);
+    border: 1px solid rgba(239, 68, 68, 0.3);
+}
+.bounty-scope__col h4 {
+    font-family: var(--f-tech);
+    font-size: 0.82rem;
+    letter-spacing: 0.16em;
+    text-transform: uppercase;
+    margin: 0 0 1rem;
+}
+.bounty-scope__col--in h4   { color: var(--c-success); }
+.bounty-scope__col--out h4  { color: var(--c-blood); }
+.bounty-scope__col ul {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+}
+.bounty-scope__col li {
+    position: relative;
+    padding-left: 1.4rem;
+    margin-bottom: 0.6rem;
+    font-size: 0.88rem;
+    line-height: 1.55;
+    color: var(--c-text-dim);
+}
+.bounty-scope__col--in li::before {
+    content: '✓';
+    position: absolute;
+    left: 0;
+    color: var(--c-success);
+    font-weight: 700;
+}
+.bounty-scope__col--out li::before {
+    content: '✗';
+    position: absolute;
+    left: 0;
+    color: var(--c-blood);
+    font-weight: 700;
+}
+.bounty-scope__col li code {
+    font-family: var(--f-mono);
+    font-size: 0.85em;
+    color: var(--c-cyan-bright);
+}
+
+.bounty-rules {
+    margin-top: 3rem;
+    padding: 2rem;
+    background: rgba(0, 229, 255, 0.03);
+    border-left: 3px solid var(--c-cyan);
+    border-radius: var(--r-md);
+}
+.bounty-rules h3 {
+    color: var(--c-cyan-bright);
+    margin-bottom: 1.25rem;
+    text-transform: none;
+    letter-spacing: 0.04em;
+}
+.bounty-rules ol {
+    padding-left: 1.5rem;
+    margin: 0;
+    counter-reset: rule;
+    list-style: none;
+}
+.bounty-rules ol li {
+    position: relative;
+    padding-left: 2.5rem;
+    margin-bottom: 1rem;
+    font-size: 0.95rem;
+    line-height: 1.7;
+    color: var(--c-text-dim);
+    counter-increment: rule;
+}
+.bounty-rules ol li::before {
+    content: counter(rule);
+    position: absolute;
+    left: 0;
+    top: 0;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 28px;
+    height: 28px;
+    font-family: var(--f-mono);
+    font-size: 0.85rem;
+    font-weight: 700;
+    color: var(--c-cyan-bright);
+    background: rgba(0, 229, 255, 0.1);
+    border: 1px solid rgba(0, 229, 255, 0.4);
+    border-radius: 50%;
+}
+.bounty-rules ol li strong {
+    display: block;
+    color: var(--c-text);
+    margin-bottom: 0.25rem;
+}
+
+/* ══════════════════════════════════════════════════════════════════════════
+ * REPORT GRID
+ * ========================================================================== */
+
+.report-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 1.5rem;
+    margin-top: 2rem;
+}
+@media (max-width: 720px) {
+    .report-grid { grid-template-columns: 1fr; }
+}
+.report-card {
+    padding: 2rem 1.75rem;
+    text-align: center;
+    position: relative;
+    transition: all var(--t-med) var(--ease-out);
+}
+.report-card:hover {
+    transform: translateY(-3px);
+    box-shadow:
+        0 15px 40px rgba(0, 0, 0, 0.5),
+        0 0 30px rgba(0, 229, 255, 0.12);
+}
+.report-card--primary { border-color: rgba(0, 229, 255, 0.4); }
+.report-card--soon    { border-color: rgba(212, 175, 55, 0.4); }
+.report-card__badge {
+    display: inline-block;
+    padding: 0.25rem 0.8rem;
+    margin-bottom: 1rem;
+    font-family: var(--f-tech);
+    font-size: 0.62rem;
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+    color: var(--c-void);
+    background: var(--c-cyan);
+    border-radius: 999px;
+}
+.report-card__badge--soon { background: var(--c-gold); }
+.report-card h3 {
+    font-family: var(--f-display);
+    font-size: 1.35rem;
+    letter-spacing: 0.06em;
+    color: var(--c-text);
+    text-transform: none;
+    margin: 0 0 1rem;
+}
+.report-card p {
+    font-size: 0.9rem;
+    line-height: 1.65;
+    color: var(--c-text-dim);
+    margin: 0 0 1.25rem;
+}
+.report-card__email {
+    display: inline-block;
+    font-family: var(--f-mono);
+    font-size: 1rem;
+    color: var(--c-cyan-bright);
+    text-decoration: none;
+    padding: 0.65rem 1.25rem;
+    background: rgba(0, 229, 255, 0.06);
+    border: 1px solid rgba(0, 229, 255, 0.35);
+    border-radius: var(--r-sm);
+    word-break: break-all;
+    transition: all var(--t-fast) var(--ease-out);
+    text-shadow: 0 0 8px rgba(0, 229, 255, 0.4);
+}
+.report-card__email:hover {
+    background: rgba(0, 229, 255, 0.12);
+    box-shadow: 0 0 12px rgba(0, 229, 255, 0.3);
+}
+.report-card__email--soon {
+    cursor: default;
+    opacity: 0.7;
+}
+.report-card__email--soon:hover {
+    background: rgba(212, 175, 55, 0.08);
+    box-shadow: none;
+}
+.report-card__note {
+    margin-top: 1.5rem !important;
+    padding-top: 1.25rem;
+    border-top: 1px dashed rgba(0, 229, 255, 0.2);
+    font-size: 0.82rem !important;
+    line-height: 1.6 !important;
+    color: var(--c-text-dim) !important;
+}
+.report-card__note strong { color: var(--c-text); }
+
+.report-cta {
+    margin-top: 2rem;
+    text-align: center;
+}
+
+.report-fineprint {
+    margin-top: 2rem;
+    text-align: center;
+    font-size: 0.85rem;
+    color: var(--c-text-faint);
+    font-style: italic;
+    max-width: 600px;
+    margin-left: auto;
+    margin-right: auto;
+}
+
+/* ══════════════════════════════════════════════════════════════════════════
+ * RESPONSIVE
+ * ========================================================================== */
+
+@media (max-width: 720px) {
+    .security-hero {
+        padding: 4rem 1rem 3rem;
+        min-height: auto;
+    }
+    .security-facts {
+        padding: 1.5rem 1rem;
+        gap: 1rem;
+    }
+    .security-fact__num {
+        font-size: 1.75rem;
+    }
+    .mechanisms-grid,
+    .shield-grid {
+        grid-template-columns: 1fr;
+    }
+    .math-callout {
+        flex-direction: column;
+        text-align: center;
+        padding: 1.5rem 1.25rem;
+    }
+    .math-callout__glyph {
+        font-size: 3rem;
+    }
+    .bounty-rules {
+        padding: 1.5rem 1.25rem;
+    }
+    .bounty-rules ol li {
+        padding-left: 2.25rem;
+    }
+    .bounty-rules ol li::before {
+        width: 24px;
+        height: 24px;
+        font-size: 0.75rem;
+    }
+}
+
+/* ============================================================================
+ * ███ CITADEL.CSS — PART 7: LEGAL PAGES (Terms, Privacy) ███
+ * ========================================================================== */
+
+.page-legal {
+    flex: 1 1 auto;
+    width: 100%;
+}
+
+.legal-section {
+    scroll-margin-top: 90px;
+}
+
+/* Meta line under the page header */
+.legal-meta {
+    margin-top: 1.25rem;
+    font-family: var(--f-mono);
+    font-size: 0.78rem;
+    letter-spacing: 0.06em;
+    color: var(--c-text-faint);
+}
+.legal-meta strong {
+    color: var(--c-text-dim);
+}
+.legal-meta__sep {
+    margin: 0 0.65rem;
+    color: var(--c-text-faint);
+}
+
+/* Sub-headings inside legal sections */
+.legal-subhead {
+    margin: 1.75rem 0 0.75rem;
+    font-family: var(--f-tech);
+    font-size: 0.88rem;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    color: var(--c-cyan);
+}
+.legal-subhead:first-of-type {
+    margin-top: 0.5rem;
+}
+
+/* Lists */
+.legal-list {
+    list-style: none;
+    padding: 0;
+    margin: 0 0 1.5rem;
+}
+.legal-list li {
+    position: relative;
+    padding-left: 1.5rem;
+    margin-bottom: 0.75rem;
+    font-size: 0.95rem;
+    line-height: 1.7;
+    color: var(--c-text-dim);
+}
+.legal-list li::before {
+    content: '›';
+    position: absolute;
+    left: 0;
+    top: -1px;
+    color: var(--c-cyan);
+    font-weight: 700;
+    font-size: 1.1rem;
+}
+.legal-list li strong {
+    color: var(--c-text);
+}
+
+.legal-list--ordered {
+    counter-reset: legal-counter;
+}
+.legal-list--ordered li {
+    padding-left: 2.25rem;
+    counter-increment: legal-counter;
+}
+.legal-list--ordered li::before {
+    content: counter(legal-counter);
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 24px;
+    height: 24px;
+    font-family: var(--f-mono);
+    font-size: 0.72rem;
+    font-weight: 700;
+    color: var(--c-cyan-bright);
+    background: rgba(0, 229, 255, 0.08);
+    border: 1px solid rgba(0, 229, 255, 0.35);
+    border-radius: 50%;
+    font-size: 0.7rem;
+    top: 0;
+}
+
+/* Callout boxes */
+.legal-callout {
+    margin: 1.5rem 0;
+    padding: 1.25rem 1.5rem;
+    font-size: 0.92rem;
+    line-height: 1.7;
+    color: var(--c-text-dim);
+    background: rgba(0, 229, 255, 0.04);
+    border-left: 3px solid var(--c-cyan);
+    border-radius: var(--r-md);
+}
+.legal-callout strong {
+    color: var(--c-cyan-bright);
+    display: inline-block;
+    margin-right: 0.35rem;
+}
+.legal-callout a {
+    color: var(--c-cyan);
+    text-decoration: none;
+    border-bottom: 1px dashed rgba(0, 229, 255, 0.35);
+}
+.legal-callout a:hover {
+    border-bottom-style: solid;
+    color: var(--c-cyan-bright);
+}
+
+.legal-callout--warning {
+    background: rgba(239, 68, 68, 0.05);
+    border-left-color: var(--c-blood);
+}
+.legal-callout--warning strong {
+    color: #ffb0b0;
+}
+
+.legal-allcaps {
+    font-size: 0.88rem;
+    letter-spacing: 0.02em;
+    line-height: 1.65;
+    color: var(--c-text-dim);
+}
+
+/* ══════════════════════════════════════════════════════════════════════════
+ * PROHIBITED CONDUCT GRID
+ * ========================================================================== */
+
+.legal-prohibitions {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+    gap: 1.25rem;
+    margin-top: 3rem;
+}
+
+.prohibition-card {
+    padding: 1.75rem;
+    border-left: 3px solid var(--c-gold);
+    transition: all var(--t-med) var(--ease-out);
+}
+.prohibition-card:hover {
+    transform: translateY(-2px);
+    border-left-color: var(--c-cyan);
+    box-shadow:
+        0 12px 35px rgba(0, 0, 0, 0.5),
+        0 0 25px rgba(0, 229, 255, 0.1);
+}
+
+.prohibition-card--severe {
+    border-left-color: var(--c-blood);
+    background: linear-gradient(180deg, rgba(239, 68, 68, 0.03), transparent), var(--c-slab);
+}
+.prohibition-card--severe:hover {
+    border-left-color: #ff4040;
+    box-shadow:
+        0 12px 35px rgba(0, 0, 0, 0.5),
+        0 0 25px rgba(239, 68, 68, 0.15);
+}
+
+.prohibition-card__icon {
+    font-size: 1.5rem;
+    line-height: 1;
+    margin-bottom: 0.85rem;
+    filter: drop-shadow(0 0 8px rgba(239, 68, 68, 0.5));
+}
+.prohibition-card h3 {
+    font-size: 0.92rem;
+    margin-bottom: 0.65rem;
+    color: var(--c-blood);
+}
+.prohibition-card--severe h3 {
+    color: #ffb0b0;
+}
+.prohibition-card p {
+    font-size: 0.88rem;
+    line-height: 1.65;
+    margin: 0;
+    color: var(--c-text-dim);
+}
+
+/* ══════════════════════════════════════════════════════════════════════════
+ * IP GRID
+ * ========================================================================== */
+
+.ip-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 1.5rem;
+    margin-top: 3rem;
+}
+@media (max-width: 720px) {
+    .ip-grid { grid-template-columns: 1fr; }
+}
+
+.ip-card {
+    padding: 2rem 1.75rem;
+}
+.ip-card--allowed {
+    border-color: rgba(57, 255, 20, 0.35);
+}
+.ip-card--forbidden {
+    border-color: rgba(239, 68, 68, 0.35);
+}
+
+.ip-card__badge {
+    display: inline-block;
+    padding: 0.3rem 0.9rem;
+    margin-bottom: 1rem;
+    font-family: var(--f-tech);
+    font-size: 0.65rem;
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+    color: var(--c-void);
+    background: var(--c-success);
+    border-radius: 999px;
+    box-shadow: 0 0 12px rgba(57, 255, 20, 0.5);
+}
+.ip-card__badge--forbidden {
+    background: var(--c-blood);
+    box-shadow: 0 0 12px rgba(239, 68, 68, 0.5);
+    color: #ffffff;
+}
+.ip-card h3 {
+    font-family: var(--f-display);
+    font-size: 1.25rem;
+    color: var(--c-text);
+    text-transform: none;
+    letter-spacing: 0.03em;
+    margin: 0 0 1rem;
+}
+.ip-card ul {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+}
+.ip-card li {
+    position: relative;
+    padding-left: 1.5rem;
+    margin-bottom: 0.7rem;
+    font-size: 0.9rem;
+    line-height: 1.6;
+    color: var(--c-text-dim);
+}
+.ip-card--allowed li::before {
+    content: '✓';
+    position: absolute;
+    left: 0;
+    color: var(--c-success);
+    font-weight: 700;
+}
+.ip-card--forbidden li::before {
+    content: '✗';
+    position: absolute;
+    left: 0;
+    color: var(--c-blood);
+    font-weight: 700;
+}
+.ip-card li strong {
+    color: var(--c-text);
+}
+
+/* ══════════════════════════════════════════════════════════════════════════
+ * CONTACT DEPARTMENTS (reusable across legal pages)
+ * ========================================================================== */
+
+.contact-departments {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+    gap: 1rem;
+    margin-top: 1.5rem;
+}
+.contact-departments--compact {
+    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+}
+
+.contact-dept {
+    padding: 1.25rem 1.5rem;
+    background: rgba(0, 229, 255, 0.03);
+    border: 1px solid rgba(0, 229, 255, 0.18);
+    border-radius: var(--r-md);
+    text-align: center;
+    transition: all var(--t-med) var(--ease-out);
+}
+.contact-dept:hover {
+    border-color: rgba(0, 229, 255, 0.5);
+    background: rgba(0, 229, 255, 0.06);
+}
+.contact-dept__label {
+    display: block;
+    font-family: var(--f-tech);
+    font-size: 0.68rem;
+    letter-spacing: 0.18em;
+    text-transform: uppercase;
+    color: var(--c-text-faint);
+    margin-bottom: 0.6rem;
+}
+.contact-dept a {
+    font-family: var(--f-mono);
+    font-size: 0.85rem;
+    color: var(--c-cyan-bright);
+    text-decoration: none;
+    word-break: break-all;
+    transition: color var(--t-fast);
+}
+.contact-dept a:hover {
+    color: var(--c-cyan);
+    text-shadow: 0 0 8px rgba(0, 229, 255, 0.5);
+}
+
+/* ══════════════════════════════════════════════════════════════════════════
+ * RESPONSIVE
+ * ========================================================================== */
+
+@media (max-width: 720px) {
+    .legal-toc {
+        justify-content: flex-start;
+    }
+    .legal-toc a {
+        font-size: 0.6rem;
+        padding: 0.35rem 0.75rem;
+    }
+    .legal-prohibitions {
+        grid-template-columns: 1fr;
+    }
+    .prohibition-card,
+    .ip-card,
+    .contact-dept {
+        padding: 1.5rem 1.25rem;
+    }
+}

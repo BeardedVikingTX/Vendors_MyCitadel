@@ -310,3 +310,35 @@ Stack trace:
 Stack trace:
 #0 {main}
   thrown in /home/beardedviking/vendors.mycitadel.lol/stripe-php-21.1.0-alpha.2/lib/Service/MarginService.php on line 12
+[28-Sep-2026 01:04:01 UTC] PHP Fatal error:  Uncaught Error: Class "Stripe\Service\AbstractService" not found in /home/beardedviking/vendors.mycitadel.lol/stripe-php-21.1.0-alpha.2/lib/Service/FileLinkService.php:12
+Stack trace:
+#0 {main}
+  thrown in /home/beardedviking/vendors.mycitadel.lol/stripe-php-21.1.0-alpha.2/lib/Service/FileLinkService.php on line 12
+[28-Sep-2026 01:04:46 UTC] PHP Fatal error:  Uncaught Error: Class "Stripe\Service\AbstractService" not found in /home/beardedviking/vendors.mycitadel.lol/stripe-php-21.1.0-alpha.2/lib/Service/TokenService.php:12
+Stack trace:
+#0 {main}
+  thrown in /home/beardedviking/vendors.mycitadel.lol/stripe-php-21.1.0-alpha.2/lib/Service/TokenService.php on line 12
+[28-Sep-2026 01:42:21 UTC] PHP Fatal error:  Uncaught Error: Class "Stripe\Service\AbstractService" not found in /home/beardedviking/vendors.mycitadel.lol/stripe-php-21.1.0-alpha.2/lib/Service/SetupIntentService.php:12
+Stack trace:
+#0 {main}
+  thrown in /home/beardedviking/vendors.mycitadel.lol/stripe-php-21.1.0-alpha.2/lib/Service/SetupIntentService.php on line 12
+[28-Sep-2026 01:47:47 UTC] PHP Fatal error:  Uncaught Error: Class "Stripe\Service\AbstractService" not found in /home/beardedviking/vendors.mycitadel.lol/stripe-php-21.1.0-alpha.2/lib/Service/GiftCardOperationService.php:12
+Stack trace:
+#0 {main}
+  thrown in /home/beardedviking/vendors.mycitadel.lol/stripe-php-21.1.0-alpha.2/lib/Service/GiftCardOperationService.php on line 12
+[28-Sep-2026 01:51:31 UTC] PHP Fatal error:  Uncaught Error: Class "Stripe\Service\AbstractService" not found in /home/beardedviking/vendors.mycitadel.lol/stripe-php-21.1.0-alpha.2/lib/Service/PaymentRecordService.php:12
+Stack trace:
+#0 {main}
+  thrown in /home/beardedviking/vendors.mycitadel.lol/stripe-php-21.1.0-alpha.2/lib/Service/PaymentRecordService.php on line 12
+[28-Sep-2026 02:00:12 UTC] PHP Fatal error:  Uncaught Error: Class "Stripe\Service\AbstractService" not found in /home/beardedviking/vendors.mycitadel.lol/stripe-php-21.1.0-alpha.2/lib/Service/PaymentMethodDomainService.php:12
+Stack trace:
+#0 {main}
+  thrown in /home/beardedviking/vendors.mycitadel.lol/stripe-php-21.1.0-alpha.2/lib/Service/PaymentMethodDomainService.php on line 12
+[28-Sep-2026 02:01:01 UTC] PHP Fatal error:  Uncaught Error: Class "Stripe\Service\AbstractService" not found in /home/beardedviking/vendors.mycitadel.lol/stripe-php-21.1.0-alpha.2/lib/Service/ApplicationFeeService.php:12
+Stack trace:
+#0 {main}
+  thrown in /home/beardedviking/vendors.mycitadel.lol/stripe-php-21.1.0-alpha.2/lib/Service/ApplicationFeeService.php on line 12
+[28-Sep-2026 02:01:48 UTC] PHP Fatal error:  Uncaught Error: Class "Stripe\Service\AbstractService" not found in /home/beardedviking/vendors.mycitadel.lol/stripe-php-21.1.0-alpha.2/lib/Service/PaymentLocationService.php:12
+Stack trace:
+#0 {main}
+  thrown in /home/beardedviking/vendors.mycitadel.lol/stripe-php-21.1.0-alpha.2/lib/Service/PaymentLocationService.php on line 12

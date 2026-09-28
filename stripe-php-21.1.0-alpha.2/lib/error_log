@@ -478,3 +478,59 @@ Stack trace:
 Stack trace:
 #0 {main}
   thrown in /home/beardedviking/vendors.mycitadel.lol/stripe-php-21.1.0-alpha.2/lib/TaxId.php on line 25
+[27-Sep-2026 23:49:04 UTC] PHP Fatal error:  Uncaught Error: Class "Stripe\ApiResource" not found in /home/beardedviking/vendors.mycitadel.lol/stripe-php-21.1.0-alpha.2/lib/CreditNoteLineItem.php:28
+Stack trace:
+#0 {main}
+  thrown in /home/beardedviking/vendors.mycitadel.lol/stripe-php-21.1.0-alpha.2/lib/CreditNoteLineItem.php on line 28
+[27-Sep-2026 23:49:49 UTC] PHP Fatal error:  Uncaught Error: Class "Stripe\ApiResource" not found in /home/beardedviking/vendors.mycitadel.lol/stripe-php-21.1.0-alpha.2/lib/Source.php:61
+Stack trace:
+#0 {main}
+  thrown in /home/beardedviking/vendors.mycitadel.lol/stripe-php-21.1.0-alpha.2/lib/Source.php on line 61
+[28-Sep-2026 00:37:08 UTC] PHP Fatal error:  Uncaught Error: Class "Stripe\StripeObject" not found in /home/beardedviking/vendors.mycitadel.lol/stripe-php-21.1.0-alpha.2/lib/ErrorObject.php:30
+Stack trace:
+#0 {main}
+  thrown in /home/beardedviking/vendors.mycitadel.lol/stripe-php-21.1.0-alpha.2/lib/ErrorObject.php on line 30
+[28-Sep-2026 00:39:04 UTC] PHP Fatal error:  Uncaught Error: Class "Stripe\ApiResource" not found in /home/beardedviking/vendors.mycitadel.lol/stripe-php-21.1.0-alpha.2/lib/Plan.php:38
+Stack trace:
+#0 {main}
+  thrown in /home/beardedviking/vendors.mycitadel.lol/stripe-php-21.1.0-alpha.2/lib/Plan.php on line 38
+[28-Sep-2026 01:05:31 UTC] PHP Fatal error:  Uncaught Error: Class "Stripe\ApiResource" not found in /home/beardedviking/vendors.mycitadel.lol/stripe-php-21.1.0-alpha.2/lib/CustomerSession.php:24
+Stack trace:
+#0 {main}
+  thrown in /home/beardedviking/vendors.mycitadel.lol/stripe-php-21.1.0-alpha.2/lib/CustomerSession.php on line 24
+[28-Sep-2026 01:06:17 UTC] PHP Fatal error:  Uncaught Error: Class "Stripe\ApiResource" not found in /home/beardedviking/vendors.mycitadel.lol/stripe-php-21.1.0-alpha.2/lib/AccountSignals.php:16
+Stack trace:
+#0 {main}
+  thrown in /home/beardedviking/vendors.mycitadel.lol/stripe-php-21.1.0-alpha.2/lib/AccountSignals.php on line 16
+[28-Sep-2026 01:07:07 UTC] PHP Fatal error:  Uncaught Error: Class "Stripe\ApiResource" not found in /home/beardedviking/vendors.mycitadel.lol/stripe-php-21.1.0-alpha.2/lib/Review.php:28
+Stack trace:
+#0 {main}
+  thrown in /home/beardedviking/vendors.mycitadel.lol/stripe-php-21.1.0-alpha.2/lib/Review.php on line 28
+[28-Sep-2026 01:07:53 UTC] PHP Fatal error:  Uncaught Error: Class "Stripe\ApiResource" not found in /home/beardedviking/vendors.mycitadel.lol/stripe-php-21.1.0-alpha.2/lib/PaymentRecord.php:35
+Stack trace:
+#0 {main}
+  thrown in /home/beardedviking/vendors.mycitadel.lol/stripe-php-21.1.0-alpha.2/lib/PaymentRecord.php on line 35
+[28-Sep-2026 01:44:48 UTC] PHP Fatal error:  Uncaught Error: Class "Stripe\ApiResource" not found in /home/beardedviking/vendors.mycitadel.lol/stripe-php-21.1.0-alpha.2/lib/ConnectCollectionTransfer.php:15
+Stack trace:
+#0 {main}
+  thrown in /home/beardedviking/vendors.mycitadel.lol/stripe-php-21.1.0-alpha.2/lib/ConnectCollectionTransfer.php on line 15
+[28-Sep-2026 01:45:12 UTC] PHP Fatal error:  Uncaught Error: Class "Stripe\ApiResource" not found in /home/beardedviking/vendors.mycitadel.lol/stripe-php-21.1.0-alpha.2/lib/PaymentMethodConfiguration.php:96
+Stack trace:
+#0 {main}
+  thrown in /home/beardedviking/vendors.mycitadel.lol/stripe-php-21.1.0-alpha.2/lib/PaymentMethodConfiguration.php on line 96
+[28-Sep-2026 01:46:05 UTC] PHP Fatal error:  Uncaught Error: Class "Stripe\ApiResource" not found in /home/beardedviking/vendors.mycitadel.lol/stripe-php-21.1.0-alpha.2/lib/Capability.php:22
+Stack trace:
+#0 {main}
+  thrown in /home/beardedviking/vendors.mycitadel.lol/stripe-php-21.1.0-alpha.2/lib/Capability.php on line 22
+[28-Sep-2026 01:46:56 UTC] PHP Fatal error:  Uncaught Error: Class "Stripe\ApiResource" not found in /home/beardedviking/vendors.mycitadel.lol/stripe-php-21.1.0-alpha.2/lib/SourceMandateNotification.php:25
+Stack trace:
+#0 {main}
+  thrown in /home/beardedviking/vendors.mycitadel.lol/stripe-php-21.1.0-alpha.2/lib/SourceMandateNotification.php on line 25
+[28-Sep-2026 01:49:22 UTC] PHP Fatal error:  Uncaught Error: Class "Stripe\ApiResource" not found in /home/beardedviking/vendors.mycitadel.lol/stripe-php-21.1.0-alpha.2/lib/ShippingRate.php:24
+Stack trace:
+#0 {main}
+  thrown in /home/beardedviking/vendors.mycitadel.lol/stripe-php-21.1.0-alpha.2/lib/ShippingRate.php on line 24
+[28-Sep-2026 01:52:12 UTC] PHP Fatal error:  Uncaught Error: Class "Stripe\ApiResource" not found in /home/beardedviking/vendors.mycitadel.lol/stripe-php-21.1.0-alpha.2/lib/Payout.php:45
+Stack trace:
+#0 {main}
+  thrown in /home/beardedviking/vendors.mycitadel.lol/stripe-php-21.1.0-alpha.2/lib/Payout.php on line 45
