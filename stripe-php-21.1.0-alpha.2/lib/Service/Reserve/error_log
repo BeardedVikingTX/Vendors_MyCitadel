@@ -1,0 +1,8 @@
+[28-Sep-2026 03:03:42 UTC] PHP Fatal error:  Uncaught Error: Class "Stripe\Service\AbstractServiceFactory" not found in /home/beardedviking/vendors.mycitadel.lol/stripe-php-21.1.0-alpha.2/lib/Service/Reserve/ReserveServiceFactory.php:14
+Stack trace:
+#0 {main}
+  thrown in /home/beardedviking/vendors.mycitadel.lol/stripe-php-21.1.0-alpha.2/lib/Service/Reserve/ReserveServiceFactory.php on line 14
+[28-Sep-2026 03:05:39 UTC] PHP Fatal error:  Uncaught Error: Class "Stripe\Service\AbstractService" not found in /home/beardedviking/vendors.mycitadel.lol/stripe-php-21.1.0-alpha.2/lib/Service/Reserve/HoldService.php:12
+Stack trace:
+#0 {main}
+  thrown in /home/beardedviking/vendors.mycitadel.lol/stripe-php-21.1.0-alpha.2/lib/Service/Reserve/HoldService.php on line 12

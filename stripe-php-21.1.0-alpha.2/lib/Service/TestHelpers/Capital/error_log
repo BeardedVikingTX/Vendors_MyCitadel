@@ -1,0 +1,8 @@
+[28-Sep-2026 03:51:33 UTC] PHP Fatal error:  Uncaught Error: Class "Stripe\Service\AbstractServiceFactory" not found in /home/beardedviking/vendors.mycitadel.lol/stripe-php-21.1.0-alpha.2/lib/Service/TestHelpers/Capital/CapitalServiceFactory.php:12
+Stack trace:
+#0 {main}
+  thrown in /home/beardedviking/vendors.mycitadel.lol/stripe-php-21.1.0-alpha.2/lib/Service/TestHelpers/Capital/CapitalServiceFactory.php on line 12
+[28-Sep-2026 03:51:40 UTC] PHP Fatal error:  Uncaught Error: Class "Stripe\Service\AbstractService" not found in /home/beardedviking/vendors.mycitadel.lol/stripe-php-21.1.0-alpha.2/lib/Service/TestHelpers/Capital/FinancingOfferService.php:12
+Stack trace:
+#0 {main}
+  thrown in /home/beardedviking/vendors.mycitadel.lol/stripe-php-21.1.0-alpha.2/lib/Service/TestHelpers/Capital/FinancingOfferService.php on line 12

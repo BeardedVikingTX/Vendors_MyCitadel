@@ -2,17 +2,38 @@
  * ███ NAV.JS ███
  * MyCitadel — Nav Hydration
  * ----------------------------------------------------------------------------
- * Reads session state from citadel-app.js (already fetched /me during
- * bootstrap) and swaps the nav between guest, user, and loading states.
+ * Watches citadel-app.js for session state and swaps the nav between
+ * guest / user / loading states. Also handles the user dropdown, mobile
+ * burger menu, and logout.
+ *
+ * HOW IT WORKS
+ *   1. On DOMContentLoaded, check if window.Citadel.user is already set.
+ *      If yes, apply immediately.
+ *   2. Otherwise, listen for the 'citadel:ready' event dispatched by
+ *      citadel-app.js after bootstrap completes.
+ *   3. If neither happens within 5s, fall back to guest state (safety net
+ *      for when citadel-app.js fails to load).
+ *
+ * NO POLLING. NO ARBITRARY TIMEOUTS. Event-driven only.
  * ========================================================================== */
 (function () {
     'use strict';
+
+    const LOG = '[nav]';
+    const SAFETY_TIMEOUT_MS = 5000;
+
+    let stateApplied = false;
+
+    /* ── Logging ─────────────────────────────────────────────────────── */
+    function log(...args)  { console.log(LOG, ...args); }
+    function warn(...args) { console.warn(LOG, ...args); }
 
     /* ── State switcher ──────────────────────────────────────────────── */
     function setAuthState(state) {
         document.querySelectorAll('[data-auth-state]').forEach(function (el) {
             el.hidden = el.dataset.authState !== state;
         });
+        log('state →', state);
     }
 
     /* ── Render the authenticated user ───────────────────────────────── */
@@ -23,7 +44,9 @@
         const nameEl   = nav.querySelector('[data-username]');
         const avatarEl = nav.querySelector('[data-avatar]');
 
-        if (nameEl) nameEl.textContent = user.username || 'Citizen';
+        if (nameEl) {
+            nameEl.textContent = user.username || 'Citizen';
+        }
 
         if (avatarEl) {
             if (user.avatar_url) {
@@ -35,20 +58,21 @@
             }
         }
 
-        // Persist a UI hint so the next page load renders the user state instantly
+        // Persist a UI hint so the next page load can render the user state
+        // instantly (without waiting for the API round-trip).
         try {
             document.cookie = 'citadel_ui_hint=1; Path=/; Max-Age=2592000; Secure; SameSite=Lax';
         } catch (e) { /* cookie disabled — harmless */ }
     }
 
-    /* ── Clear the UI hint on logout or session expiry ───────────────── */
+    /* ── Clear the UI hint on logout ─────────────────────────────────── */
     function clearHint() {
         try {
             document.cookie = 'citadel_ui_hint=0; Path=/; Max-Age=0; Secure; SameSite=Lax';
         } catch (e) { /* ignore */ }
     }
 
-    /* ── Notifications badge (optional — polls /notifications/list) ───── */
+    /* ── Notifications badge (optional — polls /notifications/list) ──── */
     async function refreshNotificationBadge() {
         if (!window.Citadel || !window.Citadel.isLoggedIn()) return;
         try {
@@ -62,44 +86,33 @@
             } else {
                 badge.hidden = true;
             }
-        } catch (e) { /* silent — not critical */ }
+        } catch (e) {
+            // Silent — notifications are non-critical. Common failure:
+            // the endpoint doesn't exist yet in this build. That's fine.
+        }
     }
 
-    /* ── Wire everything up after DOM + Citadel bootstrap ────────────── */
-    document.addEventListener('DOMContentLoaded', function () {
+    /* ── Apply the resolved auth state (idempotent) ──────────────────── */
+    function applyUserState(user) {
+        if (stateApplied) return;
+        stateApplied = true;
 
-        // Start in loading state
-        setAuthState('loading');
+        if (user) {
+            log('applying user state for', user.username);
+            renderUser(user);
+            setAuthState('user');
+            refreshNotificationBadge();
+            // Refresh badge every 60s while the tab is open
+            setInterval(refreshNotificationBadge, 60000);
+        } else {
+            log('applying guest state');
+            clearHint();
+            setAuthState('guest');
+        }
+    }
 
-        // Wait one tick for citadel-app's async bootstrap to finish.
-        // It sets window.Citadel.user synchronously on completion, so we
-        // just need to give it a chance.
-        (async function boot() {
-            // Poll for up to ~1.5s while citadel-app runs its bootstrap
-            const deadline = Date.now() + 1500;
-            while (!window.Citadel && Date.now() < deadline) {
-                await new Promise(r => setTimeout(r, 50));
-            }
-            if (!window.Citadel) { setAuthState('guest'); return; }
-
-            // Give bootstrap a moment to populate the user cache
-            while (!window.Citadel.user && Date.now() < deadline) {
-                await new Promise(r => setTimeout(r, 50));
-            }
-
-            const user = window.Citadel.user;
-            if (user) {
-                renderUser(user);
-                setAuthState('user');
-                refreshNotificationBadge();
-                // Refresh badge every 60s
-                setInterval(refreshNotificationBadge, 60000);
-            } else {
-                clearHint();
-                setAuthState('guest');
-            }
-        })();
-
+    /* ── Wire up DOM-interactive elements (dropdown, burger, logout) ─── */
+    function wireInteractions() {
         /* ── Dropdown toggle ────────────────────────────────────────── */
         const toggle = document.getElementById('citadel-nav-user-toggle');
         const dd     = document.getElementById('citadel-nav-dropdown');
@@ -140,17 +153,81 @@
             });
         }
 
-        /* ── Logout link ────────────────────────────────────────────── */
+        /* ── Logout link(s) ─────────────────────────────────────────── */
         document.querySelectorAll('[data-action="logout"]').forEach(function (el) {
             el.addEventListener('click', async function (e) {
                 e.preventDefault();
+
+                // Best-effort API call — even if it fails, we still log out
+                // on the client side.
                 try {
-                    await window.Citadel.post('/auth/logout.php', {});
-                } catch (_) { /* logout even if API errors */ }
+                    if (window.Citadel && typeof window.Citadel.post === 'function') {
+                        await window.Citadel.post('/auth/logout.php', {});
+                    }
+                } catch (err) {
+                    warn('logout API call failed (continuing anyway):', err);
+                }
+
                 clearHint();
                 window.location.href = '/';
             });
         });
+    }
 
-    });
+    /* ── Main boot ───────────────────────────────────────────────────── */
+    function boot() {
+        log('boot — checking session state');
+
+        // Start in loading state
+        setAuthState('loading');
+
+        // Wire up DOM interactions immediately (dropdown toggle, burger,
+        // logout link) — they don't depend on auth state.
+        wireInteractions();
+
+        // ── Path 1: user is already known (bootstrap beat us here) ────
+        if (window.Citadel && window.Citadel.user) {
+            log('user already set — applying immediately');
+            applyUserState(window.Citadel.user);
+            return;
+        }
+
+        // ── Path 2: wait for citadel-app.js to fire 'citadel:ready' ───
+        let resolved = false;
+
+        const onReady = function (e) {
+            if (resolved) return;
+            resolved = true;
+            const user = (e && e.detail && e.detail.user) || null;
+            log('received citadel:ready —', user ? ('user=' + user.username) : 'guest');
+            applyUserState(user);
+        };
+
+        window.addEventListener('citadel:ready', onReady, { once: true });
+
+        // ── Path 3: safety net — if nothing happens in 5s, give up ────
+        // This only fires if citadel-app.js is missing, broken, or blocked
+        // by a CSP. The user gets guest state, which is always safe.
+        setTimeout(function () {
+            if (resolved) return;
+            resolved = true;
+            window.removeEventListener('citadel:ready', onReady);
+            warn('safety timeout fired — citadel-app.js may have failed. Defaulting to guest.');
+            // Double-check once more in case the user was set silently
+            if (window.Citadel && window.Citadel.user) {
+                applyUserState(window.Citadel.user);
+            } else {
+                applyUserState(null);
+            }
+        }, SAFETY_TIMEOUT_MS);
+    }
+
+    /* ── Entry point ─────────────────────────────────────────────────── */
+    if (document.readyState === 'loading') {
+        document.addEventListener('DOMContentLoaded', boot);
+    } else {
+        // DOM already parsed (script loaded late) — boot immediately
+        boot();
+    }
+
 })();
