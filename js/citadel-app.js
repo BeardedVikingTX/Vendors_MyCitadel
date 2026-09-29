@@ -272,18 +272,34 @@
     }
 
     async function logout() {
+        // Force a fresh CSRF token — the cached one may be stale, which would
+        // cause /auth/logout.php to reject the request and leave the server
+        // session alive.
+        csrfToken = null;
+        csrfPromise = null;
+    
+        try {
+            await ensureCsrf();
+        } catch (err) {
+            warn('CSRF refresh before logout failed:', err);
+        }
+    
         try {
             await post('/auth/logout.php', {});
+            log('logout API call succeeded');
         } catch (err) {
             warn('logout API call failed (continuing client-side logout):', err);
         }
+    
         const wasLoggedIn = currentUser !== null;
         currentUser = null;
         csrfToken = null;
         csrfPromise = null;
         bootstrapPromise = null;
         bootstrapped = false;
+    
         if (wasLoggedIn) emit('citadel:logout');
+    
         try {
             document.cookie = 'citadel_ui_hint=0; Path=/; Max-Age=0; Secure; SameSite=Lax';
         } catch (_) { /* ignore */ }

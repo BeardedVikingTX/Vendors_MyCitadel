@@ -157,17 +157,20 @@
         document.querySelectorAll('[data-action="logout"]').forEach(function (el) {
             el.addEventListener('click', async function (e) {
                 e.preventDefault();
-
-                // Best-effort API call — even if it fails, we still log out
-                // on the client side.
+        
+                // Preferred: use the client's own logout method — it clears
+                // in-memory state, dispatches 'citadel:logout', and clears the
+                // UI hint cookie.
                 try {
-                    if (window.Citadel && typeof window.Citadel.post === 'function') {
+                    if (window.Citadel && typeof window.Citadel.logout === 'function') {
+                        await window.Citadel.logout();
+                    } else if (window.Citadel && typeof window.Citadel.post === 'function') {
                         await window.Citadel.post('/auth/logout.php', {});
                     }
                 } catch (err) {
                     warn('logout API call failed (continuing anyway):', err);
                 }
-
+        
                 clearHint();
                 window.location.href = '/';
             });
