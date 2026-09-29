@@ -307,7 +307,7 @@
 
         if (state === 'connected') {
             addBtn('Sever Connection', 'btn-citizen--danger', () => confirmSever(p));
-            addBtn('Message', 'btn-citizen--gold', () => toast('Messaging is coming soon.', 'info'));
+            addBtn('Message', 'btn-citizen--gold', () => openConversation(profile));
         } else if (state === 'pending_out') {
             addBtn('Request Sent', 'btn-citizen--muted', () => {});
             addBtn('Cancel Request', 'btn-citizen--ghost', () => confirmCancel(p));
@@ -600,6 +600,24 @@
         toast('Hidden.', 'info');
         window.location.href = '/users';
     }
+    
+    async function openConversation(profile) {
+        setActionsBusy(true);
+        try {
+            const r = await api('POST', '/messages/open.php', { to: profile.id });
+            if (!r.ok || !r.data || !r.data.conversation_id) {
+                throw new Error((r.data && r.data.message) || 'Could not open conversation.');
+            }
+            window.location.href = '/messages?c=' + r.data.conversation_id;
+        } catch (e) {
+            setActionsBusy(false);
+            if (e.code === 'not_connected') {
+                toast('You must be connected to message this user.', 'error');
+            } else {
+                toast(e.message || 'Could not open conversation.', 'error');
+            }
+        }
+    }    
 
     function setActionsBusy(busy) {
         actionsEl.querySelectorAll('button').forEach(b => b.disabled = busy);

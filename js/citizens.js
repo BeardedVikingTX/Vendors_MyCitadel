@@ -275,9 +275,7 @@
                 window.location.href = '/users/view.php?id=' + u.id;
             });
             addBtn('Sever', 'btn-citizen--danger', () => confirmSever(container, u));
-            addBtn('Message', 'btn-citizen--gold', () => {
-                toast('Messaging is coming soon.', 'info');
-            });
+            addBtn('Message', 'btn-citizen--gold', () => openConversation(container, u));
         } else if (state === 'pending_out') {
             addBtn('Request Sent', 'btn-citizen--muted', () => {});
             addBtn('Cancel', 'btn-citizen--ghost', () => cancelRequest(container, u));
@@ -351,6 +349,30 @@
             toast(e.message || 'Could not cancel.', 'error');
         }
     }
+
+    /**
+     * Open (or create) a direct conversation with the target user and
+     * navigate to the messages page. The API enforces the connection gate
+     * server-side; we only get here from the "connected" state so it will
+     * always succeed unless the server has stale state.
+     */
+    async function openConversation(container, u) {
+        setBusy(container, true);
+        try {
+            const data = await api('POST', '/messages/open.php', { to: u.id });
+            if (!data || !data.conversation_id) {
+                throw new Error('Could not open conversation.');
+            }
+            window.location.href = '/messages?c=' + data.conversation_id;
+        } catch (e) {
+            setBusy(container, false);
+            if (e.code === 'not_connected') {
+                toast('You must be connected to message this user.', 'error');
+            } else {
+                toast(e.message || 'Could not open conversation.', 'error');
+            }
+        }
+    }    
 
     function confirmSever(container, u) {
         if (!confirm('Sever connection with ' + u.username + '? This destroys all messages and hides you from each other.')) {

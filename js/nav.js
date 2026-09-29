@@ -102,14 +102,32 @@
             renderUser(user);
             setAuthState('user');
             refreshNotificationBadge();
-            // Refresh badge every 60s while the tab is open
-            setInterval(refreshNotificationBadge, 60000);
+            refreshMessagesBadge();
+            setInterval(refreshMessagesBadge, 60000);
         } else {
             log('applying guest state');
             clearHint();
             setAuthState('guest');
         }
     }
+
+    async function refreshMessagesBadge() {
+        if (!window.Citadel || !window.Citadel.isLoggedIn()) return;
+        try {
+            const data = await window.Citadel.get('/messages/conversations.php');
+            const list = data.conversations || [];
+            const total = list.reduce((sum, c) => sum + (Number(c.unread_count) || 0), 0);
+    
+            const badge = document.querySelector('[data-badge="messages"]');
+            if (!badge) return;
+            if (total > 0) {
+                badge.textContent = total > 99 ? '99+' : String(total);
+                badge.hidden = false;
+            } else {
+                badge.hidden = true;
+            }
+        } catch (_) { /* silent — non-critical */ }
+    }    
 
     /* ── Wire up DOM-interactive elements (dropdown, burger, logout) ─── */
     function wireInteractions() {
