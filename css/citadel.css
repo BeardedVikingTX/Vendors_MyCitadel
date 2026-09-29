@@ -6644,3 +6644,196 @@
     .msg-thread__body { padding: 10px; }
     .msg-item { max-width: 90%; }
 }
+
+/* ═══════════════════════════════════════════════════════════════════════════
+   ANDROID BETA SECTION
+   ======================================================================= */
+
+.android-card {
+    display: grid;
+    grid-template-columns: auto 1fr auto;
+    gap: 2rem;
+    align-items: center;
+    padding: 2rem;
+    margin-bottom: 2rem;
+    border-color: rgba(255, 199, 44, 0.35) !important;
+    background: linear-gradient(
+        135deg,
+        rgba(16, 21, 29, 0.9),
+        rgba(255, 199, 44, 0.03)
+    ) !important;
+}
+
+.android-card__icon {
+    font-size: 4rem;
+    line-height: 1;
+    filter: drop-shadow(0 0 20px rgba(255, 199, 44, 0.4));
+}
+
+.android-card__body {
+    min-width: 0;
+}
+
+.android-card__heading {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+    margin-bottom: 1rem;
+    flex-wrap: wrap;
+}
+.android-card__heading h3 {
+    margin: 0;
+    font-family: var(--f-heading, serif);
+    font-size: 1.5rem;
+    color: #e0e6ed;
+    letter-spacing: 0.03em;
+}
+.android-card__badge {
+    display: inline-block;
+    padding: 0.2rem 0.6rem;
+    background: #ffc72c;
+    color: #05070a;
+    font-family: var(--f-tech, monospace);
+    font-size: 0.65rem;
+    font-weight: 700;
+    letter-spacing: 0.15em;
+    border-radius: 999px;
+}
+
+.android-card__meta {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 1rem;
+    list-style: none;
+    padding: 0;
+    margin: 0 0 1rem;
+    font-size: 0.85rem;
+    color: #7a8899;
+}
+.android-card__meta li {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.4rem;
+}
+.android-card__meta strong {
+    color: #00e5ff;
+    font-family: var(--f-tech, monospace);
+    font-size: 0.72rem;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    font-weight: 600;
+}
+
+.android-card__note {
+    margin: 0 0 1.5rem;
+    padding: 0.85rem 1rem;
+    background: rgba(0, 0, 0, 0.25);
+    border-left: 2px solid rgba(255, 199, 44, 0.5);
+    border-radius: 0 6px 6px 0;
+    font-size: 0.82rem;
+    line-height: 1.6;
+    color: #a0aec0;
+}
+
+.android-card__actions {
+    display: flex;
+    gap: 0.75rem;
+    flex-wrap: wrap;
+}
+
+.android-card__qr {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 0.5rem;
+    padding: 1rem;
+    background: #05070a;
+    border: 1px solid rgba(255, 199, 44, 0.3);
+    border-radius: 12px;
+}
+.android-card__qr img {
+    display: block;
+    border-radius: 6px;
+}
+.android-card__qr span {
+    font-family: var(--f-tech, monospace);
+    font-size: 0.65rem;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    color: #7a8899;
+}
+
+/* ── Install instructions ──────────────────────────────────────── */
+.android-install {
+    padding: 2rem;
+    background: rgba(16, 21, 29, 0.6);
+    border: 1px solid rgba(0, 229, 255, 0.15);
+    border-radius: 14px;
+}
+.android-install h3 {
+    margin: 0 0 1.25rem;
+    font-family: var(--f-heading, serif);
+    font-size: 1.2rem;
+    color: #ffc72c;
+    letter-spacing: 0.05em;
+}
+.android-install ol {
+    padding-left: 1.5rem;
+    margin: 0 0 1.5rem;
+    display: flex;
+    flex-direction: column;
+    gap: 0.85rem;
+}
+.android-install li {
+    color: #a0aec0;
+    font-size: 0.92rem;
+    line-height: 1.6;
+}
+.android-install li strong {
+    color: #e0e6ed;
+    font-weight: 600;
+    margin-right: 0.25rem;
+}
+.android-install code {
+    padding: 0.1rem 0.4rem;
+    background: rgba(0, 0, 0, 0.4);
+    border: 1px solid rgba(0, 229, 255, 0.15);
+    border-radius: 4px;
+    font-family: var(--f-mono, monospace);
+    font-size: 0.82rem;
+    color: #00e5ff;
+}
+.android-install a {
+    color: #00e5ff;
+    text-decoration: none;
+    border-bottom: 1px dashed rgba(0, 229, 255, 0.4);
+}
+.android-install a:hover { border-bottom-style: solid; }
+
+.android-install__warn {
+    margin: 0;
+    padding: 1rem;
+    background: rgba(239, 68, 68, 0.06);
+    border-left: 3px solid #ef4444;
+    border-radius: 0 6px 6px 0;
+    font-size: 0.85rem;
+    line-height: 1.6;
+    color: #ffb0b0;
+}
+.android-install__warn strong { color: #ef4444; }
+
+/* ── Responsive ────────────────────────────────────────────────── */
+@media (max-width: 820px) {
+    .android-card {
+        grid-template-columns: 1fr;
+        gap: 1.5rem;
+        padding: 1.5rem;
+        text-align: center;
+    }
+    .android-card__icon { font-size: 3rem; }
+    .android-card__heading { justify-content: center; }
+    .android-card__meta { justify-content: center; }
+    .android-card__actions { justify-content: center; }
+    .android-card__qr { align-self: center; }
+    .android-install { padding: 1.5rem; }
+}
