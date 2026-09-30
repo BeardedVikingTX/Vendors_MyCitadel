@@ -1,6 +1,6 @@
 /* ============================================================================
  * ███ FEED.JS ███
- * MyCitadel — Aggregated timeline (with media attachments)
+ * MyCitadel — Aggregated timeline (tier-aware, with reactions & comments)
  * ========================================================================== */
 
 (function () {
@@ -13,10 +13,53 @@
     const CLIENT    = root.dataset.client   || 'browser/1.0.0';
     const LOGIN_URL = root.dataset.loginUrl || '/login';
 
-    const DEFAULT_AVATAR    = 'https://mycitadel.lol/img/users/default/avatar.png';
-    const MAX_ATTACHMENTS   = 6;
+    const DEFAULT_AVATAR = 'https://mycitadel.lol/img/users/default/avatar.png';
 
-    /* ── DOM refs ──────────────────────────────────────────────────── */
+    /* ── Tier limits ────────────────────────────────────────────────── */
+    const TIER_LIMITS = {
+        free: {
+            tier:                      'free',
+            post_max_chars:            50,
+            post_max_attachments:      1,
+            post_allowed_kinds:        ['image'],
+            comment_max_chars:         25,
+            comment_max_attachments:   1,
+            comment_allowed_kinds:     ['image'],
+            reactions_allowed:         ['like', 'dislike'],
+        },
+        premium: {
+            tier:                      'premium',
+            post_max_chars:            1500,
+            post_max_attachments:      10,
+            post_allowed_kinds:        ['image', 'video', 'audio', 'document'],
+            comment_max_chars:         1500,
+            comment_max_attachments:   5,
+            comment_allowed_kinds:     ['image', 'video', 'audio', 'document'],
+            reactions_allowed:         ['like', 'dislike', 'heart', 'angry'],
+        },
+    };
+
+    const KIND_MIME = {
+        image:    'image/jpeg,image/png,image/webp,image/gif',
+        video:    'video/mp4,video/webm',
+        audio:    'audio/mpeg,audio/ogg,audio/wav',
+        document: 'application/pdf,text/plain,text/markdown,application/zip',
+    };
+
+    const REACTION_ICONS = {
+        like:    '👍',
+        dislike: '👎',
+        heart:   '❤',
+        angry:   '😡',
+    };
+    const REACTION_LABELS = {
+        like:    'Like',
+        dislike: 'Dislike',
+        heart:   'Heart',
+        angry:   'Angry',
+    };
+
+    /* ── DOM refs ───────────────────────────────────────────────────── */
     const loadingEl      = document.getElementById('feed-loading');
     const errorEl        = document.getElementById('feed-error');
     const errorMsgEl     = document.getElementById('feed-error-msg');
@@ -35,20 +78,41 @@
     const attachInput    = document.getElementById('composer-file-input');
     const attachList     = document.getElementById('composer-attachments');
 
-    /* ── Runtime state ─────────────────────────────────────────────── */
+    /* ── Runtime state ──────────────────────────────────────────────── */
     let currentUser        = null;
+    let limits             = TIER_LIMITS.free;
     let scope              = 'all';
     let nextCursor         = null;
     let loadingMore        = false;
     let visibility         = 'public';
     let wired              = false;
+    let delegatesWired     = false;
     let csrfToken          = null;
     let csrfPromise        = null;
-    let pendingAttachments = [];   // [{token, url, kind, mime, name, size}]
+    let pendingAttachments = [];
 
     const log  = (...a) => console.log('[feed]', ...a);
     const warn = (...a) => console.warn('[feed]', ...a);
     const err  = (...a) => console.error('[feed]', ...a);
+
+    /* ══════════════════════════════════════════════════════════════════
+     * TIER RESOLUTION
+     * ================================================================ */
+
+    function resolveLimits(user) {
+        const base = (user && (user.premium === true || user.is_premium === true))
+            ? TIER_LIMITS.premium
+            : TIER_LIMITS.free;
+
+        if (user && user.limits && typeof user.limits === 'object') {
+            return Object.assign({}, base, user.limits);
+        }
+        return base;
+    }
+
+    function buildMimeAccept(kinds) {
+        return (kinds || ['image']).map(k => KIND_MIME[k] || '').filter(Boolean).join(',');
+    }
 
     /* ══════════════════════════════════════════════════════════════════
      * UTILITIES
@@ -108,18 +172,11 @@
         return '📎';
     }
 
-    /**
-     * Resolve an avatar URL from a post/comment/user object.
-     * Different API responses use different field names — check them all.
-     * Falls back to the DEFAULT_AVATAR image so we never show a blank.
-     */
     function resolveAvatar(source) {
         if (!source) return DEFAULT_AVATAR;
         const candidates = [
-            source.author_avatar_url,
-            source.avatar_url,
-            source.user_avatar_url,
-            source.avatarUrl,
+            source.author_avatar_url, source.avatar_url,
+            source.user_avatar_url, source.avatarUrl,
         ];
         for (const c of candidates) {
             if (typeof c === 'string' && c.length > 0) return c;
@@ -141,7 +198,7 @@
     }
 
     /* ══════════════════════════════════════════════════════════════════
-     * CSRF
+     * CSRF / API
      * ================================================================ */
 
     function citadelCsrf() {
@@ -157,12 +214,8 @@
     async function mintCsrf() {
         if (csrfToken) return csrfToken;
         if (csrfPromise) return csrfPromise;
-
-        const citadelToken = citadelCsrf();
-        if (citadelToken) {
-            csrfToken = citadelToken;
-            return csrfToken;
-        }
+        const c = citadelCsrf();
+        if (c) { csrfToken = c; return csrfToken; }
 
         csrfPromise = (async () => {
             try {
@@ -184,17 +237,12 @@
         return csrfPromise;
     }
 
-    /* ══════════════════════════════════════════════════════════════════
-     * API
-     * ================================================================ */
-
     async function api(method, path, body) {
         const headers = { 'X-Citadel-Client': CLIENT };
         const isUnsafe = method !== 'GET' && method !== 'HEAD';
         const hasBody = body !== undefined && body !== null;
 
         if (hasBody) headers['Content-Type'] = 'application/json';
-
         if (isUnsafe) {
             const t = await mintCsrf();
             if (!t) throw makeError('csrf_failed', 'Could not establish a secure session.');
@@ -223,21 +271,18 @@
             window.location.href = `${LOGIN_URL}?next=${next}`;
             throw makeError('unauthenticated', 'Session expired.');
         }
-
         if (!res.ok) {
             throw makeError(
                 (data && data.code) || ('http_' + res.status),
                 (data && data.message) || ('Request failed: ' + res.status)
             );
         }
-
         if (!data || data.status === 'error') {
             throw makeError(
                 (data && data.code) || 'unknown',
                 (data && data.message) || 'Unexpected response from server.'
             );
         }
-
         return data;
     }
 
@@ -248,7 +293,7 @@
     }
 
     /* ══════════════════════════════════════════════════════════════════
-     * RESOLVE CURRENT USER
+     * USER RESOLUTION
      * ================================================================ */
 
     async function resolveCurrentUser() {
@@ -256,8 +301,8 @@
             if (window.Citadel && window.Citadel.user) return window.Citadel.user;
         } catch (_) {}
 
-        const userFromEvent = await waitForCitadelEvent(2500);
-        if (userFromEvent) return userFromEvent;
+        const ev = await waitForCitadelEvent(2500);
+        if (ev) return ev;
 
         try {
             const data = await api('GET', '/users/me.php');
@@ -266,7 +311,6 @@
             if (e.code === 'unauthenticated') throw e;
             warn('own /users/me.php failed:', e.message);
         }
-
         return null;
     }
 
@@ -274,7 +318,6 @@
         return new Promise((resolve) => {
             if (!window.addEventListener) return resolve(null);
             if (window.Citadel && window.Citadel.user) return resolve(window.Citadel.user);
-
             let settled = false;
             const onReady = (e) => {
                 if (settled) return;
@@ -302,6 +345,10 @@
         const avatarHtml = `<img src="${esc(avatarUrl)}" alt="${esc(user.username)}"
                                  onerror="this.replaceWith(document.createTextNode('${esc(initials)}'))">`;
 
+        const tierPill = limits.tier === 'premium'
+            ? `<span class="feed-identity__tier feed-identity__tier--premium">★ PREMIUM</span>`
+            : `<span class="feed-identity__tier feed-identity__tier--free">FREE</span>`;
+
         const identityEl = document.getElementById('feed-identity-card');
         if (identityEl) {
             identityEl.innerHTML = `
@@ -311,14 +358,38 @@
                         <p class="feed-identity__name">${esc(user.display_name || user.username)}</p>
                         <p class="feed-identity__handle">@${esc(user.username)}</p>
                     </div>
+                    ${tierPill}
                 </div>
                 <a href="/users/dashboard.php" class="feed-identity__link">View Dashboard →</a>
             `;
         }
 
-        if (composerAvatar) {
-            composerAvatar.innerHTML = `<img src="${esc(avatarUrl)}" alt="">`;
-        }
+        if (composerAvatar) composerAvatar.innerHTML = `<img src="${esc(avatarUrl)}" alt="">`;
+    }
+
+    function ensureUpsellStrip() {
+        const composer = document.getElementById('composer');
+        if (!composer) return;
+
+        let strip = document.getElementById('composer-upsell');
+        if (strip) { strip.hidden = limits.tier === 'premium'; return; }
+        if (limits.tier !== 'free') return;
+
+        strip = document.createElement('div');
+        strip.className = 'composer__upsell';
+        strip.id = 'composer-upsell';
+        strip.innerHTML = `
+            <span class="composer__upsell-icon" aria-hidden="true">★</span>
+            <span class="composer__upsell-text">
+                Free tier: <strong>${limits.post_max_chars}</strong> characters,
+                <strong>${limits.post_max_attachments}</strong> image.
+            </span>
+            <a href="/premium" class="composer__upsell-link">Go Premium</a>
+            <span class="composer__upsell-text">
+                for <strong>1,500</strong> characters and <strong>10</strong> attachments.
+            </span>
+        `;
+        composer.appendChild(strip);
     }
 
     /* ══════════════════════════════════════════════════════════════════
@@ -327,7 +398,6 @@
 
     function renderAttachments(list) {
         if (!Array.isArray(list) || list.length === 0) return '';
-
         const n = list.length;
         const gridClass = n === 1 ? 'att-grid att-grid--1'
                         : n === 2 ? 'att-grid att-grid--2'
@@ -364,6 +434,215 @@
     }
 
     /* ══════════════════════════════════════════════════════════════════
+     * REACTIONS
+     * ================================================================ */
+
+    function renderReactionBar(post) {
+        const allowed = (limits.reactions_allowed || ['like', 'dislike']);
+        const viewer  = post.viewer_reaction || null;
+        const total   = post.reaction_count || 0;
+
+        const buttons = allowed.map(r => {
+            const active = viewer === r ? ' is-active' : '';
+            return `
+                <button type="button"
+                        class="reaction-btn reaction-btn--${r}${active}"
+                        data-reaction="${r}"
+                        title="${REACTION_LABELS[r]}">
+                    <span class="reaction-btn__icon">${REACTION_ICONS[r]}</span>
+                    <span class="reaction-btn__label">${REACTION_LABELS[r]}</span>
+                </button>
+            `;
+        }).join('');
+
+        const totalHtml = total > 0
+            ? `<span class="post__reaction-total" data-reaction-total>${total} reaction${total === 1 ? '' : 's'}</span>`
+            : `<span class="post__reaction-total" data-reaction-total></span>`;
+
+        return `
+            <div class="post__reactions" data-reactions>
+                ${buttons}
+                ${totalHtml}
+            </div>
+        `;
+    }
+
+    async function toggleReaction(post, reaction, btn) {
+        const container = btn.closest('[data-reactions]');
+        if (!container) return;
+
+        const allBtns  = container.querySelectorAll('.reaction-btn');
+        const totalEl  = container.querySelector('[data-reaction-total]');
+        const wasActive = btn.classList.contains('is-active');
+        const priorViewer = post.viewer_reaction || null;
+
+        // Optimistic: compute new local state
+        const newViewer = wasActive ? null : reaction;
+        let delta = 0;
+        if (wasActive)         delta = -1;
+        else if (!priorViewer) delta = 1;
+
+        const optimisticCount = Math.max(0, (post.reaction_count || 0) + delta);
+        applyReactionUI(container, allBtns, totalEl, newViewer, optimisticCount);
+
+        try {
+            const result = await api('POST', '/reactions/toggle.php', {
+                target_type: 'post',
+                target_id:   post.id,
+                reaction:    reaction,
+            });
+
+            post.viewer_reaction = result.reaction;
+            post.reaction_count  = result.count;
+            applyReactionUI(container, allBtns, totalEl, result.reaction, result.count);
+        } catch (e) {
+            if (e.code === 'unauthenticated') return;
+            // Revert
+            post.viewer_reaction = priorViewer;
+            post.reaction_count  = Math.max(0, optimisticCount - delta);
+            applyReactionUI(container, allBtns, totalEl, priorViewer, post.reaction_count);
+            toast(e.message || 'Could not save reaction.', 'error');
+        }
+    }
+
+    function applyReactionUI(container, allBtns, totalEl, viewerReaction, count) {
+        allBtns.forEach(b => b.classList.remove('is-active'));
+        if (viewerReaction) {
+            const active = container.querySelector(`.reaction-btn[data-reaction="${viewerReaction}"]`);
+            if (active) active.classList.add('is-active');
+        }
+        if (totalEl) {
+            totalEl.textContent = count > 0
+                ? `${count} reaction${count === 1 ? '' : 's'}`
+                : '';
+        }
+    }
+
+    /* ══════════════════════════════════════════════════════════════════
+     * COMMENTS
+     * ================================================================ */
+
+    function renderComment(c) {
+        const avatarUrl = resolveAvatar(c);
+        const initials  = initialsOf(c.author_display_name || c.author_username);
+        const avatarHtml = `<img src="${esc(avatarUrl)}" alt=""
+                                 onerror="this.replaceWith(document.createTextNode('${esc(initials)}'))">`;
+
+        const isMine = currentUser && c.user_id === currentUser.id;
+
+        const el = document.createElement('div');
+        el.className = 'comment' + (isMine ? ' comment--mine' : '');
+        el.dataset.commentId = c.id;
+
+        el.innerHTML = `
+            <div class="comment__avatar">
+                <a href="/users/view.php?id=${c.user_id}">${avatarHtml}</a>
+            </div>
+            <div class="comment__body">
+                <div class="comment__head">
+                    <a href="/users/view.php?id=${c.user_id}" class="comment__name">
+                        ${esc(c.author_display_name || c.author_username)}
+                    </a>
+                    <span class="comment__handle">@${esc(c.author_username)}</span>
+                    <span class="comment__dot">·</span>
+                    <time class="comment__time" title="${esc(fmtFullDate(c.created_at))}">${esc(fmtRelative(c.created_at))}</time>
+                </div>
+                <div class="comment__content">${esc(c.content)}</div>
+            </div>
+        `;
+        return el;
+    }
+
+    async function loadComments(post, commentsEl, listEl) {
+        if (listEl.dataset.loaded === '1') return;
+
+        listEl.innerHTML = `<div class="comment-loading">Loading comments…</div>`;
+
+        try {
+            const data = await api('GET', `/comments/list.php?post_id=${post.id}&limit=50`);
+            const comments = data.comments || [];
+
+            if (comments.length === 0) {
+                listEl.innerHTML = `<div class="comment-empty">No comments yet. Be the first.</div>`;
+            } else {
+                listEl.innerHTML = '';
+                comments.forEach(c => listEl.appendChild(renderComment(c)));
+            }
+            listEl.dataset.loaded = '1';
+        } catch (e) {
+            if (e.code === 'unauthenticated') return;
+            listEl.innerHTML = `<div class="comment-empty">${esc(e.message || 'Could not load comments.')}</div>`;
+        }
+    }
+
+    async function submitComment(post, form) {
+        const textarea = form.querySelector('textarea');
+        const content  = textarea.value.trim();
+        if (!content) return;
+
+        if (content.length > limits.comment_max_chars) {
+            toast(`Comments are limited to ${limits.comment_max_chars} characters on your tier.`, 'error');
+            return;
+        }
+
+        const submitBtn = form.querySelector('button[type="submit"]');
+        const original  = submitBtn.textContent;
+        submitBtn.disabled = true;
+        submitBtn.textContent = 'Posting…';
+
+        try {
+            const result = await api('POST', '/comments/create.php', {
+                post_id:   post.id,
+                content,
+                parent_id: null,
+            });
+
+            const newComment = {
+                id: result.comment_id,
+                post_id: post.id,
+                user_id: currentUser.id,
+                content,
+                created_at: new Date().toISOString(),
+                author_username:     currentUser.username,
+                author_display_name: currentUser.display_name || currentUser.username,
+                author_avatar_url:   resolveAvatar(currentUser),
+            };
+
+            const listEl = form.closest('[data-comments]').querySelector('[data-comments-list]');
+            if (listEl) {
+                const emptyMsg = listEl.querySelector('.comment-empty');
+                if (emptyMsg) emptyMsg.remove();
+                listEl.appendChild(renderComment(newComment));
+            }
+
+            // Update comment count on the toggle
+            const postEl = form.closest('.post');
+            const countEl = postEl ? postEl.querySelector('[data-comment-count]') : null;
+            post.comment_count = (post.comment_count || 0) + 1;
+            if (countEl) countEl.textContent = `Comments (${post.comment_count})`;
+
+            textarea.value = '';
+            updateCommentCounter(form);
+            toast('Comment posted. +5 reputation ✓', 'success');
+        } catch (e) {
+            if (e.code === 'unauthenticated') return;
+            toast(e.message || 'Could not post comment.', 'error');
+        } finally {
+            submitBtn.disabled = false;
+            submitBtn.textContent = original;
+        }
+    }
+
+    function updateCommentCounter(form) {
+        const textarea = form.querySelector('textarea');
+        const counter  = form.querySelector('[data-comment-count-label]');
+        if (!textarea || !counter) return;
+        const len = textarea.value.length;
+        counter.textContent = `${len} / ${limits.comment_max_chars}`;
+        counter.classList.toggle('is-warn', len > Math.floor(limits.comment_max_chars * 0.9));
+    }
+
+    /* ══════════════════════════════════════════════════════════════════
      * POST CARD
      * ================================================================ */
 
@@ -374,9 +653,9 @@
         const card = document.createElement('article');
         card.className = 'post';
         card.dataset.postId = p.id;
+        card._post = p;   // stash the raw object for delegated handlers
 
         const avatarUrl  = resolveAvatar(p);
-        const initials   = initialsOf(p.author_display_name || p.author_username);
         const avatarHtml = `<img src="${esc(avatarUrl)}" alt=""
                                  onerror="this.src='${esc(DEFAULT_AVATAR)}'">`;
 
@@ -408,9 +687,29 @@
                 ${renderAttachments(p.attachments)}
             </div>
 
+            ${renderReactionBar(p)}
+
             <footer class="post__foot">
+                <button type="button" class="post__comments-toggle" data-action="comments">
+                    💬 <span data-comment-count>Comments (${p.comment_count || 0})</span>
+                </button>
                 <a href="/posts/view.php?id=${p.id}" class="post__link">Permalink</a>
             </footer>
+
+            <div class="post__comments" data-comments hidden>
+                <div class="post__comments-list" data-comments-list></div>
+                <form class="post__comment-form" data-comment-form autocomplete="off">
+                    <textarea
+                        rows="2"
+                        maxlength="${limits.comment_max_chars}"
+                        placeholder="Write a comment…"
+                        data-comment-input></textarea>
+                    <div class="post__comment-form-bar">
+                        <span class="post__comment-counter" data-comment-count-label>0 / ${limits.comment_max_chars}</span>
+                        <button type="submit" class="btn-cyber btn-cyber--sm btn-gold">Comment</button>
+                    </div>
+                </form>
+            </div>
         `;
 
         if (isOwn) {
@@ -420,7 +719,57 @@
             if (delBtn)  delBtn.addEventListener('click', () => deletePost(card, p));
         }
 
+        // Wire comment textarea counter (local — no delegation needed)
+        const cForm = card.querySelector('[data-comment-form]');
+        if (cForm) {
+            const ta = cForm.querySelector('textarea');
+            ta.addEventListener('input', () => updateCommentCounter(cForm));
+        }
+
         return card;
+    }
+
+    /* ══════════════════════════════════════════════════════════════════
+     * DELEGATED EVENTS (reactions, comments — dynamically added posts)
+     * ================================================================ */
+
+    function wireFeedDelegates() {
+        if (delegatesWired || !listEl) return;
+        delegatesWired = true;
+
+        listEl.addEventListener('click', async (ev) => {
+            const reactBtn = ev.target.closest('.reaction-btn');
+            if (reactBtn) {
+                ev.preventDefault();
+                const postEl = reactBtn.closest('.post');
+                if (!postEl || !postEl._post) return;
+                await toggleReaction(postEl._post, reactBtn.dataset.reaction, reactBtn);
+                return;
+            }
+
+            const toggle = ev.target.closest('[data-action="comments"]');
+            if (toggle) {
+                ev.preventDefault();
+                const postEl = toggle.closest('.post');
+                if (!postEl || !postEl._post) return;
+                const commentsEl = postEl.querySelector('[data-comments]');
+                const listInnerEl = postEl.querySelector('[data-comments-list]');
+                if (!commentsEl || !listInnerEl) return;
+                commentsEl.hidden = !commentsEl.hidden;
+                if (!commentsEl.hidden) {
+                    await loadComments(postEl._post, commentsEl, listInnerEl);
+                }
+            }
+        });
+
+        listEl.addEventListener('submit', async (ev) => {
+            const form = ev.target.closest('[data-comment-form]');
+            if (!form) return;
+            ev.preventDefault();
+            const postEl = form.closest('.post');
+            if (!postEl || !postEl._post) return;
+            await submitComment(postEl._post, form);
+        });
     }
 
     /* ══════════════════════════════════════════════════════════════════
@@ -430,11 +779,11 @@
     function enterEditMode(card, post) {
         const bodyEl   = card.querySelector('[data-body]');
         const original = post.content;
-
+        const editMaxLen = Math.max(limits.post_max_chars, (original || '').length);
         const attachmentsHtml = renderAttachments(post.attachments);
 
         bodyEl.innerHTML = `
-            <textarea class="post__edit-text" maxlength="2000" rows="4">${esc(original)}</textarea>
+            <textarea class="post__edit-text" maxlength="${editMaxLen}" rows="4">${esc(original)}</textarea>
             ${attachmentsHtml}
             <div class="post__edit-bar">
                 <div class="post__edit-vis" role="radiogroup" aria-label="Visibility">
@@ -495,13 +844,8 @@
         });
     }
 
-    /* ══════════════════════════════════════════════════════════════════
-     * DELETE
-     * ================================================================ */
-
     async function deletePost(card, post) {
         if (!confirm('Delete this post? This cannot be undone.')) return;
-
         try {
             await api('POST', '/posts/delete.php', { id: post.id });
             card.style.transition = 'opacity 240ms, transform 240ms';
@@ -532,8 +876,8 @@
         try {
             const cursorQs = nextCursor ? `&cursor=${encodeURIComponent(nextCursor)}` : '';
             const data = await api('GET', `/feed.php?scope=${scope}&limit=20${cursorQs}`);
-
             const posts = data.posts || [];
+
             if (reset && posts.length === 0) {
                 if (emptyEl) emptyEl.hidden = false;
                 if (moreEl)  moreEl.hidden  = true;
@@ -562,6 +906,12 @@
     function wireComposer() {
         if (!composerText || !composerSubmit) return;
 
+        composerText.maxLength = limits.post_max_chars;
+        if (attachInput) {
+            attachInput.accept   = buildMimeAccept(limits.post_allowed_kinds);
+            attachInput.multiple = limits.post_max_attachments > 1;
+        }
+
         composerText.addEventListener('input', () => {
             composerText.style.height = 'auto';
             composerText.style.height = Math.min(composerText.scrollHeight, 300) + 'px';
@@ -587,18 +937,25 @@
 
         if (attachBtn && attachInput) {
             attachBtn.addEventListener('click', () => {
-                if (pendingAttachments.length >= MAX_ATTACHMENTS) {
-                    toast(`Maximum ${MAX_ATTACHMENTS} attachments per post.`, 'error');
+                if (pendingAttachments.length >= limits.post_max_attachments) {
+                    const plural = limits.post_max_attachments === 1 ? 'attachment' : 'attachments';
+                    const extra  = limits.tier === 'free'
+                        ? ' Upgrade to Premium for up to 10.' : '';
+                    toast(`Maximum ${limits.post_max_attachments} ${plural} per post.${extra}`, 'error');
                     return;
                 }
                 attachInput.click();
             });
+
             attachInput.addEventListener('change', async (e) => {
                 const files = Array.from(e.target.files || []);
                 if (!files.length) return;
-                const slotsLeft = MAX_ATTACHMENTS - pendingAttachments.length;
+                const slotsLeft = limits.post_max_attachments - pendingAttachments.length;
                 for (const file of files.slice(0, slotsLeft)) {
                     await uploadAttachment(file);
+                }
+                if (files.length > slotsLeft) {
+                    toast(`Only ${slotsLeft} slot(s) remaining at your tier.`, 'error');
                 }
                 e.target.value = '';
                 updateComposerState();
@@ -608,10 +965,13 @@
 
     function updateComposerState() {
         const len = composerText ? composerText.value.length : 0;
+        const max = limits.post_max_chars;
+
         if (composerCount) {
-            composerCount.textContent = len + ' / 2000';
-            composerCount.classList.toggle('is-warn', len > 1800);
+            composerCount.textContent = len + ' / ' + max;
+            composerCount.classList.toggle('is-warn', len > Math.floor(max * 0.9));
         }
+
         const hasText = composerText && composerText.value.trim().length > 0;
         const hasAtt  = pendingAttachments.length > 0;
         if (composerSubmit) composerSubmit.disabled = !hasText && !hasAtt;
@@ -625,7 +985,6 @@
         const fd = new FormData();
         fd.append('file', file);
 
-        // Optimistic preview chip
         const chip = document.createElement('div');
         chip.className = 'attach-chip is-uploading';
 
@@ -724,6 +1083,15 @@
         const content = composerText.value.trim();
         if (!content && pendingAttachments.length === 0) return;
 
+        if (content.length > limits.post_max_chars) {
+            toast(`Posts are limited to ${limits.post_max_chars} characters on your tier.`, 'error');
+            return;
+        }
+        if (pendingAttachments.length > limits.post_max_attachments) {
+            toast(`Posts are limited to ${limits.post_max_attachments} attachment(s) on your tier.`, 'error');
+            return;
+        }
+
         composerSubmit.disabled = true;
         composerSubmit.textContent = 'Posting…';
 
@@ -736,7 +1104,6 @@
                 attachment_tokens: attachmentsToSend.map(a => a.token),
             });
 
-            // Optimistic insert
             const post = {
                 id:                   result.post_id,
                 user_id:              currentUser.id,
@@ -748,6 +1115,9 @@
                 author_display_name:  currentUser.display_name || currentUser.username,
                 author_avatar_url:    resolveAvatar(currentUser),
                 attachments:          attachmentsToSend,
+                reaction_count:       0,
+                viewer_reaction:      null,
+                comment_count:        0,
             };
 
             if (listEl) {
@@ -756,7 +1126,6 @@
             }
             if (emptyEl) emptyEl.hidden = true;
 
-            // Reset composer
             composerText.value = '';
             composerText.style.height = 'auto';
             pendingAttachments = [];
@@ -801,13 +1170,11 @@
         if (errorEl)   errorEl.hidden   = false;
         if (errorMsgEl) errorMsgEl.textContent = msg;
     }
-
     function showLoading() {
         if (loadingEl) loadingEl.hidden = false;
         if (errorEl)   errorEl.hidden   = true;
         if (shellEl)   shellEl.hidden   = true;
     }
-
     function showShell() {
         if (loadingEl) loadingEl.hidden = true;
         if (errorEl)   errorEl.hidden   = true;
@@ -823,30 +1190,33 @@
         showLoading();
 
         let user = null;
-        try {
-            user = await resolveCurrentUser();
-        } catch (e) {
+        try { user = await resolveCurrentUser(); }
+        catch (e) {
             if (e.code === 'unauthenticated') return;
             err('resolveCurrentUser threw:', e);
         }
 
         if (!user) {
-            log('no authenticated user — redirecting');
             const next = encodeURIComponent(location.pathname + location.search);
             window.location.href = `${LOGIN_URL}?next=${next}`;
             return;
         }
 
         currentUser = user;
-        log('authenticated as', currentUser.username);
+        limits      = resolveLimits(user);
+        log('authenticated as', currentUser.username, '| tier:', limits.tier);
 
         renderIdentity(currentUser);
+        ensureUpsellStrip();
+
         if (!wired) {
             wireComposer();
             wireScopes();
+            wireFeedDelegates();
             wired = true;
         }
 
+        updateComposerState();
         showShell();
         loadFeed({ reset: true });
     }

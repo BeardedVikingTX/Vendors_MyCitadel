@@ -66,3 +66,23 @@ Stack trace:
 Stack trace:
 #0 {main}
   thrown in /home/beardedviking/vendors.mycitadel.lol/stripe-php-21.1.0-alpha.2/lib/Service/V2/Billing/MeteredItemService.php on line 12
+[29-Sep-2026 05:11:50 UTC] PHP Fatal error:  Uncaught Error: Class "Stripe\Service\AbstractService" not found in /home/beardedviking/vendors.mycitadel.lol/stripe-php-21.1.0-alpha.2/lib/Service/V2/Billing/PricingPlanService.php:15
+Stack trace:
+#0 {main}
+  thrown in /home/beardedviking/vendors.mycitadel.lol/stripe-php-21.1.0-alpha.2/lib/Service/V2/Billing/PricingPlanService.php on line 15
+[29-Sep-2026 05:12:16 UTC] PHP Fatal error:  Uncaught Error: Class "Stripe\Service\AbstractService" not found in /home/beardedviking/vendors.mycitadel.lol/stripe-php-21.1.0-alpha.2/lib/Service/V2/Billing/LicensedItemService.php:12
+Stack trace:
+#0 {main}
+  thrown in /home/beardedviking/vendors.mycitadel.lol/stripe-php-21.1.0-alpha.2/lib/Service/V2/Billing/LicensedItemService.php on line 12
+[29-Sep-2026 05:16:15 UTC] PHP Fatal error:  Uncaught Error: Class "Stripe\Service\AbstractService" not found in /home/beardedviking/vendors.mycitadel.lol/stripe-php-21.1.0-alpha.2/lib/Service/V2/Billing/PricingPlanSubscriptionService.php:12
+Stack trace:
+#0 {main}
+  thrown in /home/beardedviking/vendors.mycitadel.lol/stripe-php-21.1.0-alpha.2/lib/Service/V2/Billing/PricingPlanSubscriptionService.php on line 12
+[29-Sep-2026 09:06:01 UTC] PHP Fatal error:  Uncaught Error: Class "Stripe\Service\AbstractService" not found in /home/beardedviking/vendors.mycitadel.lol/stripe-php-21.1.0-alpha.2/lib/Service/V2/Billing/PricingPlanSubscriptionService.php:12
+Stack trace:
+#0 {main}
+  thrown in /home/beardedviking/vendors.mycitadel.lol/stripe-php-21.1.0-alpha.2/lib/Service/V2/Billing/PricingPlanSubscriptionService.php on line 12
+[29-Sep-2026 09:06:01 UTC] PHP Fatal error:  Uncaught Error: Class "Stripe\Service\AbstractService" not found in /home/beardedviking/vendors.mycitadel.lol/stripe-php-21.1.0-alpha.2/lib/Service/V2/Billing/CadenceService.php:14
+Stack trace:
+#0 {main}
+  thrown in /home/beardedviking/vendors.mycitadel.lol/stripe-php-21.1.0-alpha.2/lib/Service/V2/Billing/CadenceService.php on line 14

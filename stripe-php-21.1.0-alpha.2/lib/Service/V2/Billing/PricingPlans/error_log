@@ -1,0 +1,8 @@
+[29-Sep-2026 06:06:24 UTC] PHP Fatal error:  Uncaught Error: Class "Stripe\Service\AbstractService" not found in /home/beardedviking/vendors.mycitadel.lol/stripe-php-21.1.0-alpha.2/lib/Service/V2/Billing/PricingPlans/VersionService.php:12
+Stack trace:
+#0 {main}
+  thrown in /home/beardedviking/vendors.mycitadel.lol/stripe-php-21.1.0-alpha.2/lib/Service/V2/Billing/PricingPlans/VersionService.php on line 12
+[29-Sep-2026 06:08:01 UTC] PHP Fatal error:  Uncaught Error: Class "Stripe\Service\AbstractService" not found in /home/beardedviking/vendors.mycitadel.lol/stripe-php-21.1.0-alpha.2/lib/Service/V2/Billing/PricingPlans/ComponentService.php:12
+Stack trace:
+#0 {main}
+  thrown in /home/beardedviking/vendors.mycitadel.lol/stripe-php-21.1.0-alpha.2/lib/Service/V2/Billing/PricingPlans/ComponentService.php on line 12

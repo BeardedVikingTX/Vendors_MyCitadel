@@ -2,3 +2,11 @@
 Stack trace:
 #0 {main}
   thrown in /home/beardedviking/vendors.mycitadel.lol/stripe-php-21.1.0-alpha.2/lib/Service/V2/Payments/PaymentsServiceFactory.php on line 13
+[29-Sep-2026 05:11:29 UTC] PHP Fatal error:  Uncaught Error: Class "Stripe\Service\AbstractService" not found in /home/beardedviking/vendors.mycitadel.lol/stripe-php-21.1.0-alpha.2/lib/Service/V2/Payments/SettlementAllocationIntentService.php:14
+Stack trace:
+#0 {main}
+  thrown in /home/beardedviking/vendors.mycitadel.lol/stripe-php-21.1.0-alpha.2/lib/Service/V2/Payments/SettlementAllocationIntentService.php on line 14
+[29-Sep-2026 05:13:52 UTC] PHP Fatal error:  Uncaught Error: Class "Stripe\Service\AbstractService" not found in /home/beardedviking/vendors.mycitadel.lol/stripe-php-21.1.0-alpha.2/lib/Service/V2/Payments/OffSessionPaymentService.php:12
+Stack trace:
+#0 {main}
+  thrown in /home/beardedviking/vendors.mycitadel.lol/stripe-php-21.1.0-alpha.2/lib/Service/V2/Payments/OffSessionPaymentService.php on line 12

@@ -362,3 +362,111 @@ Stack trace:
 Stack trace:
 #0 {main}
   thrown in /home/beardedviking/vendors.mycitadel.lol/stripe-php-21.1.0-alpha.2/lib/EventData/V2IamStripeAccessGrantApprovedEventData.php on line 10
+[29-Sep-2026 03:01:09 UTC] PHP Fatal error:  Uncaught Error: Class "Stripe\StripeObject" not found in /home/beardedviking/vendors.mycitadel.lol/stripe-php-21.1.0-alpha.2/lib/EventData/V2CoreAccountIncludingConfigurationCardCreatorCapabilityStatusUpdatedEventData.php:10
+Stack trace:
+#0 {main}
+  thrown in /home/beardedviking/vendors.mycitadel.lol/stripe-php-21.1.0-alpha.2/lib/EventData/V2CoreAccountIncludingConfigurationCardCreatorCapabilityStatusUpdatedEventData.php on line 10
+[29-Sep-2026 03:01:50 UTC] PHP Fatal error:  Uncaught Error: Class "Stripe\StripeObject" not found in /home/beardedviking/vendors.mycitadel.lol/stripe-php-21.1.0-alpha.2/lib/EventData/V2CoreAccountPersonUpdatedEventData.php:10
+Stack trace:
+#0 {main}
+  thrown in /home/beardedviking/vendors.mycitadel.lol/stripe-php-21.1.0-alpha.2/lib/EventData/V2CoreAccountPersonUpdatedEventData.php on line 10
+[29-Sep-2026 03:02:38 UTC] PHP Fatal error:  Uncaught Error: Class "Stripe\StripeObject" not found in /home/beardedviking/vendors.mycitadel.lol/stripe-php-21.1.0-alpha.2/lib/EventData/V2CoreHealthApiLatencyFiringEventData.php:14
+Stack trace:
+#0 {main}
+  thrown in /home/beardedviking/vendors.mycitadel.lol/stripe-php-21.1.0-alpha.2/lib/EventData/V2CoreHealthApiLatencyFiringEventData.php on line 14
+[29-Sep-2026 03:04:23 UTC] PHP Fatal error:  Uncaught Error: Class "Stripe\StripeObject" not found in /home/beardedviking/vendors.mycitadel.lol/stripe-php-21.1.0-alpha.2/lib/EventData/V2IamApiKeyRotatedEventData.php:11
+Stack trace:
+#0 {main}
+  thrown in /home/beardedviking/vendors.mycitadel.lol/stripe-php-21.1.0-alpha.2/lib/EventData/V2IamApiKeyRotatedEventData.php on line 11
+[29-Sep-2026 03:04:46 UTC] PHP Fatal error:  Uncaught Error: Class "Stripe\StripeObject" not found in /home/beardedviking/vendors.mycitadel.lol/stripe-php-21.1.0-alpha.2/lib/EventData/V2CoreHealthIssuingAuthorizationRequestTimeoutResolvedEventData.php:15
+Stack trace:
+#0 {main}
+  thrown in /home/beardedviking/vendors.mycitadel.lol/stripe-php-21.1.0-alpha.2/lib/EventData/V2CoreHealthIssuingAuthorizationRequestTimeoutResolvedEventData.php on line 15
+[29-Sep-2026 04:03:06 UTC] PHP Fatal error:  Uncaught Error: Class "Stripe\StripeObject" not found in /home/beardedviking/vendors.mycitadel.lol/stripe-php-21.1.0-alpha.2/lib/EventData/V2CoreHealthMeterEventSummariesDelayedFiringEventData.php:14
+Stack trace:
+#0 {main}
+  thrown in /home/beardedviking/vendors.mycitadel.lol/stripe-php-21.1.0-alpha.2/lib/EventData/V2CoreHealthMeterEventSummariesDelayedFiringEventData.php on line 14
+[29-Sep-2026 04:04:01 UTC] PHP Fatal error:  Uncaught Error: Class "Stripe\StripeObject" not found in /home/beardedviking/vendors.mycitadel.lol/stripe-php-21.1.0-alpha.2/lib/EventData/V2MoneyManagementFinancialAccountStatementCreatedEventData.php:10
+Stack trace:
+#0 {main}
+  thrown in /home/beardedviking/vendors.mycitadel.lol/stripe-php-21.1.0-alpha.2/lib/EventData/V2MoneyManagementFinancialAccountStatementCreatedEventData.php on line 10
+[29-Sep-2026 04:04:56 UTC] PHP Fatal error:  Uncaught Error: Class "Stripe\StripeObject" not found in /home/beardedviking/vendors.mycitadel.lol/stripe-php-21.1.0-alpha.2/lib/EventData/V2OrchestratedCommerceAgreementTerminatedEventData.php:13
+Stack trace:
+#0 {main}
+  thrown in /home/beardedviking/vendors.mycitadel.lol/stripe-php-21.1.0-alpha.2/lib/EventData/V2OrchestratedCommerceAgreementTerminatedEventData.php on line 13
+[29-Sep-2026 04:05:39 UTC] PHP Fatal error:  Uncaught Error: Class "Stripe\StripeObject" not found in /home/beardedviking/vendors.mycitadel.lol/stripe-php-21.1.0-alpha.2/lib/EventData/V1BillingMeterNoMeterFoundEventData.php:13
+Stack trace:
+#0 {main}
+  thrown in /home/beardedviking/vendors.mycitadel.lol/stripe-php-21.1.0-alpha.2/lib/EventData/V1BillingMeterNoMeterFoundEventData.php on line 13
+[29-Sep-2026 04:06:36 UTC] PHP Fatal error:  Uncaught Error: Class "Stripe\StripeObject" not found in /home/beardedviking/vendors.mycitadel.lol/stripe-php-21.1.0-alpha.2/lib/EventData/V2IamStripeAccessGrantDeniedEventData.php:10
+Stack trace:
+#0 {main}
+  thrown in /home/beardedviking/vendors.mycitadel.lol/stripe-php-21.1.0-alpha.2/lib/EventData/V2IamStripeAccessGrantDeniedEventData.php on line 10
+[29-Sep-2026 07:02:51 UTC] PHP Fatal error:  Uncaught Error: Class "Stripe\StripeObject" not found in /home/beardedviking/vendors.mycitadel.lol/stripe-php-21.1.0-alpha.2/lib/EventData/V2CoreAccountIncludingConfigurationMoneyManagerCapabilityStatusUpdatedEventData.php:10
+Stack trace:
+#0 {main}
+  thrown in /home/beardedviking/vendors.mycitadel.lol/stripe-php-21.1.0-alpha.2/lib/EventData/V2CoreAccountIncludingConfigurationMoneyManagerCapabilityStatusUpdatedEventData.php on line 10
+[29-Sep-2026 07:03:33 UTC] PHP Fatal error:  Uncaught Error: Class "Stripe\StripeObject" not found in /home/beardedviking/vendors.mycitadel.lol/stripe-php-21.1.0-alpha.2/lib/EventData/V2CoreHealthApiErrorFiringEventData.php:14
+Stack trace:
+#0 {main}
+  thrown in /home/beardedviking/vendors.mycitadel.lol/stripe-php-21.1.0-alpha.2/lib/EventData/V2CoreHealthApiErrorFiringEventData.php on line 14
+[29-Sep-2026 07:04:49 UTC] PHP Fatal error:  Uncaught Error: Class "Stripe\StripeObject" not found in /home/beardedviking/vendors.mycitadel.lol/stripe-php-21.1.0-alpha.2/lib/EventData/V2IamStripeAccessGrantUpdatedEventData.php:10
+Stack trace:
+#0 {main}
+  thrown in /home/beardedviking/vendors.mycitadel.lol/stripe-php-21.1.0-alpha.2/lib/EventData/V2IamStripeAccessGrantUpdatedEventData.php on line 10
+[29-Sep-2026 07:06:29 UTC] PHP Fatal error:  Uncaught Error: Class "Stripe\StripeObject" not found in /home/beardedviking/vendors.mycitadel.lol/stripe-php-21.1.0-alpha.2/lib/EventData/V2IamApiKeyCreatedEventData.php:10
+Stack trace:
+#0 {main}
+  thrown in /home/beardedviking/vendors.mycitadel.lol/stripe-php-21.1.0-alpha.2/lib/EventData/V2IamApiKeyCreatedEventData.php on line 10
+[29-Sep-2026 07:06:50 UTC] PHP Fatal error:  Uncaught Error: Class "Stripe\StripeObject" not found in /home/beardedviking/vendors.mycitadel.lol/stripe-php-21.1.0-alpha.2/lib/EventData/V2CoreAccountLinkReturnedEventData.php:12
+Stack trace:
+#0 {main}
+  thrown in /home/beardedviking/vendors.mycitadel.lol/stripe-php-21.1.0-alpha.2/lib/EventData/V2CoreAccountLinkReturnedEventData.php on line 12
+[29-Sep-2026 07:10:43 UTC] PHP Fatal error:  Uncaught Error: Class "Stripe\StripeObject" not found in /home/beardedviking/vendors.mycitadel.lol/stripe-php-21.1.0-alpha.2/lib/EventData/V2CoreHealthWebhookLatencyFiringEventData.php:14
+Stack trace:
+#0 {main}
+  thrown in /home/beardedviking/vendors.mycitadel.lol/stripe-php-21.1.0-alpha.2/lib/EventData/V2CoreHealthWebhookLatencyFiringEventData.php on line 14
+[29-Sep-2026 08:16:48 UTC] PHP Fatal error:  Uncaught Error: Class "Stripe\StripeObject" not found in /home/beardedviking/vendors.mycitadel.lol/stripe-php-21.1.0-alpha.2/lib/EventData/V2BillingPricingPlanComponentCreatedEventData.php:10
+Stack trace:
+#0 {main}
+  thrown in /home/beardedviking/vendors.mycitadel.lol/stripe-php-21.1.0-alpha.2/lib/EventData/V2BillingPricingPlanComponentCreatedEventData.php on line 10
+[29-Sep-2026 08:19:32 UTC] PHP Fatal error:  Uncaught Error: Class "Stripe\StripeObject" not found in /home/beardedviking/vendors.mycitadel.lol/stripe-php-21.1.0-alpha.2/lib/EventData/V2BillingRateCardCreatedEventData.php:10
+Stack trace:
+#0 {main}
+  thrown in /home/beardedviking/vendors.mycitadel.lol/stripe-php-21.1.0-alpha.2/lib/EventData/V2BillingRateCardCreatedEventData.php on line 10
+[29-Sep-2026 08:20:22 UTC] PHP Fatal error:  Uncaught Error: Class "Stripe\StripeObject" not found in /home/beardedviking/vendors.mycitadel.lol/stripe-php-21.1.0-alpha.2/lib/EventData/V2CoreAccountSignalsFraudulentWebsiteReadyEventData.php:15
+Stack trace:
+#0 {main}
+  thrown in /home/beardedviking/vendors.mycitadel.lol/stripe-php-21.1.0-alpha.2/lib/EventData/V2CoreAccountSignalsFraudulentWebsiteReadyEventData.php on line 15
+[29-Sep-2026 08:25:54 UTC] PHP Fatal error:  Uncaught Error: Class "Stripe\StripeObject" not found in /home/beardedviking/vendors.mycitadel.lol/stripe-php-21.1.0-alpha.2/lib/EventData/V2SignalsAccountSignalFraudulentMerchantReadyEventData.php:14
+Stack trace:
+#0 {main}
+  thrown in /home/beardedviking/vendors.mycitadel.lol/stripe-php-21.1.0-alpha.2/lib/EventData/V2SignalsAccountSignalFraudulentMerchantReadyEventData.php on line 14
+[29-Sep-2026 11:05:39 UTC] PHP Fatal error:  Uncaught Error: Class "Stripe\StripeObject" not found in /home/beardedviking/vendors.mycitadel.lol/stripe-php-21.1.0-alpha.2/lib/EventData/V2CoreHealthElementsErrorResolvedEventData.php:15
+Stack trace:
+#0 {main}
+  thrown in /home/beardedviking/vendors.mycitadel.lol/stripe-php-21.1.0-alpha.2/lib/EventData/V2CoreHealthElementsErrorResolvedEventData.php on line 15
+[29-Sep-2026 11:06:58 UTC] PHP Fatal error:  Uncaught Error: Class "Stripe\StripeObject" not found in /home/beardedviking/vendors.mycitadel.lol/stripe-php-21.1.0-alpha.2/lib/EventData/V2CoreAccountIncludingConfigurationMerchantCapabilityStatusUpdatedEventData.php:10
+Stack trace:
+#0 {main}
+  thrown in /home/beardedviking/vendors.mycitadel.lol/stripe-php-21.1.0-alpha.2/lib/EventData/V2CoreAccountIncludingConfigurationMerchantCapabilityStatusUpdatedEventData.php on line 10
+[29-Sep-2026 11:07:37 UTC] PHP Fatal error:  Uncaught Error: Class "Stripe\StripeObject" not found in /home/beardedviking/vendors.mycitadel.lol/stripe-php-21.1.0-alpha.2/lib/EventData/V2CoreHealthWebhookLatencyFiringEventData.php:14
+Stack trace:
+#0 {main}
+  thrown in /home/beardedviking/vendors.mycitadel.lol/stripe-php-21.1.0-alpha.2/lib/EventData/V2CoreHealthWebhookLatencyFiringEventData.php on line 14
+[29-Sep-2026 11:07:57 UTC] PHP Fatal error:  Uncaught Error: Class "Stripe\StripeObject" not found in /home/beardedviking/vendors.mycitadel.lol/stripe-php-21.1.0-alpha.2/lib/EventData/V2CoreHealthMeterEventSummariesDelayedResolvedEventData.php:15
+Stack trace:
+#0 {main}
+  thrown in /home/beardedviking/vendors.mycitadel.lol/stripe-php-21.1.0-alpha.2/lib/EventData/V2CoreHealthMeterEventSummariesDelayedResolvedEventData.php on line 15
+[29-Sep-2026 11:09:04 UTC] PHP Fatal error:  Uncaught Error: Class "Stripe\StripeObject" not found in /home/beardedviking/vendors.mycitadel.lol/stripe-php-21.1.0-alpha.2/lib/EventData/V2CoreAccountLinkReturnedEventData.php:12
+Stack trace:
+#0 {main}
+  thrown in /home/beardedviking/vendors.mycitadel.lol/stripe-php-21.1.0-alpha.2/lib/EventData/V2CoreAccountLinkReturnedEventData.php on line 12
+[29-Sep-2026 11:09:05 UTC] PHP Fatal error:  Uncaught Error: Class "Stripe\StripeObject" not found in /home/beardedviking/vendors.mycitadel.lol/stripe-php-21.1.0-alpha.2/lib/EventData/V2OrchestratedCommerceAgreementCreatedEventData.php:13
+Stack trace:
+#0 {main}
+  thrown in /home/beardedviking/vendors.mycitadel.lol/stripe-php-21.1.0-alpha.2/lib/EventData/V2OrchestratedCommerceAgreementCreatedEventData.php on line 13
+[29-Sep-2026 11:09:24 UTC] PHP Fatal error:  Uncaught Error: Class "Stripe\StripeObject" not found in /home/beardedviking/vendors.mycitadel.lol/stripe-php-21.1.0-alpha.2/lib/EventData/V2MoneyManagementInboundTransferAvailableEventData.php:10
+Stack trace:
+#0 {main}
+  thrown in /home/beardedviking/vendors.mycitadel.lol/stripe-php-21.1.0-alpha.2/lib/EventData/V2MoneyManagementInboundTransferAvailableEventData.php on line 10
