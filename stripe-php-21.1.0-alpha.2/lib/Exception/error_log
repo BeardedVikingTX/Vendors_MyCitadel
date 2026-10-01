@@ -118,3 +118,123 @@ Stack trace:
 Stack trace:
 #0 {main}
   thrown in /home/beardedviking/vendors.mycitadel.lol/stripe-php-21.1.0-alpha.2/lib/Exception/UnknownApiErrorException.php on line 10
+[30-Sep-2026 15:47:24 UTC] PHP Fatal error:  Uncaught Error: Class "Stripe\Exception\ApiErrorException" not found in /home/beardedviking/vendors.mycitadel.lol/stripe-php-21.1.0-alpha.2/lib/Exception/AlreadyCanceledException.php:7
+Stack trace:
+#0 {main}
+  thrown in /home/beardedviking/vendors.mycitadel.lol/stripe-php-21.1.0-alpha.2/lib/Exception/AlreadyCanceledException.php on line 7
+[30-Sep-2026 15:47:24 UTC] PHP Fatal error:  Uncaught Error: Class "Stripe\Exception\ApiErrorException" not found in /home/beardedviking/vendors.mycitadel.lol/stripe-php-21.1.0-alpha.2/lib/Exception/AlreadyExistsException.php:7
+Stack trace:
+#0 {main}
+  thrown in /home/beardedviking/vendors.mycitadel.lol/stripe-php-21.1.0-alpha.2/lib/Exception/AlreadyExistsException.php on line 7
+[30-Sep-2026 15:47:25 UTC] PHP Fatal error:  Uncaught Error: Class "Stripe\Exception\ApiErrorException" not found in /home/beardedviking/vendors.mycitadel.lol/stripe-php-21.1.0-alpha.2/lib/Exception/ApiConnectionException.php:10
+Stack trace:
+#0 {main}
+  thrown in /home/beardedviking/vendors.mycitadel.lol/stripe-php-21.1.0-alpha.2/lib/Exception/ApiConnectionException.php on line 10
+[30-Sep-2026 15:47:25 UTC] PHP Fatal error:  Uncaught Error: Interface "Stripe\Exception\ExceptionInterface" not found in /home/beardedviking/vendors.mycitadel.lol/stripe-php-21.1.0-alpha.2/lib/Exception/ApiErrorException.php:8
+Stack trace:
+#0 {main}
+  thrown in /home/beardedviking/vendors.mycitadel.lol/stripe-php-21.1.0-alpha.2/lib/Exception/ApiErrorException.php on line 8
+[30-Sep-2026 15:47:25 UTC] PHP Fatal error:  Uncaught Error: Class "Stripe\Exception\ApiErrorException" not found in /home/beardedviking/vendors.mycitadel.lol/stripe-php-21.1.0-alpha.2/lib/Exception/AuthenticationException.php:9
+Stack trace:
+#0 {main}
+  thrown in /home/beardedviking/vendors.mycitadel.lol/stripe-php-21.1.0-alpha.2/lib/Exception/AuthenticationException.php on line 9
+[30-Sep-2026 15:47:25 UTC] PHP Fatal error:  Uncaught Error: Interface "Stripe\Exception\ExceptionInterface" not found in /home/beardedviking/vendors.mycitadel.lol/stripe-php-21.1.0-alpha.2/lib/Exception/BadMethodCallException.php:5
+Stack trace:
+#0 {main}
+  thrown in /home/beardedviking/vendors.mycitadel.lol/stripe-php-21.1.0-alpha.2/lib/Exception/BadMethodCallException.php on line 5
+[30-Sep-2026 15:47:25 UTC] PHP Fatal error:  Uncaught Error: Class "Stripe\Exception\ApiErrorException" not found in /home/beardedviking/vendors.mycitadel.lol/stripe-php-21.1.0-alpha.2/lib/Exception/BlockedByStripeException.php:7
+Stack trace:
+#0 {main}
+  thrown in /home/beardedviking/vendors.mycitadel.lol/stripe-php-21.1.0-alpha.2/lib/Exception/BlockedByStripeException.php on line 7
+[30-Sep-2026 15:47:25 UTC] PHP Fatal error:  Uncaught Error: Class "Stripe\Exception\ApiErrorException" not found in /home/beardedviking/vendors.mycitadel.lol/stripe-php-21.1.0-alpha.2/lib/Exception/CannotProceedException.php:7
+Stack trace:
+#0 {main}
+  thrown in /home/beardedviking/vendors.mycitadel.lol/stripe-php-21.1.0-alpha.2/lib/Exception/CannotProceedException.php on line 7
+[30-Sep-2026 15:47:26 UTC] PHP Fatal error:  Uncaught Error: Class "Stripe\Exception\ApiErrorException" not found in /home/beardedviking/vendors.mycitadel.lol/stripe-php-21.1.0-alpha.2/lib/Exception/CardException.php:9
+Stack trace:
+#0 {main}
+  thrown in /home/beardedviking/vendors.mycitadel.lol/stripe-php-21.1.0-alpha.2/lib/Exception/CardException.php on line 9
+[30-Sep-2026 15:47:26 UTC] PHP Fatal error:  Uncaught Error: Class "Stripe\Exception\ApiErrorException" not found in /home/beardedviking/vendors.mycitadel.lol/stripe-php-21.1.0-alpha.2/lib/Exception/ControlledByAlternateResourceException.php:7
+Stack trace:
+#0 {main}
+  thrown in /home/beardedviking/vendors.mycitadel.lol/stripe-php-21.1.0-alpha.2/lib/Exception/ControlledByAlternateResourceException.php on line 7
+[30-Sep-2026 15:47:26 UTC] PHP Fatal error:  Uncaught Error: Class "Stripe\Exception\ApiErrorException" not found in /home/beardedviking/vendors.mycitadel.lol/stripe-php-21.1.0-alpha.2/lib/Exception/ControlledByDashboardException.php:7
+Stack trace:
+#0 {main}
+  thrown in /home/beardedviking/vendors.mycitadel.lol/stripe-php-21.1.0-alpha.2/lib/Exception/ControlledByDashboardException.php on line 7
+[30-Sep-2026 15:47:26 UTC] PHP Fatal error:  Uncaught Error: Class "Stripe\Exception\ApiErrorException" not found in /home/beardedviking/vendors.mycitadel.lol/stripe-php-21.1.0-alpha.2/lib/Exception/FeatureNotEnabledException.php:7
+Stack trace:
+#0 {main}
+  thrown in /home/beardedviking/vendors.mycitadel.lol/stripe-php-21.1.0-alpha.2/lib/Exception/FeatureNotEnabledException.php on line 7
+[30-Sep-2026 15:47:26 UTC] PHP Fatal error:  Uncaught Error: Class "Stripe\Exception\ApiErrorException" not found in /home/beardedviking/vendors.mycitadel.lol/stripe-php-21.1.0-alpha.2/lib/Exception/FxQuoteExpiredException.php:7
+Stack trace:
+#0 {main}
+  thrown in /home/beardedviking/vendors.mycitadel.lol/stripe-php-21.1.0-alpha.2/lib/Exception/FxQuoteExpiredException.php on line 7
+[30-Sep-2026 15:47:27 UTC] PHP Fatal error:  Uncaught Error: Class "Stripe\Exception\ApiErrorException" not found in /home/beardedviking/vendors.mycitadel.lol/stripe-php-21.1.0-alpha.2/lib/Exception/IdempotencyException.php:9
+Stack trace:
+#0 {main}
+  thrown in /home/beardedviking/vendors.mycitadel.lol/stripe-php-21.1.0-alpha.2/lib/Exception/IdempotencyException.php on line 9
+[30-Sep-2026 15:47:27 UTC] PHP Fatal error:  Uncaught Error: Class "Stripe\Exception\ApiErrorException" not found in /home/beardedviking/vendors.mycitadel.lol/stripe-php-21.1.0-alpha.2/lib/Exception/InsufficientFundsException.php:7
+Stack trace:
+#0 {main}
+  thrown in /home/beardedviking/vendors.mycitadel.lol/stripe-php-21.1.0-alpha.2/lib/Exception/InsufficientFundsException.php on line 7
+[30-Sep-2026 15:47:27 UTC] PHP Fatal error:  Uncaught Error: Class "Stripe\Exception\ApiErrorException" not found in /home/beardedviking/vendors.mycitadel.lol/stripe-php-21.1.0-alpha.2/lib/Exception/FinancialAccountNotOpenException.php:7
+Stack trace:
+#0 {main}
+  thrown in /home/beardedviking/vendors.mycitadel.lol/stripe-php-21.1.0-alpha.2/lib/Exception/FinancialAccountNotOpenException.php on line 7
+[30-Sep-2026 15:47:27 UTC] PHP Fatal error:  Uncaught Error: Interface "Stripe\Exception\ExceptionInterface" not found in /home/beardedviking/vendors.mycitadel.lol/stripe-php-21.1.0-alpha.2/lib/Exception/InvalidArgumentException.php:5
+Stack trace:
+#0 {main}
+  thrown in /home/beardedviking/vendors.mycitadel.lol/stripe-php-21.1.0-alpha.2/lib/Exception/InvalidArgumentException.php on line 5
+[30-Sep-2026 15:47:27 UTC] PHP Fatal error:  Uncaught Error: Class "Stripe\Exception\ApiErrorException" not found in /home/beardedviking/vendors.mycitadel.lol/stripe-php-21.1.0-alpha.2/lib/Exception/InvalidPaymentMethodException.php:7
+Stack trace:
+#0 {main}
+  thrown in /home/beardedviking/vendors.mycitadel.lol/stripe-php-21.1.0-alpha.2/lib/Exception/InvalidPaymentMethodException.php on line 7
+[30-Sep-2026 15:47:27 UTC] PHP Fatal error:  Uncaught Error: Class "Stripe\Exception\ApiErrorException" not found in /home/beardedviking/vendors.mycitadel.lol/stripe-php-21.1.0-alpha.2/lib/Exception/InvalidPayoutMethodException.php:7
+Stack trace:
+#0 {main}
+  thrown in /home/beardedviking/vendors.mycitadel.lol/stripe-php-21.1.0-alpha.2/lib/Exception/InvalidPayoutMethodException.php on line 7
+[30-Sep-2026 15:47:28 UTC] PHP Fatal error:  Uncaught Error: Class "Stripe\Exception\ApiErrorException" not found in /home/beardedviking/vendors.mycitadel.lol/stripe-php-21.1.0-alpha.2/lib/Exception/InvalidRequestException.php:9
+Stack trace:
+#0 {main}
+  thrown in /home/beardedviking/vendors.mycitadel.lol/stripe-php-21.1.0-alpha.2/lib/Exception/InvalidRequestException.php on line 9
+[30-Sep-2026 15:47:28 UTC] PHP Fatal error:  Uncaught Error: Class "Stripe\Exception\ApiErrorException" not found in /home/beardedviking/vendors.mycitadel.lol/stripe-php-21.1.0-alpha.2/lib/Exception/NonZeroBalanceException.php:7
+Stack trace:
+#0 {main}
+  thrown in /home/beardedviking/vendors.mycitadel.lol/stripe-php-21.1.0-alpha.2/lib/Exception/NonZeroBalanceException.php on line 7
+[30-Sep-2026 15:47:28 UTC] PHP Fatal error:  Uncaught Error: Class "Stripe\Exception\ApiErrorException" not found in /home/beardedviking/vendors.mycitadel.lol/stripe-php-21.1.0-alpha.2/lib/Exception/NotCancelableException.php:7
+Stack trace:
+#0 {main}
+  thrown in /home/beardedviking/vendors.mycitadel.lol/stripe-php-21.1.0-alpha.2/lib/Exception/NotCancelableException.php on line 7
+[30-Sep-2026 15:47:28 UTC] PHP Fatal error:  Uncaught Error: Class "Stripe\Exception\ApiErrorException" not found in /home/beardedviking/vendors.mycitadel.lol/stripe-php-21.1.0-alpha.2/lib/Exception/PermissionException.php:9
+Stack trace:
+#0 {main}
+  thrown in /home/beardedviking/vendors.mycitadel.lol/stripe-php-21.1.0-alpha.2/lib/Exception/PermissionException.php on line 9
+[30-Sep-2026 15:47:28 UTC] PHP Fatal error:  Uncaught Error: Class "Stripe\Exception\ApiErrorException" not found in /home/beardedviking/vendors.mycitadel.lol/stripe-php-21.1.0-alpha.2/lib/Exception/QuotaExceededException.php:7
+Stack trace:
+#0 {main}
+  thrown in /home/beardedviking/vendors.mycitadel.lol/stripe-php-21.1.0-alpha.2/lib/Exception/QuotaExceededException.php on line 7
+[30-Sep-2026 15:47:29 UTC] PHP Fatal error:  Uncaught Error: Class "Stripe\Exception\InvalidRequestException" not found in /home/beardedviking/vendors.mycitadel.lol/stripe-php-21.1.0-alpha.2/lib/Exception/RateLimitException.php:10
+Stack trace:
+#0 {main}
+  thrown in /home/beardedviking/vendors.mycitadel.lol/stripe-php-21.1.0-alpha.2/lib/Exception/RateLimitException.php on line 10
+[30-Sep-2026 15:47:29 UTC] PHP Fatal error:  Uncaught Error: Class "Stripe\Exception\ApiErrorException" not found in /home/beardedviking/vendors.mycitadel.lol/stripe-php-21.1.0-alpha.2/lib/Exception/RecipientNotNotifiableException.php:7
+Stack trace:
+#0 {main}
+  thrown in /home/beardedviking/vendors.mycitadel.lol/stripe-php-21.1.0-alpha.2/lib/Exception/RecipientNotNotifiableException.php on line 7
+[30-Sep-2026 15:47:29 UTC] PHP Fatal error:  Uncaught Error: Interface "Stripe\Exception\ExceptionInterface" not found in /home/beardedviking/vendors.mycitadel.lol/stripe-php-21.1.0-alpha.2/lib/Exception/SignatureVerificationException.php:9
+Stack trace:
+#0 {main}
+  thrown in /home/beardedviking/vendors.mycitadel.lol/stripe-php-21.1.0-alpha.2/lib/Exception/SignatureVerificationException.php on line 9
+[30-Sep-2026 15:47:29 UTC] PHP Fatal error:  Uncaught Error: Class "Stripe\Exception\ApiErrorException" not found in /home/beardedviking/vendors.mycitadel.lol/stripe-php-21.1.0-alpha.2/lib/Exception/TemporarySessionExpiredException.php:7
+Stack trace:
+#0 {main}
+  thrown in /home/beardedviking/vendors.mycitadel.lol/stripe-php-21.1.0-alpha.2/lib/Exception/TemporarySessionExpiredException.php on line 7
+[30-Sep-2026 15:47:29 UTC] PHP Fatal error:  Uncaught Error: Interface "Stripe\Exception\ExceptionInterface" not found in /home/beardedviking/vendors.mycitadel.lol/stripe-php-21.1.0-alpha.2/lib/Exception/UnexpectedValueException.php:5
+Stack trace:
+#0 {main}
+  thrown in /home/beardedviking/vendors.mycitadel.lol/stripe-php-21.1.0-alpha.2/lib/Exception/UnexpectedValueException.php on line 5
+[30-Sep-2026 15:47:30 UTC] PHP Fatal error:  Uncaught Error: Class "Stripe\Exception\ApiErrorException" not found in /home/beardedviking/vendors.mycitadel.lol/stripe-php-21.1.0-alpha.2/lib/Exception/UnknownApiErrorException.php:10
+Stack trace:
+#0 {main}
+  thrown in /home/beardedviking/vendors.mycitadel.lol/stripe-php-21.1.0-alpha.2/lib/Exception/UnknownApiErrorException.php on line 10

@@ -6,3 +6,7 @@ Stack trace:
 Stack trace:
 #0 {main}
   thrown in /home/beardedviking/vendors.mycitadel.lol/stripe-php-21.1.0-alpha.2/lib/Util/DefaultLogger.php on line 9
+[30-Sep-2026 15:50:31 UTC] PHP Fatal error:  Uncaught Error: Interface "Stripe\Util\LoggerInterface" not found in /home/beardedviking/vendors.mycitadel.lol/stripe-php-21.1.0-alpha.2/lib/Util/DefaultLogger.php:9
+Stack trace:
+#0 {main}
+  thrown in /home/beardedviking/vendors.mycitadel.lol/stripe-php-21.1.0-alpha.2/lib/Util/DefaultLogger.php on line 9

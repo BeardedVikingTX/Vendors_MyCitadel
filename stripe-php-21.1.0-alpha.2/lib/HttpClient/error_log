@@ -2,3 +2,7 @@
 Stack trace:
 #0 {main}
   thrown in /home/beardedviking/vendors.mycitadel.lol/stripe-php-21.1.0-alpha.2/lib/HttpClient/CurlClient.php on line 27
+[30-Sep-2026 15:47:32 UTC] PHP Fatal error:  Uncaught Error: Interface "Stripe\HttpClient\ClientInterface" not found in /home/beardedviking/vendors.mycitadel.lol/stripe-php-21.1.0-alpha.2/lib/HttpClient/CurlClient.php:27
+Stack trace:
+#0 {main}
+  thrown in /home/beardedviking/vendors.mycitadel.lol/stripe-php-21.1.0-alpha.2/lib/HttpClient/CurlClient.php on line 27

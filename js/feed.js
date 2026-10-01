@@ -523,27 +523,34 @@
      * ================================================================ */
 
     function renderComment(c) {
-        const avatarUrl = resolveAvatar(c);
-        const initials  = initialsOf(c.author_display_name || c.author_username);
+        // The API returns author data nested under `author`. Comments created
+        // locally (right after posting) still use flat fields. Normalize both.
+        const author      = c.author || {};
+        const authorId    = author.id           || c.user_id;
+        const username    = author.username     || c.author_username     || '';
+        const displayName = author.display_name || c.author_display_name || username;
+        const avatarUrl   = author.avatar_url   || c.author_avatar_url   || DEFAULT_AVATAR;
+        const initials    = initialsOf(displayName || username);
+    
         const avatarHtml = `<img src="${esc(avatarUrl)}" alt=""
                                  onerror="this.replaceWith(document.createTextNode('${esc(initials)}'))">`;
-
-        const isMine = currentUser && c.user_id === currentUser.id;
-
+    
+        const isMine = currentUser && authorId === currentUser.id;
+    
         const el = document.createElement('div');
         el.className = 'comment' + (isMine ? ' comment--mine' : '');
         el.dataset.commentId = c.id;
-
+    
         el.innerHTML = `
             <div class="comment__avatar">
-                <a href="/users/view.php?id=${c.user_id}">${avatarHtml}</a>
+                <a href="/users/view.php?id=${authorId}">${avatarHtml}</a>
             </div>
             <div class="comment__body">
                 <div class="comment__head">
-                    <a href="/users/view.php?id=${c.user_id}" class="comment__name">
-                        ${esc(c.author_display_name || c.author_username)}
+                    <a href="/users/view.php?id=${authorId}" class="comment__name">
+                        ${esc(displayName)}
                     </a>
-                    <span class="comment__handle">@${esc(c.author_username)}</span>
+                    <span class="comment__handle">@${esc(username)}</span>
                     <span class="comment__dot">·</span>
                     <time class="comment__time" title="${esc(fmtFullDate(c.created_at))}">${esc(fmtRelative(c.created_at))}</time>
                 </div>

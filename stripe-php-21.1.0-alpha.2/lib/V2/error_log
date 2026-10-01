@@ -14,3 +14,19 @@ Stack trace:
 Stack trace:
 #0 {main}
   thrown in /home/beardedviking/vendors.mycitadel.lol/stripe-php-21.1.0-alpha.2/lib/V2/FinancialAddressGeneratedMicrodeposits.php on line 15
+[30-Sep-2026 15:50:33 UTC] PHP Fatal error:  Uncaught Error: Class "Stripe\StripeObject" not found in /home/beardedviking/vendors.mycitadel.lol/stripe-php-21.1.0-alpha.2/lib/V2/Collection.php:16
+Stack trace:
+#0 {main}
+  thrown in /home/beardedviking/vendors.mycitadel.lol/stripe-php-21.1.0-alpha.2/lib/V2/Collection.php on line 16
+[30-Sep-2026 15:50:33 UTC] PHP Fatal error:  Uncaught Error: Class "Stripe\ApiResource" not found in /home/beardedviking/vendors.mycitadel.lol/stripe-php-21.1.0-alpha.2/lib/V2/DeletedObject.php:11
+Stack trace:
+#0 {main}
+  thrown in /home/beardedviking/vendors.mycitadel.lol/stripe-php-21.1.0-alpha.2/lib/V2/DeletedObject.php on line 11
+[30-Sep-2026 15:50:33 UTC] PHP Fatal error:  Uncaught Error: Class "Stripe\ApiResource" not found in /home/beardedviking/vendors.mycitadel.lol/stripe-php-21.1.0-alpha.2/lib/V2/FinancialAddressCreditSimulation.php:14
+Stack trace:
+#0 {main}
+  thrown in /home/beardedviking/vendors.mycitadel.lol/stripe-php-21.1.0-alpha.2/lib/V2/FinancialAddressCreditSimulation.php on line 14
+[30-Sep-2026 15:50:34 UTC] PHP Fatal error:  Uncaught Error: Class "Stripe\ApiResource" not found in /home/beardedviking/vendors.mycitadel.lol/stripe-php-21.1.0-alpha.2/lib/V2/FinancialAddressGeneratedMicrodeposits.php:15
+Stack trace:
+#0 {main}
+  thrown in /home/beardedviking/vendors.mycitadel.lol/stripe-php-21.1.0-alpha.2/lib/V2/FinancialAddressGeneratedMicrodeposits.php on line 15
