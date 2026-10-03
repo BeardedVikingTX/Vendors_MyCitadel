@@ -9,6 +9,11 @@
  *   4. Incoming messages render in-place; inbox updates previews
  *   5. Sending optimistically inserts and reconciles with the server ID
  *
+ * TIER AWARENESS
+ *   Free    — 1 attachment per message, images only. No conversation deletion.
+ *   Premium — 10 attachments, all file types. Can destroy conversations they
+ *             participate in (hard delete, all participants).
+ *
  * Encryption: server-side (ChaCha20-Poly1305). Ciphertext travels as-is
  * over HTTPS; plaintext exists only in the browser memory after decryption.
  * ========================================================================== */
@@ -23,6 +28,30 @@
     const CLIENT    = root.dataset.client   || 'browser/1.0.0';
     const LOGIN_URL = root.dataset.loginUrl || '/login';
     const INITIAL_C = parseInt(root.dataset.initialConversation, 10) || 0;
+
+    /* ── Tier limits — mirror messages/send.php ─────────────────────── */
+    const TIER_LIMITS = {
+        free: {
+            tier:                   'free',
+            message_max_attachments: 1,
+            message_allowed_kinds:  ['image'],
+            can_delete_conversations: false,
+        },
+        premium: {
+            tier:                   'premium',
+            message_max_attachments: 10,
+            message_allowed_kinds:  ['image', 'video', 'audio', 'document'],
+            can_delete_conversations: true,
+        },
+    };
+
+    /* MIME strings for the file picker's accept="" attribute */
+    const KIND_MIME = {
+        image:    'image/jpeg,image/png,image/webp,image/gif',
+        video:    'video/mp4,video/webm',
+        audio:    'audio/mpeg,audio/ogg,audio/wav',
+        document: 'application/pdf,text/plain,text/markdown,application/zip',
+    };
 
     const loadingEl   = document.getElementById('msg-loading');
     const errorEl     = document.getElementById('msg-error');
@@ -48,6 +77,7 @@
     let csrfToken     = null;
     let csrfPromise   = null;
     let currentUser   = null;
+    let limits        = TIER_LIMITS.free;   // conservative until /me resolves
     let conversations = [];
     let activeConvId  = null;
     let activeOther   = null;
@@ -60,6 +90,29 @@
     const log  = (...a) => console.log('[msg]', ...a);
     const warn = (...a) => console.warn('[msg]', ...a);
     const err  = (...a) => console.error('[msg]', ...a);
+
+    /* ══════════════════════════════════════════════════════════════
+     * TIER RESOLUTION
+     * ================================================================ */
+
+    function resolveLimits(user) {
+        const base = (user && (user.premium === true || user.is_premium === true))
+            ? TIER_LIMITS.premium
+            : TIER_LIMITS.free;
+
+        if (user && user.limits && typeof user.limits === 'object') {
+            return Object.assign({}, base, {
+                message_max_attachments:  user.limits.message_max_attachments  || base.message_max_attachments,
+                message_allowed_kinds:    user.limits.message_allowed_kinds    || base.message_allowed_kinds,
+                can_delete_conversations: user.limits.can_delete_conversations ?? base.can_delete_conversations,
+            });
+        }
+        return base;
+    }
+
+    function buildMimeAccept(kinds) {
+        return (kinds || ['image']).map(k => KIND_MIME[k] || '').filter(Boolean).join(',');
+    }
 
     /* ══════════════════════════════════════════════════════════════
      * UTILITIES
@@ -320,6 +373,15 @@
         if (!activeOther) return;
         const name = activeOther.display_name || activeOther.username;
         const avatarUrl = escUrl(activeOther.avatar_url) || DEFAULT_AVATAR;
+
+        // Delete-conversation button — premium only
+        const deleteBtn = limits.can_delete_conversations
+            ? `<button type="button" class="msg-thread__delete" id="msg-thread-delete"
+                       title="Destroy this conversation for all participants">
+                   ✕
+               </button>`
+            : '';
+
         threadHead.innerHTML = `
             <a href="/users/view.php?id=${activeOther.id}" class="msg-thread__avatar-link">
                 <div class="msg-thread__avatar">
@@ -331,7 +393,53 @@
                 <a href="/users/view.php?id=${activeOther.id}" class="msg-thread__name">${esc(name)}</a>
                 <span class="msg-thread__handle">@${esc(activeOther.username)}</span>
             </div>
+            ${deleteBtn}
         `;
+
+        if (limits.can_delete_conversations) {
+            const del = document.getElementById('msg-thread-delete');
+            if (del) del.addEventListener('click', confirmDeleteConversation);
+        }
+    }
+
+    async function confirmDeleteConversation() {
+        if (!activeConvId) return;
+        const name = (activeOther && (activeOther.display_name || activeOther.username)) || 'this conversation';
+
+        const confirmed = confirm(
+            `Destroy your conversation with ${name} for both participants?\n\n` +
+            `This is permanent. Messages, attachments, and the conversation row ` +
+            `are all removed from the database. Neither of you will be able to ` +
+            `recover anything from it.\n\n` +
+            `Continue?`
+        );
+        if (!confirmed) return;
+
+        try {
+            await api('POST', '/messages/delete.php', { conversation_id: activeConvId });
+
+            toast('Conversation destroyed.', 'success');
+
+            // Remove from local state
+            conversations = conversations.filter(c => c.id !== activeConvId);
+            activeConvId = null;
+            activeOther = null;
+            messages = [];
+
+            // Reset UI
+            threadEl.hidden = true;
+            blankEl.hidden = false;
+            threadBody.innerHTML = '';
+            renderConversations();
+
+            // Update URL
+            const url = new URL(location.href);
+            url.searchParams.delete('c');
+            history.replaceState(null, '', url);
+        } catch (e) {
+            if (e.message === 'unauthenticated') return;
+            toast(e.message || 'Could not delete conversation.', 'error');
+        }
     }
 
     function renderThreadBody() {
@@ -424,11 +532,9 @@
                 if (incoming.length > 0) {
                     handleIncoming(incoming);
                 }
-                // Re-poll immediately
                 continue;
             } catch (e) {
                 if (e.message === 'unauthenticated') return;
-                // Wait a beat before retrying so we don't hammer the server
                 await new Promise(r => setTimeout(r, 2000));
             }
         }
@@ -443,7 +549,6 @@
         let affectedConvId = null;
 
         incoming.forEach(m => {
-            // Dedupe against local state
             if (messages.some(x => x.id === m.id)) return;
 
             if (m.conversation_id === activeConvId) {
@@ -452,7 +557,6 @@
             }
             affectedConvId = m.conversation_id;
 
-            // Update the sidebar preview for that conversation
             const conv = conversations.find(c => c.id === m.conversation_id);
             if (conv) {
                 conv.last_preview = m.deleted ? '[deleted]' : (m.body || '').slice(0, 100);
@@ -466,7 +570,6 @@
 
         if (affectedConvId === activeConvId) {
             scrollToBottom();
-            // Mark read
             const lastId = messages[messages.length - 1]?.id || 0;
             if (lastId > 0) {
                 api('POST', '/messages/read.php', {
@@ -476,7 +579,6 @@
             }
         }
 
-        // Re-sort sidebar
         conversations.sort((a, b) =>
             new Date(b.last_message_at || 0) - new Date(a.last_message_at || 0)
         );
@@ -504,15 +606,44 @@
             await sendMessage();
         });
 
-        attachBtn.addEventListener('click', () => fileInput.click());
+        attachBtn.addEventListener('click', () => {
+            const max = limits.message_max_attachments;
+            if (pendingAtts.length >= max) {
+                const plural = max === 1 ? 'attachment' : 'attachments';
+                const hint   = limits.tier === 'free'
+                    ? ' Upgrade to Premium for up to 10.'
+                    : '';
+                toast(`Maximum ${max} ${plural} per message.${hint}`, 'error');
+                return;
+            }
+            fileInput.click();
+        });
+
         fileInput.addEventListener('change', async e => {
             const files = Array.from(e.target.files || []);
-            for (const f of files.slice(0, 6 - pendingAtts.length)) {
+            const slotsLeft = limits.message_max_attachments - pendingAtts.length;
+
+            if (files.length > slotsLeft) {
+                const plural = limits.message_max_attachments === 1 ? 'attachment' : 'attachments';
+                const hint   = limits.tier === 'free'
+                    ? ' Upgrade to Premium for up to 10.'
+                    : '';
+                toast(
+                    `Only ${slotsLeft} more ${plural} allowed at your tier.${hint}`,
+                    'error'
+                );
+            }
+
+            for (const f of files.slice(0, slotsLeft)) {
                 await uploadAttachment(f);
             }
             e.target.value = '';
             renderPendingAtts();
         });
+
+        // Apply tier-based accept filter to the file picker
+        fileInput.accept = buildMimeAccept(limits.message_allowed_kinds);
+        fileInput.multiple = limits.message_max_attachments > 1;
     }
 
     function updateSendEnabled() {
@@ -584,6 +715,16 @@
         if (!body && pendingAtts.length === 0) return;
         if (!activeConvId) return;
 
+        // Client-side pre-check before hitting the API
+        if (pendingAtts.length > limits.message_max_attachments) {
+            toast(
+                `Messages are limited to ${limits.message_max_attachments} ` +
+                `attachment(s) on your tier.`,
+                'error'
+            );
+            return;
+        }
+
         const idem = uuidHex();
         const attsToSend = pendingAtts.slice();
 
@@ -601,7 +742,6 @@
         threadBody.appendChild(renderMessage(optimistic));
         scrollToBottom();
 
-        // Clear composer
         inputEl.value = '';
         inputEl.style.height = 'auto';
         pendingAtts = [];
@@ -616,14 +756,12 @@
                 idempotency_key: idem,
             });
 
-            // Reconcile the temp ID with the real one
             const el = threadBody.querySelector(`[data-msg-id="${optimistic.id}"]`);
             if (el) el.dataset.msgId = String(data.message_id);
             optimistic.id = data.message_id;
         } catch (e) {
             if (e.message === 'unauthenticated') return;
             toast(e.message || 'Could not send.', 'error');
-            // Roll back
             messages = messages.filter(x => x.id !== optimistic.id);
             threadBody.querySelector(`[data-msg-id="${optimistic.id}"]`)?.remove();
         }
@@ -656,14 +794,21 @@
 
     async function boot() {
         showLoading();
+
+        let user = null;
         try {
-            currentUser = await resolveCurrentUser();
+            user = await resolveCurrentUser();
         } catch (e) { if (e.message === 'unauthenticated') return; }
-        if (!currentUser) {
+
+        if (!user) {
             const next = encodeURIComponent(location.pathname + location.search);
             window.location.href = `${LOGIN_URL}?next=${next}`;
             return;
         }
+
+        currentUser = user;
+        limits = resolveLimits(user);
+        log('tier:', limits.tier);
 
         try {
             await loadConversations();
@@ -672,10 +817,6 @@
             showError(e.message || 'Could not load conversations.');
             return;
         }
-
-        // Set the initial stream cursor to the newest message we know about
-        conversations.forEach(c => {}); // placeholder to seed from thread later
-        lastStreamId = 0;
 
         if (INITIAL_C > 0) {
             try { await openConversation(INITIAL_C); } catch (_) {}
